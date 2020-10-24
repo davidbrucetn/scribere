@@ -17,22 +17,20 @@ Initial Sketchboard Layout https://sketchboard.me/LColsCx2jIP#/
 DBDiagram Schema https://dbdiagram.io/d/5f91ad8e3a78976d7b78c797
 
 ### Github for Scribere
-
-MVP Features
-User Registration and JWT Authentication.
-Edit user profile.
-Article CRUD with category, tags, and visibility (self, circle, all).
-Comment on articles
-Delete unwanted comments on your own articles. 
-Block other users (prevents them seeing your work or commenting).
-Favorite other authors or articles.
+  MVP Features
+* User Registration and JWT Authentication.
+* Edit user profile.
+* Article CRUD with category, tags, and visibility (self, circle, all).
+* Comment on articles
+* Delete unwanted comments on your own articles. 
+* Block other users (prevents them seeing your work or commenting).
+* Favorite other authors or articles.
 
 ### Stretch Goals
-
-Book search API for looking up book titles and authors for reviews.
-Add users to Circle for messaging
-Inter-user messaging with multi-recipients option.
-Free text search on content.
+* Book search API for looking up book titles and authors for reviews.
+* Add users to Circle for messaging
+* Inter-user messaging with multi-recipients option.
+* Free text search on content.
 
 ### User Stories
  * As a user I’d like to be able to register with an email and password to login to Scribere.
