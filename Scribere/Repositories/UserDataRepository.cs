@@ -10,6 +10,54 @@ namespace Scribere.Repositories
     {
         public UserDataRepository(IConfiguration configuration) : base(configuration) { }
 
+
+        private UserData NewArticleFromReader(SqlDataReader reader)
+        {
+            UserData UserData = null;
+            UserImage UserImage = null;
+
+            UserData = new UserData()
+            {
+                Id = DbUtils.GetInt(reader, "Id"),
+                FirebaseUserId = DbUtils.GetString(reader, "FirebaseUserId"),
+                Email = DbUtils.GetString(reader, "Email"),
+                NameFirst = DbUtils.GetString(reader, "NameFirst"),
+                NameLast = DbUtils.GetString(reader, "NameLast"),
+                City = DbUtils.GetString(reader, "City"),
+                State = DbUtils.GetString(reader, "State"),
+                CountryId = DbUtils.GetInt(reader, "CountryId"),
+                Pseudonym = DbUtils.GetString(reader, "Pseudonym"),
+                Created_at = reader.GetDateTime(reader.GetOrdinal("Created_at")),
+                UserLevelId = DbUtils.GetInt(reader, "UserLevelId"),
+                IsActive = DbUtils.GetInt(reader, "IsActive"),
+                AllowMessaging = DbUtils.GetInt(reader, "AllowMessaging"),
+                UserLevel = new UserLevel()
+                {
+                    Id = DbUtils.GetInt(reader, "UserLevelId"),
+                    Level = DbUtils.GetString(reader, "UserLevelName")
+                },
+                Country = new Country()
+                {
+                    Id = DbUtils.GetInt(reader, "CountryId"),
+                    Name = DbUtils.GetString(reader, "Name")
+                },
+            };
+            if (DbUtils.IsNotDbNull(reader, "UserImageId"))
+            {
+                UserImage = new UserImage()
+                {
+                    Id = DbUtils.GetInt(reader, "UserImageId"),
+                    UserId = DbUtils.GetInt(reader, "Id"),
+                    ImageUrl = DbUtils.GetString(reader, "ImageUrl")
+                };
+                UserData.UserImage = UserImage;
+            };
+
+            return UserData;
+
+
+        }
+
         public List<UserData> GetAll()
         {
             using (var conn = Connection)
@@ -32,43 +80,10 @@ namespace Scribere.Repositories
                     var reader = cmd.ExecuteReader();
 
                     var users = new List<UserData>();
-
                     while (reader.Read())
                     {
-                        users.Add(new UserData()
-                        {
-                            Id = DbUtils.GetInt(reader, "Id"),
-                            FirebaseUserId = DbUtils.GetString(reader, "FirebaseUserId"),
-                            Email = DbUtils.GetString(reader, "Email"),
-                            NameFirst = DbUtils.GetString(reader, "NameFirst"),
-                            NameLast = DbUtils.GetString(reader, "NameLast"),
-                            City = DbUtils.GetString(reader, "City"),
-                            State = DbUtils.GetString(reader, "State"),
-                            CountryId = DbUtils.GetInt(reader, "CountryId"),
-                            Pseudonym = DbUtils.GetString(reader, "Pseudonym"),
-                            Created_at = reader.GetDateTime(reader.GetOrdinal("Created_at")),
-                            UserLevelId = DbUtils.GetInt(reader, "UserLevelId"),
-                            IsActive = DbUtils.GetInt(reader, "IsActive"),
-                            AllowMessaging = DbUtils.GetInt(reader, "AllowMessaging"),
-                            UserLevel = new UserLevel()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserLevelId"),
-                                Level = DbUtils.GetString(reader, "UserLevelName")
-                            },
-                            UserImage = new UserImage()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserImageId"),
-                                UserId = DbUtils.GetInt(reader, "Id"),
-                                ImageUrl = DbUtils.GetString(reader, "ImageUrl")
-                            },
-                            Country = new Country()
-                            {
-                                Id = DbUtils.GetInt(reader, "CountryId"),
-                                Name = DbUtils.GetString(reader, "Name")
-                            },
-                        });
+                        users.Add(NewArticleFromReader(reader));
                     }
-
                     reader.Close();
                     return users;
                 }
@@ -97,43 +112,10 @@ namespace Scribere.Repositories
                     var reader = cmd.ExecuteReader();
 
                     var users = new List<UserData>();
-
                     while (reader.Read())
                     {
-                        users.Add(new UserData()
-                        {
-                            Id = DbUtils.GetInt(reader, "Id"),
-                            FirebaseUserId = DbUtils.GetString(reader, "FirebaseUserId"),
-                            Email = DbUtils.GetString(reader, "Email"),
-                            NameFirst = DbUtils.GetString(reader, "NameFirst"),
-                            NameLast = DbUtils.GetString(reader, "NameLast"),
-                            City = DbUtils.GetString(reader, "City"),
-                            State = DbUtils.GetString(reader, "State"),
-                            CountryId = DbUtils.GetInt(reader, "CountryId"),
-                            Pseudonym = DbUtils.GetString(reader, "Pseudonym"),
-                            Created_at = reader.GetDateTime(reader.GetOrdinal("Created_at")),
-                            UserLevelId = DbUtils.GetInt(reader, "UserLevelId"),
-                            IsActive = DbUtils.GetInt(reader, "IsActive"),
-                            AllowMessaging = DbUtils.GetInt(reader, "AllowMessaging"),
-                            UserLevel = new UserLevel()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserLevelId"),
-                                Level = DbUtils.GetString(reader, "UserLevelName")
-                            },
-                            UserImage = new UserImage()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserImageId"),
-                                UserId = DbUtils.GetInt(reader, "Id"),
-                                ImageUrl = DbUtils.GetString(reader, "ImageUrl")
-                            },
-                            Country = new Country()
-                            {
-                                Id = DbUtils.GetInt(reader, "CountryId"),
-                                Name = DbUtils.GetString(reader, "Name")
-                            },
-                        });
+                        users.Add(NewArticleFromReader(reader));
                     }
-
                     reader.Close();
                     return users;
                 }
@@ -160,48 +142,16 @@ namespace Scribere.Repositories
                                          WHERE u.id = @id";
                     cmd.Parameters.AddWithValue("@id", id);
 
-                    UserData UserData = null;
+                    UserData userData = null;
                     var reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
-                        UserData = new UserData()
-                        {
-                            Id = DbUtils.GetInt(reader, "Id"),
-                            FirebaseUserId = DbUtils.GetString(reader, "FirebaseUserId"),
-                            Email = DbUtils.GetString(reader, "Email"),
-                            NameFirst = DbUtils.GetString(reader, "NameFirst"),
-                            NameLast = DbUtils.GetString(reader, "NameLast"),
-                            City = DbUtils.GetString(reader, "City"),
-                            State = DbUtils.GetString(reader, "State"),
-                            CountryId = DbUtils.GetInt(reader, "CountryId"),
-                            Pseudonym = DbUtils.GetString(reader, "Pseudonym"),
-                            Created_at = reader.GetDateTime(reader.GetOrdinal("Created_at")),
-                            UserLevelId = DbUtils.GetInt(reader, "UserLevelId"),
-                            IsActive = DbUtils.GetInt(reader, "IsActive"),
-                            AllowMessaging = DbUtils.GetInt(reader, "AllowMessaging"),
-                            UserLevel = new UserLevel()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserLevelId"),
-                                Level = DbUtils.GetString(reader, "UserLevelName")
-                            },
-                            UserImage = new UserImage()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserImageId"),
-                                UserId = DbUtils.GetInt(reader, "Id"),
-                                ImageUrl = DbUtils.GetString(reader, "ImageUrl")
-                            },
-                            Country = new Country()
-                            {
-                                Id = DbUtils.GetInt(reader, "CountryId"),
-                                Name = DbUtils.GetString(reader, "Name")
-                            },
-                        };
+                        userData = NewArticleFromReader(reader);
                     }
 
                     reader.Close();
-
-                    return UserData;
+                    return userData;
                 }
             }
         }
@@ -227,53 +177,16 @@ namespace Scribere.Repositories
 
                     DbUtils.AddParameter(cmd, "@FirebaseUserId", firebaseUserId);
 
-                    UserData UserData = null;
-
+                    UserData userData = null;
                     var reader = cmd.ExecuteReader();
+
                     if (reader.Read())
                     {
-                        UserData = new UserData()
-                        {
-                            Id = DbUtils.GetInt(reader, "Id"),
-                            FirebaseUserId = DbUtils.GetString(reader, "FirebaseUserId"),
-                            Email = DbUtils.GetString(reader, "Email"),
-                            NameFirst = DbUtils.GetString(reader, "NameFirst"),
-                            NameLast = DbUtils.GetString(reader, "NameLast"),
-                            City = DbUtils.GetString(reader, "City"),
-                            State = DbUtils.GetString(reader, "State"),
-                            CountryId = DbUtils.GetInt(reader, "CountryId"),
-                            Pseudonym = DbUtils.GetString(reader, "Pseudonym"),
-                            Created_at = reader.GetDateTime(reader.GetOrdinal("Created_at")),
-                            UserLevelId = DbUtils.GetInt(reader, "UserLevelId"),
-                            IsActive = DbUtils.GetInt(reader, "IsActive"),
-                            AllowMessaging = DbUtils.GetInt(reader, "AllowMessaging"),
-                            UserLevel = new UserLevel()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserLevelId"),
-                                Level = DbUtils.GetString(reader, "UserLevelName")
-                            },
-                            Country = new Country()
-                            {
-                                Id = DbUtils.GetInt(reader, "CountryId"),
-                                Name = DbUtils.GetString(reader, "Name")
-                            }
-
-                        };
-                        if (DbUtils.IsNotDbNull(reader, "UserImageId"))
-                        {
-                            UserData.UserImage = new UserImage()
-                            {
-                                Id = DbUtils.GetInt(reader, "UserImageId"),
-                                UserId = DbUtils.GetInt(reader, "Id"),
-                                ImageUrl = DbUtils.GetString(reader, "ImageUrl")
-                            };
-                        };
-
-                    
+                        userData = NewArticleFromReader(reader);
                     }
-                    reader.Close();
 
-                    return UserData;
+                    reader.Close();
+                    return userData;
                 }
             }
         }
@@ -331,25 +244,46 @@ namespace Scribere.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO UserData (FirebaseUserId, NameFirst, NameLast, Pseudonym, 
-                                                                 Email, Created_at, UserLevelId)
-                                        OUTPUT INSERTED.ID
-                                        VALUES (@FirebaseUserId, @NameFirst, @NameLast, @Pseudonym, 
-                                                @Email, @Created_at, @UserLevelId)";
+                    cmd.CommandText = @"
+                      BEGIN
+
+                        DECLARE @UserImage TABLE (
+                            [UserId] INT,
+                            [ImageUrl] VARCHAR(300)
+                        )
+                                        
+                            INSERT INTO UserData (FirebaseUserId, NameFirst, NameLast, Pseudonym, Email, City, State, CountryId,
+                                Created_at, UserLevelId, IsActive, AllowMessaging )
+                            OUTPUT INSERTED.ID, @UserImageUrl INTO @UserImage
+                            VALUES (@FirebaseUserId, @NameFirst, @NameLast, @Pseudonym, @Email, @City, @State, @CountryId,
+                                @Created_at, @UserLevelId, @IsActive, @AllowMessaging)
+
+                        If @UserImageUrl IS NOT NULL
+                            BEGIN
+                                INSERT INTO UserImage (UserId, ImageUrl) SELECT [UserId],[ImageUrl] FROM @UserImage
+                            END
+                      END;
+                        ";
                     DbUtils.AddParameter(cmd, "@FirebaseUserId", UserData.FirebaseUserId);
                     DbUtils.AddParameter(cmd, "@NameFirst", UserData.NameFirst);
                     DbUtils.AddParameter(cmd, "@NameLast", UserData.NameLast);
                     DbUtils.AddParameter(cmd, "@Pseudonym", UserData.Pseudonym);
                     DbUtils.AddParameter(cmd, "@Email", UserData.Email);
+                    DbUtils.AddParameter(cmd, "@City", UserData.City);
+                    DbUtils.AddParameter(cmd, "@State", UserData.State);
+                    DbUtils.AddParameter(cmd, "@CountryId", UserData.CountryId);
                     DbUtils.AddParameter(cmd, "@Created_at", UserData.Created_at);
                     DbUtils.AddParameter(cmd, "@UserLevelId", UserData.UserLevelId);
+                    DbUtils.AddParameter(cmd, "@IsActive", UserData.IsActive);
+                    DbUtils.AddParameter(cmd, "@AllowMessagine", UserData.AllowMessaging);
+                    DbUtils.AddParameter(cmd, "@UserImageUrl", UserData.UserImage.ImageUrl);
 
                     UserData.Id = (int)cmd.ExecuteScalar();
                 }
             }
         }
 
-        public void UpdateUser(UserData user)
+        public void UpdateUser(UserData editUser)
         {
             using (var conn = Connection)
             {
@@ -358,31 +292,61 @@ namespace Scribere.Repositories
                 {
                     cmd.CommandText = @"
                         DECLARE @Admins INT
-                        SELECT @Admins = Count(*)
-                        FROM UserData
-                        WHERE UserLevelId = 1 AND IsActive = 0
-                        IF @Admins = 1 
-                            IF (SELECT UserLevelId FROM UserData WHERE id = @id) = 1 AND @UserLevelId = 2
+                            SELECT @Admins = Count(*)
+                                FROM UserData
+                            WHERE UserLevelId = 1 AND IsActive = 0
+                        
+                    IF ( @Admins = 1 ) 
+                            IF ( (SELECT UserLevelId FROM UserData WHERE id = @Id) = 1 AND @UserLevelId = 2 )
                                 THROW 51000, 'There must be at least 1 admin', 1
                             ELSE
                                 UPDATE UserData
-	                            SET UserLevelId = @UserLevelId	   
-                                WHERE Id = @id                              
+	                                SET 
+                                      NameFirst = @NameFirst
+                                       NameLast = @NameLast
+                                      Pseudonym = @Pseudonym
+                                          Email = @Email
+                                           City = @City
+                                          State = @State
+                                      CountryId = @CountryId
+                                    UserLevelId = @UserLevelId	                                         
+                                       IsActive = @IsActive
+                                 AllowMessaging = @AllowMessaging
+                                    WHERE Id = @id                              
+                                Update UserImage Set ImageUrl = @UserImageUrl WHERE UserId = @Id
                         ELSE
                             UPDATE UserData
-	                        SET UserLevelId = @UserLevelId	   
-                            WHERE Id = @id ";
+	                            SET 
+                                      NameFirst = @NameFirst
+                                       NameLast = @NameLast
+                                      Pseudonym = @Pseudonym
+                                          Email = @Email
+                                           City = @City
+                                          State = @State
+                                      CountryId = @CountryId
+                                    UserLevelId = @UserLevelId	                                         
+                                       IsActive = @IsActive
+                                 AllowMessaging = @AllowMessaging
+                            WHERE Id = @Id 
+                            Update UserImage Set ImageUrl = @UserImageUrl WHERE UserId = @Id;
+                    ";
 
-                    /* IF there is only one admin in database 
-                           IF editing an admin and changing their UserLevel to Author
-                               THROW an error
-                           ELSE
-                               update user
-                       ELSE
-                           update user */
-
-                    cmd.Parameters.AddWithValue("@UserLevelId", user.UserLevelId);
-                    cmd.Parameters.AddWithValue("@id", user.Id);
+                    
+                    DbUtils.AddParameter(cmd, "@Id", editUser.Id);
+                    DbUtils.AddParameter(cmd, "@FirebaseUserId", editUser.FirebaseUserId);
+                    DbUtils.AddParameter(cmd, "@NameFirst", editUser.NameFirst);
+                    DbUtils.AddParameter(cmd, "@NameLast", editUser.NameLast);
+                    DbUtils.AddParameter(cmd, "@Pseudonym", editUser.Pseudonym);
+                    DbUtils.AddParameter(cmd, "@Email", editUser.Email);
+                    DbUtils.AddParameter(cmd, "@City", editUser.City);
+                    DbUtils.AddParameter(cmd, "@State", editUser.State);
+                    DbUtils.AddParameter(cmd, "@CountryId", editUser.CountryId);
+                    DbUtils.AddParameter(cmd, "@Created_at", editUser.Created_at);
+                    DbUtils.AddParameter(cmd, "@UserLevelId", editUser.UserLevelId);
+                    DbUtils.AddParameter(cmd, "@IsActive", editUser.IsActive);
+                    DbUtils.AddParameter(cmd, "@AllowMessagine", editUser.AllowMessaging);
+                    DbUtils.AddParameter(cmd, "@UserImageUrl", editUser.UserImage.ImageUrl);
+                    
 
                     cmd.ExecuteNonQuery();
                 }
