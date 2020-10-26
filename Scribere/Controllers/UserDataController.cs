@@ -23,19 +23,22 @@ namespace Scribere.Controllers
         }
 
         [HttpGet("{firebaseUserId}")]
-        private UserData GetCurrentUserData()
-        {
-            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return _userDataRepository.GetByFirebaseUserId(firebaseUserId);
+        public IActionResult GetUserData(string firebaseUserId)
+        { 
+            return Ok(_userDataRepository.GetByFirebaseUserId(firebaseUserId));
         }
 
         [HttpPost]
         public IActionResult Post(UserData userData)
         {
-            userData.Created_at = DateTime.Now;
+            userData.IsActive = 1;
+            userData.AllowMessaging = 0;
+            userData.UserLevelId = 2;
+            userData.CountryId = 1;
+            userData.CreateDate = DateTime.Now;
             _userDataRepository.Add(userData);
             return CreatedAtAction(
-                nameof(GetCurrentUserData),
+                nameof(GetUserData),
                 new { firebaseUserId = userData.FirebaseUserId },
                 userData);
         }

@@ -38,6 +38,7 @@ namespace Scribere
             services.AddTransient<IUserBlockRepository, UserBlockRepository>();
             services.AddTransient<IArticleTagRepository, ArticleTagRepository>();
             services.AddTransient<ICountryRepository, CountryRepository>();
+            services.AddTransient<ICommentRepository, CommentRepository>();
 
 
             var firebaseProjectId = Configuration.GetValue<string>("FirebaseProjectId");
@@ -57,6 +58,7 @@ namespace Scribere
                     };
                 });
 
+            
             services.AddControllers();
         }
 

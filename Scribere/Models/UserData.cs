@@ -34,7 +34,7 @@ namespace Scribere.Models
         [MaxLength(100)]
         public string State { get; set; }
 
-        public DateTime Created_at { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public UserImage UserImage { get; set; }
 

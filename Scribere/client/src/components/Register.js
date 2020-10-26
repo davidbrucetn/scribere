@@ -12,15 +12,15 @@ export default function Register() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
-  const userLevelId = 2;
+  
+  
 
   const registerClick = (e) => {
     e.preventDefault();
     if (password && password !== confirmPassword) {
       alert("Passwords don't match. Do better.");
     } else {
-      const userData = { nameLast, nameFirst, pseudonym, email, userLevelId };
-
+      const userData = { nameLast, nameFirst, pseudonym, email };
       register(userData, password)
         .then(() => history.push("/"));
     }

@@ -36,7 +36,7 @@ namespace Scribere.Repositories
                     NameLast = DbUtils.GetString(reader, "NameLast"),
                     Pseudonym = DbUtils.GetString(reader, "Pseudonym"),
                     Email = DbUtils.GetString(reader, "Email"),
-                    Created_at = DbUtils.GetDateTime(reader, "Created_at"),
+                    CreateDate = DbUtils.GetDateTime(reader, "UserCreateDate"),
                     UserLevelId = DbUtils.GetInt(reader, "UserLevelId"),
                     UserLevel = new UserLevel()
                     {
@@ -77,7 +77,7 @@ namespace Scribere.Repositories
                               a.CategoryId, a.UserId,a.VisibilityId,
                               c.[Type] AS CategoryType,
                               u.NameFirst, u.NameLast, u.Pseudonym, 
-                              u.Email, u.Created_at, ui.ImageUrl AS UserImageUrl,
+                              u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
                               u.UserLevelId, 
                               ul.[Level]
                          FROM Article a
@@ -88,7 +88,7 @@ namespace Scribere.Repositories
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
-                          AND CreateDate < SYSDATETIME()
+                          AND a.CreateDate < SYSDATETIME()
                      ORDER BY a.CreateDate DESC;";
                     var reader = cmd.ExecuteReader();
 
@@ -120,7 +120,7 @@ namespace Scribere.Repositories
                               a.CategoryId, a.UserId,a.VisibilityId,
                               c.[Type] AS CategoryType,
                               u.NameFirst, u.NameLast, u.Pseudonym, 
-                              u.Email, u.Created_at, ui.ImageUrl AS UserImageUrl,
+                              u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
                               u.UserLevelId, 
                               ul.[Level]
                          FROM Article a
@@ -133,7 +133,7 @@ namespace Scribere.Repositories
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
-                          AND CreateDate < SYSDATETIME()
+                          AND a.CreateDate < SYSDATETIME()
                           AND (fa.SourceUserId = @SourceUserId )
                      ORDER BY a.CreateDate DESC";
 
@@ -168,7 +168,7 @@ namespace Scribere.Repositories
                               a.CategoryId, a.UserId,a.VisibilityId,
                               c.[Type] AS CategoryType,
                               u.NameFirst, u.NameLast, u.Pseudonym, 
-                              u.Email, u.Created_at, ui.ImageUrl AS UserImageUrl,
+                              u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
                               u.UserLevelId, 
                               ul.[Level]
                          FROM Article a
@@ -212,7 +212,7 @@ namespace Scribere.Repositories
                               a.CategoryId, a.UserId,a.VisibilityId,
                               c.[Type] AS CategoryType,
                               u.NameFirst, u.NameLast, u.Pseudonym, 
-                              u.Email, u.Created_at, ui.ImageUrl AS UserImageUrl,
+                              u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
                               u.UserLevelId, 
                               ul.[Level]
                          FROM Article a
