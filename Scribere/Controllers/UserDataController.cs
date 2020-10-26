@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -22,9 +23,10 @@ namespace Scribere.Controllers
         }
 
         [HttpGet("{firebaseUserId}")]
-        public IActionResult GetUserData(string firebaseUserId)
+        private UserData GetCurrentUserData()
         {
-            return Ok(_userDataRepository.GetByFirebaseUserId(firebaseUserId));
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userDataRepository.GetByFirebaseUserId(firebaseUserId);
         }
 
         [HttpPost]
@@ -33,7 +35,7 @@ namespace Scribere.Controllers
             userData.Created_at = DateTime.Now;
             _userDataRepository.Add(userData);
             return CreatedAtAction(
-                nameof(GetUserData),
+                nameof(GetCurrentUserData),
                 new { firebaseUserId = userData.FirebaseUserId },
                 userData);
         }

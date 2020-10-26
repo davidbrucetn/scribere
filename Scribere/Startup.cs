@@ -29,6 +29,16 @@ namespace Scribere
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IUserDataRepository, UserDataRepository>();
+            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IArticleRepository, ArticleRepository>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<ITagRepository, TagRepository>();
+            services.AddTransient<IFavoriteArticleRepository, FavoriteArticleRepository>();
+            services.AddTransient<IFavoriteAuthorRepository, FavoriteAuthorRepository>();
+            services.AddTransient<IUserBlockRepository, UserBlockRepository>();
+            services.AddTransient<IArticleTagRepository, ArticleTagRepository>();
+            services.AddTransient<ICountryRepository, CountryRepository>();
+
 
             var firebaseProjectId = Configuration.GetValue<string>("FirebaseProjectId");
             var googleTokenUrl = $"https://securetoken.google.com/{firebaseProjectId}";
