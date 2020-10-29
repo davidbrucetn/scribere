@@ -13,7 +13,7 @@ namespace Scribere.Repositories
     {
         public TagRepository(IConfiguration configuration) : base(configuration) { }
 
-        private Tag NewArticleFromReader(SqlDataReader reader)
+        private Tag NewTagFromReader(SqlDataReader reader)
         {
             Tag tag = new Tag()
             {
@@ -36,7 +36,7 @@ namespace Scribere.Repositories
                     var tags = new List<Tag>();
                     while (reader.Read())
                     {
-                        tags.Add(NewArticleFromReader(reader));
+                        tags.Add(NewTagFromReader(reader));
                     }
 
                     reader.Close();
@@ -61,7 +61,7 @@ namespace Scribere.Repositories
                     Tag tag = null;
                     if (reader.Read())
                     {
-                        tag = NewArticleFromReader(reader);
+                        tag = NewTagFromReader(reader);
                     }
                     reader.Close();
                     return tag;
@@ -77,7 +77,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Tag ( TagId, Title ) 
-                                                OUPUT INSERTED.Id
+                                                OUPUT INSERTED.ID
                                                   VALUES ( @TagId, @Title ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@TagId", tag.Id);

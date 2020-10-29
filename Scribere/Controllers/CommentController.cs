@@ -51,9 +51,9 @@ namespace Scribere.Controllers
             return CreatedAtAction("Get", new { id = comment.Id }, comment);
         }
 
-        // PUT api/comment
-        [HttpPut]
-        public IActionResult Put(Comment comment)
+        // PUT api/comment/commentId
+        [HttpPut("{commentId}")]
+        public IActionResult Put(int commentId, Comment comment)
         {
             _commentRepository.UpdateComment(comment);
             return NoContent();

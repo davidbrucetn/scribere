@@ -14,7 +14,7 @@ namespace Scribere.Repositories
     {
         public BookRepository(IConfiguration configuration) : base(configuration) { }
 
-        private Book NewArticleFromReader(SqlDataReader reader)
+        private Book NewBookFromReader(SqlDataReader reader)
         {
             Book book = new Book()
             {
@@ -40,7 +40,7 @@ namespace Scribere.Repositories
                     var books = new List<Book>();
                     while (reader.Read())
                     {
-                        books.Add(NewArticleFromReader(reader));
+                        books.Add(NewBookFromReader(reader));
                     }
 
                     reader.Close();
@@ -65,7 +65,7 @@ namespace Scribere.Repositories
                     Book book = null;
                     if (reader.Read())
                     {
-                        book = NewArticleFromReader(reader);
+                        book = NewBookFromReader(reader);
                     }
                     reader.Close();
                     return book;
@@ -81,7 +81,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Book ( ArticleId, ISBN, LCCN, Title, Author ) 
-                                                OUPUT INSERTED.Id
+                                                OUPUT INSERTED.ID
                                                   VALUES ( @ArticleId, @ISBN, @LCCN, @Title, @Author ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@ArticleId", book.ArticleId);

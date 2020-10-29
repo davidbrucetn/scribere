@@ -10,6 +10,7 @@ import {
   NavLink
 } from 'reactstrap';
 import { UserDataContext } from "../providers/UserDataProvider";
+import "./Header.css";
 
 export default function Header() {
   const { isLoggedIn, logout } = useContext(UserDataContext);
@@ -17,6 +18,7 @@ export default function Header() {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
+
     <div>
       <Navbar color="dark" dark expand="md">
         <NavbarBrand tag={RRNavLink} to="/">Scribere</NavbarBrand>
@@ -26,7 +28,10 @@ export default function Header() {
             {isLoggedIn &&
               <>
                 <NavItem>
-                  <NavLink tag={RRNavLink} to="/compose">Compose</NavLink>
+                  <NavLink tag={RRNavLink} to="/articles/compose">Compose</NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={RRNavLink} to="/articles">Articles</NavLink>
                 </NavItem>
                 <NavItem>
                   <a aria-current="page" className="nav-link" href="/"
@@ -52,6 +57,9 @@ export default function Header() {
           </Nav>
         </Collapse>
       </Navbar>
+
     </div>
+
+
   );
 }

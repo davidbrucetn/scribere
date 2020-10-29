@@ -32,6 +32,7 @@ namespace Scribere
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<IArticleRepository, ArticleRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<ICircleRepository, CircleRepository>();
             services.AddTransient<ITagRepository, TagRepository>();
             services.AddTransient<IFavoriteArticleRepository, FavoriteArticleRepository>();
             services.AddTransient<IFavoriteAuthorRepository, FavoriteAuthorRepository>();
@@ -39,6 +40,7 @@ namespace Scribere
             services.AddTransient<IArticleTagRepository, ArticleTagRepository>();
             services.AddTransient<ICountryRepository, CountryRepository>();
             services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<IVisibilityRepository, VisibilityRepository>();
 
 
             var firebaseProjectId = Configuration.GetValue<string>("FirebaseProjectId");
@@ -73,7 +75,7 @@ namespace Scribere
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

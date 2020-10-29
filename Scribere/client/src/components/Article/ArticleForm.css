@@ -1,0 +1,18 @@
+.container__article__new {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.div__articleNew__form {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 95vw;
+  height: 65vh;
+}
+
+.radio__group {
+  display: inline-block;
+}

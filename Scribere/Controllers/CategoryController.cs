@@ -34,14 +34,13 @@ namespace Scribere.Controllers
 
         // GET: api/category
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAllCategories()
         {
             return Ok(_categoryRepository.GetAll());
         }
 
-
-        [HttpPut]
-        public IActionResult Put(Category category)
+        [HttpPut("{categoryId}")]
+        public IActionResult Put(int categoryId, Category category)
         {
             _categoryRepository.UpdateCategory(category);
             return NoContent();

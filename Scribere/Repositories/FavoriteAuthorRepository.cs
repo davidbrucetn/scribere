@@ -13,7 +13,7 @@ namespace Scribere.Repositories
     {
         public FavoriteAuthorRepository(IConfiguration configuration) : base(configuration) { }
 
-        private FavoriteAuthor NewArticleFromReader(SqlDataReader reader)
+        private FavoriteAuthor NewFavoriteAuthorFromReader(SqlDataReader reader)
         {
             FavoriteAuthor favoriteAuthor = new FavoriteAuthor()
             {
@@ -40,7 +40,7 @@ namespace Scribere.Repositories
                     var favoriteAuthors = new List<FavoriteAuthor>();
                     while (reader.Read())
                     {
-                        favoriteAuthors.Add(NewArticleFromReader(reader));
+                        favoriteAuthors.Add(NewFavoriteAuthorFromReader(reader));
                     }
 
                     reader.Close();
@@ -60,10 +60,9 @@ namespace Scribere.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO FavoriteAuthor ( FavoriteUserId, SourceUserId ) 
-                                                OUPUT INSERTED.Id
-                                                  VALUES ( @FavoriteAuthorId, @SourceUserId ) 
-                                        ;";
+                    cmd.CommandText = @"INSERT INTO FavoriteAuthor (FavoriteUserId, SourceUserId) 
+                                                OUTPUT INSERTED.ID
+                                         VALUES ( @FavoriteAuthorId, @SourceUserId );";
                     cmd.Parameters.AddWithValue("@FavoriteAuthorId", favoriteAuthor.FavoriteUserId);
                     cmd.Parameters.AddWithValue("@SourceUserId", favoriteAuthor.SourceUserId);
 
@@ -75,7 +74,7 @@ namespace Scribere.Repositories
 
 
 
-        public void DeleteFavoriteAuthor(int SourceUserId, int favoriteAuthorId)
+        public void DeleteFavoriteAuthor(int SourceUserId, int favoriteUserId)
         {
             using (SqlConnection conn = Connection)
             {
@@ -84,9 +83,9 @@ namespace Scribere.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        DELETE FROM FavoriteAuthor WHERE Id = @favoriteAuthorId and SourceUserId = @SourceUserId;";
+                        DELETE FROM FavoriteAuthor WHERE FavoriteUserId = @favoriteUserId and SourceUserId = @SourceUserId;";
 
-                    cmd.Parameters.AddWithValue("@favoriteAuthorId", favoriteAuthorId);
+                    cmd.Parameters.AddWithValue("@favoriteUserId", favoriteUserId);
                     cmd.Parameters.AddWithValue("@SourceUserId", SourceUserId);
 
                     cmd.ExecuteNonQuery();

@@ -24,8 +24,8 @@ namespace Scribere.Controllers
             _userDataRepository = userDataRepository;
         }
 
-        // GET: api/articletag
-        [HttpGet("{articleId}")]
+        // GET: api/articletag/article/articleId
+        [HttpGet("article/{articleId}")]
         public IActionResult Get(int articleId)
         {
             return Ok(_articleTagRepository.GetAll(articleId));

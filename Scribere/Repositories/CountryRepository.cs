@@ -15,7 +15,7 @@ namespace Scribere.Repositories
     {
         public CountryRepository(IConfiguration configuration) : base(configuration) { }
 
-        private Country NewArticleFromReader(SqlDataReader reader)
+        private Country NewCountryFromReader(SqlDataReader reader)
         {
             Country country = new Country()
             {
@@ -38,7 +38,7 @@ namespace Scribere.Repositories
                     var countries = new List<Country>();
                     while (reader.Read())
                     {
-                        countries.Add(NewArticleFromReader(reader));
+                        countries.Add(NewCountryFromReader(reader));
                     }
 
                     reader.Close();
@@ -63,7 +63,7 @@ namespace Scribere.Repositories
                     Country country = null;
                     if (reader.Read())
                     {
-                        country = NewArticleFromReader(reader);
+                        country = NewCountryFromReader(reader);
                     }
                     reader.Close();
                     return country;
@@ -79,7 +79,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Country ( Name ) 
-                                                OUPUT INSERTED.Id
+                                                OUPUT INSERTED.ID
                                                   VALUES ( @Name ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@Name", country.Name);

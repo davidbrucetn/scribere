@@ -88,7 +88,6 @@ namespace Scribere.Repositories
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
-                          AND a.CreateDate < SYSDATETIME()
                      ORDER BY a.CreateDate DESC;";
                     var reader = cmd.ExecuteReader();
 
@@ -246,17 +245,24 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
+                     BEGIN
                         DECLARE @ArticleImage TABLE (
                             [ArticleId] INT,
                             [ImageUrl]  VARCHAR(300)
                         )
 
-                        INSERT INTO Article (UserId, Heading, Text, CategoryId, CreateDate, VisibilityId) 
-                            OUTPUT INSERTED.id, @ArticleImageUrl INTO @ArticleImage
-                               VALUES (@Heading, @Text,@CreateDate, @CategoryId, @UserId)
+                        INSERT INTO Article (UserId, Heading, Text, CreateDate, CategoryId, VisibilityId) 
+                            OUTPUT INSERTED.ID, @ArticleImageUrl INTO @ArticleImage
+                               VALUES (@UserId, @Heading, @Text, @CreateDate, @CategoryId, @VisibilityId)
+                        
+                        If @ArticleImageUrl IS NOT NULL
+                            BEGIN
+                             INSERT INTO ArticleImage (ArticleId,ImageUrl) SELECT [ArticleId],[ImageUrl] FROM @ArticleImage WHERE [ImageUrl] <> NULL AND [ImageUrl] <> '';
+                            END 
+                        SELECT [ArticleId] from @ArticleImage
+                           
+                     END;"; 
 
-                        INSERT INTO ArticleImage (ArticleId,ImageUrl) SELECT [ArticleId],[ImageUrl] FROM @ArticleImage;
-                    ";
                     cmd.Parameters.AddWithValue("@Heading", article.Heading);
                     cmd.Parameters.AddWithValue("@Text", article.Text);
                     cmd.Parameters.AddWithValue("@ArticleImageUrl", article.ArticleImage.ImageUrl ?? (object)DBNull.Value);
@@ -265,7 +271,7 @@ namespace Scribere.Repositories
                     cmd.Parameters.AddWithValue("@VisibilityId", article.VisibilityId);
                     cmd.Parameters.AddWithValue("@UserId", article.UserId);
 
-                    article.Id = (int)cmd.ExecuteScalar();
+                     var result = (int)cmd.ExecuteScalar();
                 }
             }
         }
@@ -305,7 +311,7 @@ namespace Scribere.Repositories
                      BEGIN
       
                        UPDATE Article
-                                 SET
+                           SET
                                     Heading = @Heading,
                                     Article.Text = @Text,
                                     CreateDate = @CreateDate, 

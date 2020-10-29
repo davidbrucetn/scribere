@@ -14,7 +14,7 @@ namespace Scribere.Repositories
     {
         public FavoriteArticleRepository(IConfiguration configuration) : base(configuration) { }
 
-        private FavoriteArticle NewArticleFromReader(SqlDataReader reader)
+        private FavoriteArticle NewFavoriteArticleFromReader(SqlDataReader reader)
         {
             FavoriteArticle favoriteArticle = new FavoriteArticle()
             {
@@ -33,7 +33,7 @@ namespace Scribere.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, Type FROM FavoriteArticle WHERE UserId = @UserId ORDER BY ArticleId;";
+                    cmd.CommandText = "SELECT Id, UserId, ArticleId FROM FavoriteArticle WHERE UserId = @UserId ORDER BY ArticleId;";
 
                     DbUtils.AddParameter(cmd, "@UserId", UserId);
 
@@ -41,7 +41,7 @@ namespace Scribere.Repositories
                     var favoriteArticles = new List<FavoriteArticle>();
                     while (reader.Read())
                     {
-                        favoriteArticles.Add(NewArticleFromReader(reader));
+                        favoriteArticles.Add(NewFavoriteArticleFromReader(reader));
                     }
 
                     reader.Close();
@@ -62,9 +62,8 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO FavoriteArticle ( ArticleId, UserId ) 
-                                                OUPUT INSERTED.Id
-                                                  VALUES ( @FavoriteArticleId, @UserId ) 
-                                        ;";
+                                                OUTPUT INSERTED.ID
+                                                  VALUES ( @FavoriteArticleId, @UserId );";
                     cmd.Parameters.AddWithValue("@FavoriteArticleId", favoriteArticle.ArticleId);
                     cmd.Parameters.AddWithValue("@UserId", favoriteArticle.UserId);
 
@@ -85,7 +84,7 @@ namespace Scribere.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        DELETE FROM FavoriteArticle WHERE Id = @favoriteArticleId and UserId = @UserId;";
+                        DELETE FROM FavoriteArticle WHERE ArticleId = @favoriteArticleId and UserId = @UserId;";
 
                     cmd.Parameters.AddWithValue("@favoriteArticleId", favoriteArticleId);
                     cmd.Parameters.AddWithValue("@UserId", UserId);

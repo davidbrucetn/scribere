@@ -11,7 +11,7 @@ namespace Scribere.Repositories
         public UserDataRepository(IConfiguration configuration) : base(configuration) { }
 
 
-        private UserData NewArticleFromReader(SqlDataReader reader)
+        private UserData NewUserDataFromReader(SqlDataReader reader)
         {
             UserData UserData = null;
             UserImage UserImage = null;
@@ -82,7 +82,7 @@ namespace Scribere.Repositories
                     var users = new List<UserData>();
                     while (reader.Read())
                     {
-                        users.Add(NewArticleFromReader(reader));
+                        users.Add(NewUserDataFromReader(reader));
                     }
                     reader.Close();
                     return users;
@@ -114,7 +114,7 @@ namespace Scribere.Repositories
                     var users = new List<UserData>();
                     while (reader.Read())
                     {
-                        users.Add(NewArticleFromReader(reader));
+                        users.Add(NewUserDataFromReader(reader));
                     }
                     reader.Close();
                     return users;
@@ -147,7 +147,7 @@ namespace Scribere.Repositories
 
                     if (reader.Read())
                     {
-                        userData = NewArticleFromReader(reader);
+                        userData = NewUserDataFromReader(reader);
                     }
 
                     reader.Close();
@@ -182,7 +182,7 @@ namespace Scribere.Repositories
 
                     if (reader.Read())
                     {
-                        userData = NewArticleFromReader(reader);
+                        userData = NewUserDataFromReader(reader);
                     }
 
                     reader.Close();

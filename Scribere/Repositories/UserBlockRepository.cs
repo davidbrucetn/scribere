@@ -13,7 +13,7 @@ namespace Scribere.Repositories
     {
         public UserBlockRepository(IConfiguration configuration) : base(configuration) { }
 
-        private UserBlock NewArticleFromReader(SqlDataReader reader)
+        private UserBlock NewUserBlockFromReader(SqlDataReader reader)
         {
             UserBlock userBlock = new UserBlock()
             {
@@ -38,7 +38,7 @@ namespace Scribere.Repositories
                     var userBlocks = new List<UserBlock>();
                     while (reader.Read())
                     {
-                        userBlocks.Add(NewArticleFromReader(reader));
+                        userBlocks.Add(NewUserBlockFromReader(reader));
                     }
 
                     reader.Close();
@@ -59,7 +59,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO UserBlock ( BlockedUserId, SourceUserId ) 
-                                                OUPUT INSERTED.Id
+                                                OUPUT INSERTED.ID
                                                   VALUES ( @BlockedUserId, @SourceUserId ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@BlockedUserId", userBlock.BlockedUserId);
