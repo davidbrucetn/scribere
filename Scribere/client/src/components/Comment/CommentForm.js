@@ -8,7 +8,6 @@ import "./Comment.css";
 export default function CommentForm(article) {
 
     const thisUser = JSON.parse(sessionStorage.UserData)
-    const thisUserId = thisUser.id
 
     const [comment, setComment] = useState({ text: '', userId: thisUser.id, articleId: '', createDate: '' });
 
@@ -16,18 +15,13 @@ export default function CommentForm(article) {
 
     const handleFieldChange = evt => {
         const stateToChange = { ...comment };
-        console.log(evt.target)
         stateToChange[evt.target.id] = evt.target.value;
         setComment(stateToChange);
     };
 
     const goAddComment = () => {
-        debugger
         comment.createDate = new Date();
         comment.articleId = parseInt(article.id);
-
-
-        console.log(comment);
 
         addComment(comment)
     }

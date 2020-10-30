@@ -28,6 +28,7 @@ const ArticleForm = () => {
         getAllCategories()
             .then((resp) => {
                 getAllVisibilities();
+                setVisibilityValue("2");
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -87,7 +88,6 @@ const ArticleForm = () => {
                                 value={article.categoryId}
                             >
 
-                                <option value="">Category</option>
                                 {category.map(aCategory =>
                                     <option value={aCategory.id} key={aCategory.id}>{aCategory.type}</option>
                                 )}

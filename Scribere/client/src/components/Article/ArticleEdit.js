@@ -106,7 +106,6 @@ const ArticleEdit = () => {
                                     onChange={handleFieldChange}
                                     value={article.categoryId}
                                 >
-                                    <option value="">Category</option>
                                     {category.map(aCategory =>
                                         <option value={aCategory.id} key={aCategory.id}>{aCategory.type}</option>
                                     )}

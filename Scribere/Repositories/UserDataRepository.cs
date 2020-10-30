@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Scribere.Models;
 using Scribere.Utils;
 using Microsoft.Data.SqlClient;
+using System;
 
 namespace Scribere.Repositories
 {
@@ -277,7 +278,7 @@ namespace Scribere.Repositories
             }
         }
 
-        public void UpdateUser(UserData editUser)
+        public void UpdateUser(UserData userData)
         {
             using (var conn = Connection)
             {
@@ -285,62 +286,43 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        DECLARE @Admins INT
-                            SELECT @Admins = Count(*)
-                                FROM UserData
-                            WHERE UserLevelId = 1 AND IsActive = 0
-                        
-                    IF ( @Admins = 1 ) 
-                            IF ( (SELECT UserLevelId FROM UserData WHERE id = @Id) = 1 AND @UserLevelId = 2 )
-                                THROW 51000, 'There must be at least 1 admin', 1
-                            ELSE
-                                UPDATE UserData
+                             UPDATE UserData
 	                                SET 
-                                      NameFirst = @NameFirst
-                                       NameLast = @NameLast
-                                      Pseudonym = @Pseudonym
-                                          Email = @Email
-                                           City = @City
-                                          State = @State
-                                      CountryId = @CountryId
-                                    UserLevelId = @UserLevelId	                                         
-                                       IsActive = @IsActive
+                                      NameFirst = @NameFirst,
+                                       NameLast = @NameLast,
+                                      Pseudonym = @Pseudonym,
+                                          Email = @Email,
+                                           City = @City,
+                                          State = @State,
+                                      CountryId = @CountryId,
+                                    UserLevelId = @UserLevelId,
+                                       IsActive = @IsActive,
                                  AllowMessaging = @AllowMessaging
                                     WHERE Id = @id                              
+ 
+                            IF @UserImageURL IS NOT NULL
+                            BEGIN
                                 Update UserImage Set ImageUrl = @UserImageUrl WHERE UserId = @Id
-                        ELSE
-                            UPDATE UserData
-	                            SET 
-                                      NameFirst = @NameFirst
-                                       NameLast = @NameLast
-                                      Pseudonym = @Pseudonym
-                                          Email = @Email
-                                           City = @City
-                                          State = @State
-                                      CountryId = @CountryId
-                                    UserLevelId = @UserLevelId	                                         
-                                       IsActive = @IsActive
-                                 AllowMessaging = @AllowMessaging
-                            WHERE Id = @Id 
-                            Update UserImage Set ImageUrl = @UserImageUrl WHERE UserId = @Id;
-                    ";
+                            END
+                    ;";
 
                     
-                    DbUtils.AddParameter(cmd, "@Id", editUser.Id);
-                    DbUtils.AddParameter(cmd, "@FirebaseUserId", editUser.FirebaseUserId);
-                    DbUtils.AddParameter(cmd, "@NameFirst", editUser.NameFirst);
-                    DbUtils.AddParameter(cmd, "@NameLast", editUser.NameLast);
-                    DbUtils.AddParameter(cmd, "@Pseudonym", editUser.Pseudonym);
-                    DbUtils.AddParameter(cmd, "@Email", editUser.Email);
-                    DbUtils.AddParameter(cmd, "@City", editUser.City);
-                    DbUtils.AddParameter(cmd, "@State", editUser.State);
-                    DbUtils.AddParameter(cmd, "@CountryId", editUser.CountryId);
-                    DbUtils.AddParameter(cmd, "@CreateDate", editUser.CreateDate);
-                    DbUtils.AddParameter(cmd, "@UserLevelId", editUser.UserLevelId);
-                    DbUtils.AddParameter(cmd, "@IsActive", editUser.IsActive);
-                    DbUtils.AddParameter(cmd, "@AllowMessagine", editUser.AllowMessaging);
-                    DbUtils.AddParameter(cmd, "@UserImageUrl", editUser.UserImage.ImageUrl);
+                    DbUtils.AddParameter(cmd, "@Id", userData.Id);
+                    DbUtils.AddParameter(cmd, "@FirebaseUserId", userData.FirebaseUserId);
+                    DbUtils.AddParameter(cmd, "@NameFirst", userData.NameFirst);
+                    DbUtils.AddParameter(cmd, "@NameLast", userData.NameLast);
+                    DbUtils.AddParameter(cmd, "@Pseudonym", userData.Pseudonym);
+                    DbUtils.AddParameter(cmd, "@Email", userData.Email);
+                    DbUtils.AddParameter(cmd, "@City", userData.City);
+                    DbUtils.AddParameter(cmd, "@State", userData.State);
+                    DbUtils.AddParameter(cmd, "@CountryId", userData.CountryId);
+                    DbUtils.AddParameter(cmd, "@CreateDate", userData.CreateDate);
+                    DbUtils.AddParameter(cmd, "@UserLevelId", userData.UserLevelId);
+                    DbUtils.AddParameter(cmd, "@IsActive", userData.IsActive);
+                    DbUtils.AddParameter(cmd, "@AllowMessaging", userData.AllowMessaging);
+                    DbUtils.AddParameter(cmd, "@UserImageUrl", userData.AllowMessaging);
                     
+
 
                     cmd.ExecuteNonQuery();
                 }

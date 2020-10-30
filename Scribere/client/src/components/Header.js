@@ -52,7 +52,7 @@ export default function Header() {
           </Nav>
           <Nav navbar>
             <NavItem>
-              Right Menu Item
+              <NavLink tag={RRNavLink} to="/users">Users</NavLink>
             </NavItem>
           </Nav>
         </Collapse>

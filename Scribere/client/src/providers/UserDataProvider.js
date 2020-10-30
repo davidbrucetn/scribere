@@ -20,7 +20,7 @@ export function UserDataProvider(props) {
   }, []);
 
   const login = (email, pw) => {
-    
+
     return firebase
       .auth()
       .signInWithEmailAndPassword(email, pw)
@@ -82,9 +82,9 @@ export function UserDataProvider(props) {
       }).then(resp => resp.json()));
   };
 
-  const saveUser = (UserData) => {
+  const updateUser = (UserData) => {
     return getToken().then((token) =>
-      fetch(`${apiUrl}/edittype`, {
+      fetch(`${apiUrl}/${UserData.id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -121,24 +121,7 @@ export function UserDataProvider(props) {
     );
   };
 
-  const reactivateUserData = (id) => {
-    return getToken().then((token) =>
-      fetch(`${apiUrl}/reactivate/${id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        }
-      }).then(function (response) {
-        if (!response.ok) {
-          return false;
-        }
 
-        return response.ok;
-
-      })
-    );
-  };
 
   const getAllUsers = () =>
     getToken().then((token) =>
@@ -152,18 +135,6 @@ export function UserDataProvider(props) {
         .then(setUsers)
     );
 
-
-  const getDeactivatedUsers = () =>
-    getToken().then((token) =>
-      fetch(`${apiUrl}/deactivated`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((resp) => resp.json())
-        .then(setUsers)
-    );
 
   const getUserById = (id) =>
     getToken().then((token) =>
@@ -187,9 +158,7 @@ export function UserDataProvider(props) {
         users,
         getAllUsers,
         getUserById,
-        getDeactivatedUsers,
-        reactivateUserData,
-        saveUser,
+        updateUser,
         saveRegisterUser
       }}
     >

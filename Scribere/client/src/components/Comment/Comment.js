@@ -21,7 +21,6 @@ export default function Comment({ comment }) {
 
     const handleFieldChange = evt => {
         const stateToChange = { ...editedComment };
-        console.log(evt.target)
         stateToChange[evt.target.id] = evt.target.value;
         setComment(stateToChange);
     };
