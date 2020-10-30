@@ -11,7 +11,7 @@ namespace Scribere.Repositories
         public UserDataRepository(IConfiguration configuration) : base(configuration) { }
 
 
-        private UserData NewArticleFromReader(SqlDataReader reader)
+        private UserData NewUserDataFromReader(SqlDataReader reader)
         {
             UserData UserData = null;
             UserImage UserImage = null;
@@ -27,7 +27,7 @@ namespace Scribere.Repositories
                 State = DbUtils.GetString(reader, "State"),
                 CountryId = DbUtils.GetInt(reader, "CountryId"),
                 Pseudonym = DbUtils.GetString(reader, "Pseudonym"),
-                Created_at = reader.GetDateTime(reader.GetOrdinal("Created_at")),
+                CreateDate = reader.GetDateTime(reader.GetOrdinal("CreateDate")),
                 UserLevelId = DbUtils.GetInt(reader, "UserLevelId"),
                 IsActive = DbUtils.GetInt(reader, "IsActive"),
                 AllowMessaging = DbUtils.GetInt(reader, "AllowMessaging"),
@@ -67,7 +67,7 @@ namespace Scribere.Repositories
                 {
                     cmd.CommandText = @"SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Email,u.City, u.State, 
                                                u.CountryId, c.Name,
-                                               u.Created_at, u.UserLevelId, u.IsActive,
+                                               u.CreateDate, u.UserLevelId, u.IsActive,
                                                ut.Level AS UserLevelName,
                                                ui.ImageUrl, ui.Id as UserImageId, u.AllowMessaging
                                           FROM UserData u
@@ -82,7 +82,7 @@ namespace Scribere.Repositories
                     var users = new List<UserData>();
                     while (reader.Read())
                     {
-                        users.Add(NewArticleFromReader(reader));
+                        users.Add(NewUserDataFromReader(reader));
                     }
                     reader.Close();
                     return users;
@@ -100,7 +100,7 @@ namespace Scribere.Repositories
                 {
                     cmd.CommandText = @"SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Email,u.City, u.State, 
                                                u.CountryId, c.Name,
-                                               u.Created_at, u.UserLevelId, u.IsActive,
+                                               u.CreateDate, u.UserLevelId, u.IsActive,
                                                ut.Level AS UserLevelName,
                                                ui.ImageUrl, ui.Id as UserImageId, u.AllowMessaging
                                           FROM UserData u
@@ -114,7 +114,7 @@ namespace Scribere.Repositories
                     var users = new List<UserData>();
                     while (reader.Read())
                     {
-                        users.Add(NewArticleFromReader(reader));
+                        users.Add(NewUserDataFromReader(reader));
                     }
                     reader.Close();
                     return users;
@@ -132,7 +132,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                        SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Email,u.City, u.State, 
                                                u.CountryId, c.Name,
-                                               u.Created_at, u.UserLevelId, u.IsActive,
+                                               u.CreateDate, u.UserLevelId, u.IsActive,
                                                ut.Level AS UserLevelName,
                                                ui.ImageUrl, ui.Id as UserImageId, u.AllowMessaging
                                           FROM UserData u
@@ -147,7 +147,7 @@ namespace Scribere.Repositories
 
                     if (reader.Read())
                     {
-                        userData = NewArticleFromReader(reader);
+                        userData = NewUserDataFromReader(reader);
                     }
 
                     reader.Close();
@@ -166,7 +166,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Email,u.City, u.State, 
                                                u.CountryId, c.Name,
-                                               u.Created_at, u.UserLevelId, u.IsActive,
+                                               u.CreateDate, u.UserLevelId, u.IsActive,
                                                ut.Level AS UserLevelName,
                                                ui.ImageUrl, ui.Id as UserImageId, u.AllowMessaging
                                           FROM UserData u
@@ -182,7 +182,7 @@ namespace Scribere.Repositories
 
                     if (reader.Read())
                     {
-                        userData = NewArticleFromReader(reader);
+                        userData = NewUserDataFromReader(reader);
                     }
 
                     reader.Close();
@@ -247,21 +247,15 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                       BEGIN
 
-                        DECLARE @UserImage TABLE (
-                            [UserId] INT,
-                            [ImageUrl] VARCHAR(300)
-                        )
+                        
                                         
                             INSERT INTO UserData (FirebaseUserId, NameFirst, NameLast, Pseudonym, Email, City, State, CountryId,
-                                Created_at, UserLevelId, IsActive, AllowMessaging )
-                            OUTPUT INSERTED.ID, @UserImageUrl INTO @UserImage
+                                CreateDate, UserLevelId, IsActive, AllowMessaging )
+                            OUTPUT INSERTED.ID
                             VALUES (@FirebaseUserId, @NameFirst, @NameLast, @Pseudonym, @Email, @City, @State, @CountryId,
-                                @Created_at, @UserLevelId, @IsActive, @AllowMessaging)
+                                @CreateDate, @UserLevelId, @IsActive, @AllowMessaging)
 
-                        If @UserImageUrl IS NOT NULL
-                            BEGIN
-                                INSERT INTO UserImage (UserId, ImageUrl) SELECT [UserId],[ImageUrl] FROM @UserImage
-                            END
+                        
                       END;
                         ";
                     DbUtils.AddParameter(cmd, "@FirebaseUserId", UserData.FirebaseUserId);
@@ -272,11 +266,11 @@ namespace Scribere.Repositories
                     DbUtils.AddParameter(cmd, "@City", UserData.City);
                     DbUtils.AddParameter(cmd, "@State", UserData.State);
                     DbUtils.AddParameter(cmd, "@CountryId", UserData.CountryId);
-                    DbUtils.AddParameter(cmd, "@Created_at", UserData.Created_at);
+                    DbUtils.AddParameter(cmd, "@CreateDate", UserData.CreateDate);
                     DbUtils.AddParameter(cmd, "@UserLevelId", UserData.UserLevelId);
                     DbUtils.AddParameter(cmd, "@IsActive", UserData.IsActive);
-                    DbUtils.AddParameter(cmd, "@AllowMessagine", UserData.AllowMessaging);
-                    DbUtils.AddParameter(cmd, "@UserImageUrl", UserData.UserImage.ImageUrl);
+                    DbUtils.AddParameter(cmd, "@AllowMessaging", UserData.AllowMessaging);
+                    
 
                     UserData.Id = (int)cmd.ExecuteScalar();
                 }
@@ -341,7 +335,7 @@ namespace Scribere.Repositories
                     DbUtils.AddParameter(cmd, "@City", editUser.City);
                     DbUtils.AddParameter(cmd, "@State", editUser.State);
                     DbUtils.AddParameter(cmd, "@CountryId", editUser.CountryId);
-                    DbUtils.AddParameter(cmd, "@Created_at", editUser.Created_at);
+                    DbUtils.AddParameter(cmd, "@CreateDate", editUser.CreateDate);
                     DbUtils.AddParameter(cmd, "@UserLevelId", editUser.UserLevelId);
                     DbUtils.AddParameter(cmd, "@IsActive", editUser.IsActive);
                     DbUtils.AddParameter(cmd, "@AllowMessagine", editUser.AllowMessaging);

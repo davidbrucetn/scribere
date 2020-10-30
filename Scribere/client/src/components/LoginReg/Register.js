@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { useHistory } from "react-router-dom";
-import { UserDataContext } from "../providers/UserDataProvider";
+import { UserDataContext } from "../../providers/UserDataProvider";
 export default function Register() {
   const history = useHistory();
   const { register } = useContext(UserDataContext);
@@ -12,15 +12,15 @@ export default function Register() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
-  const userLevelId = 2;
+
+
 
   const registerClick = (e) => {
     e.preventDefault();
     if (password && password !== confirmPassword) {
       alert("Passwords don't match. Do better.");
     } else {
-      const userData = { nameLast, nameFirst, pseudonym, email, userLevelId };
-
+      const userData = { nameLast, nameFirst, pseudonym, email };
       register(userData, password)
         .then(() => history.push("/"));
     }

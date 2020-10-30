@@ -2,17 +2,37 @@ import React from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import Header from "./components/Header";
 import ApplicationViews from "./components/ApplicationViews";
-import {UserDataProvider} from "./providers/UserDataProvider";
+import { UserDataProvider } from "./providers/UserDataProvider";
+import { ArticleProvider } from "./providers/ArticleProvider";
+import { FavoriteProvider } from "./providers/FavoriteProvider";
+import { ArticleTagProvider } from "./providers/ArticleTagProvider";
+import { CategoryProvider } from "./providers/CategoryProvider";
+import { VisibilityProvider } from "./providers/VisibilityProvider";
+import { CommentProvider } from "./providers/CommentProvider";
+import { TagProvider } from "./providers/TagProvider";
 import './App.css';
 
 function App() {
   return (
     <Router>
-        <UserDataProvider>
+      <UserDataProvider>
+        <ArticleProvider>
+          <FavoriteProvider>
+            <ArticleTagProvider>
+              <CategoryProvider>
+                <VisibilityProvider>
+                  <CommentProvider>
+                    <TagProvider>
                       <Header />
                       <ApplicationViews />
-
-        </UserDataProvider>
+                    </TagProvider>
+                  </CommentProvider>
+                </VisibilityProvider>
+              </CategoryProvider>
+            </ArticleTagProvider>
+          </FavoriteProvider>
+        </ArticleProvider>
+      </UserDataProvider>
     </Router>
   );
 }

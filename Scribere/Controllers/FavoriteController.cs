@@ -46,17 +46,19 @@ namespace Scribere.Controllers
         [HttpPost("favauthor")]
         public IActionResult Post(FavoriteAuthor favoriteauthor)
         {
+            UserData currentUser = GetCurrentUserData();
+            favoriteauthor.SourceUserId = currentUser.Id;
             _favoriteAuthorRepository.AddFavoriteAuthor(favoriteauthor);
             return CreatedAtAction("Get", new { id = favoriteauthor.Id, favoriteauthor });
         }
 
         // DELETE: api/favorite/favauthor
-        [HttpDelete("/favauthor/{favoriteauthorId}")]
-        public IActionResult DeleteFavAuthor(int favoriteauthorId)
+        [HttpDelete("favauthor/{favoriteUserId}")]
+        public IActionResult DeleteFavAuthor(int favoriteUserId)
         {
             UserData currentUser = GetCurrentUserData();
             int sourceUserId = currentUser.Id;
-            _favoriteAuthorRepository.DeleteFavoriteAuthor(sourceUserId, favoriteauthorId);
+            _favoriteAuthorRepository.DeleteFavoriteAuthor(sourceUserId, favoriteUserId);
             return NoContent();
 
         }
@@ -66,20 +68,22 @@ namespace Scribere.Controllers
         public IActionResult GetFavArticles()
         {
             UserData currentUser = GetCurrentUserData();
-            int sourceUserId = currentUser.Id;
-            return Ok(_favoriteAuthorRepository.GetAll(sourceUserId));
+            int userId = currentUser.Id;
+            return Ok(_favoriteArticleRepository.GetAll(userId));
         }
 
         // POST: api/favorite/favarticle
         [HttpPost("favarticle")]
         public IActionResult Post(FavoriteArticle favoritearticle)
         {
+            UserData currentUser = GetCurrentUserData();
+            favoritearticle.UserId = currentUser.Id;
             _favoriteArticleRepository.AddFavoriteArticle(favoritearticle);
             return CreatedAtAction("Get", new { id = favoritearticle.Id, favoritearticle });
         }
 
         // DELETE: api/favorite/favarticle
-        [HttpDelete("/favarticle/{favoriteArticleId}")]
+        [HttpDelete("favarticle/{favoriteArticleId}")]
         public IActionResult DeleteFavArticle(int favoriteArticleId)
         {
             UserData currentUser = GetCurrentUserData();

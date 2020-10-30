@@ -9,11 +9,22 @@ using System.Threading.Tasks;
 
 namespace Scribere.Repositories
 {
-    public class ArticleTagRepository : BaseRepository, IArticleTagRepository
+    public class ArticleTagRepository : BaseRepository,  IArticleTagRepository
     {
         public ArticleTagRepository(IConfiguration configuration) : base(configuration) { }
 
-        private ArticleTag NewArticleFromReader(SqlDataReader reader)
+        private Tag NewTagFromReader(SqlDataReader reader)
+        {
+            Tag tag = new Tag()
+            {
+                Id = DbUtils.GetInt(reader, "Id"),
+                Title = DbUtils.GetString(reader, "Title")
+
+            };
+            return tag;
+        }
+
+        private ArticleTag NewArticleTagFromReader(SqlDataReader reader)
         {
             ArticleTag articleTag = new ArticleTag()
             {
@@ -25,27 +36,57 @@ namespace Scribere.Repositories
             return articleTag;
         }
 
-        public List<ArticleTag> GetAll(int articleId)
+        public List<Tag> GetAll(int articleId)
         {
             using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, ArticleId, TagId FROM ArticleTag Where ArticleId = @articleId ORDER BY TagId;";
+                    cmd.CommandText = @"SELECT t.Id, t.Title 
+                                        FROM Tag t
+                                       LEFT JOIN ArticleTag at ON t.Id = at.TagId
+                                    Where at.ArticleId = @articleId 
+                                        ORDER BY t.Title;";
 
                     DbUtils.AddParameter(cmd, "@articleId", articleId);
 
                     var reader = cmd.ExecuteReader();
-                    var articleTags = new List<ArticleTag>();
+                    var tags = new List<Tag>();
                     while (reader.Read())
                     {
-                        articleTags.Add(NewArticleFromReader(reader));
+                        tags.Add(NewTagFromReader(reader));
                     }
 
                     reader.Close();
 
-                    return articleTags;
+                    return tags;
+                }
+            }
+
+        }
+
+        public ArticleTag GetArticleTag(int articleTagId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT at.Id, at.ArticleTag, at.TagId 
+                                        FROM ArticleTag at
+                                    Where at.Id = @articleTagId;";
+
+                    DbUtils.AddParameter(cmd, "@articleTagId", articleTagId);
+
+                    var reader = cmd.ExecuteReader();
+                    ArticleTag articleTag = null;
+                    if (reader.Read())
+                    {
+                        articleTag = NewArticleTagFromReader(reader);
+                    }
+                    reader.Close();
+                    return articleTag;
                 }
             }
 
@@ -61,17 +102,16 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO ArticleTag ( TagId, ArticleId ) 
-                                                OUPUT INSERTED.Id
-                                                  VALUES ( @ArticleTagId, @ArticleId ) 
+                                                OUTPUT INSERTED.ID
+                                                  VALUES ( @TagId, @ArticleId ) 
                                         ;";
-                    cmd.Parameters.AddWithValue("@ArticleTagId", articleTag.TagId);
+                    cmd.Parameters.AddWithValue("@TagId", articleTag.TagId);
                     cmd.Parameters.AddWithValue("@ArticleId", articleTag.ArticleId);
 
                     articleTag.Id = (int)cmd.ExecuteScalar();
                 }
             }
         }
-
 
 
 
@@ -84,10 +124,10 @@ namespace Scribere.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        DELETE FROM ArticleTag WHERE Id = @articleTagId;";
+                        DELETE FROM ArticleTag WHERE ArticleId = @articleTagId;";
 
                     cmd.Parameters.AddWithValue("@articleTagId", articleTagId);
-                    
+
 
                     cmd.ExecuteNonQuery();
                 }

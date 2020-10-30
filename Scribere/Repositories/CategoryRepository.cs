@@ -13,7 +13,7 @@ namespace Scribere.Repositories
     {
         public CategoryRepository(IConfiguration configuration) : base(configuration) { }
 
-        private Category NewArticleFromReader(SqlDataReader reader)
+        private Category NewCategoryFromReader(SqlDataReader reader)
         {
             Category category = new Category()
             {
@@ -36,7 +36,7 @@ namespace Scribere.Repositories
                     var categories = new List<Category>();
                     while (reader.Read())
                     {
-                        categories.Add(NewArticleFromReader(reader));
+                        categories.Add(NewCategoryFromReader(reader));
                     }
 
                     reader.Close();
@@ -61,7 +61,7 @@ namespace Scribere.Repositories
                     Category category = null;
                     if (reader.Read())
                     {
-                        category = NewArticleFromReader(reader);
+                        category = NewCategoryFromReader(reader);
                     }
                     reader.Close();
                     return category;
@@ -77,7 +77,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Category ( CategoryId, Type ) 
-                                                OUPUT INSERTED.Id
+                                                OUTPUT INSERTED.ID
                                                   VALUES ( @CategoryId, @Type ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@CategoryId", category.Id);

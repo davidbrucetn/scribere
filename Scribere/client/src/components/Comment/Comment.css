@@ -1,0 +1,7 @@
+.control__group {
+  display: inline-block;
+}
+
+.control__group Button {
+  margin: 0 0.5em;
+}

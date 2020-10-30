@@ -7,6 +7,7 @@ namespace Scribere.Repositories
     {
         void AddArticleTag(ArticleTag articleTag);
         void DeleteArticleTag(int articleTagId);
-        List<ArticleTag> GetAll(int articleId);
+        List<Tag> GetAll(int articleId);
+        ArticleTag GetArticleTag(int articleTagId);
     }
 }

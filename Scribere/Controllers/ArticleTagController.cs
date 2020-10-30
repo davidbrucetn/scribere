@@ -12,23 +12,30 @@ namespace Scribere.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ArticleTagController : ControllerBase
+    public class ArticletagController : ControllerBase
     {
-        
+
         private readonly IArticleTagRepository _articleTagRepository;
         private readonly IUserDataRepository _userDataRepository;
 
-        public ArticleTagController(IArticleTagRepository articleTagRepository, IUserDataRepository userDataRepository)
+        public ArticletagController(IArticleTagRepository articleTagRepository, IUserDataRepository userDataRepository)
         {
             _articleTagRepository = articleTagRepository;
             _userDataRepository = userDataRepository;
         }
-
-        // GET: api/articletag
-        [HttpGet("{articleId}")]
-        public IActionResult Get(int articleId)
+        // GET: api/articletag/article/articleId
+        [HttpGet("article/{articleId}")]
+        public IActionResult GetByArticleId(int articleId)
         {
             return Ok(_articleTagRepository.GetAll(articleId));
+        }
+
+
+        // GET api/articletag/articleTag.id
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            return Ok(_articleTagRepository.GetArticleTag(id));
         }
 
         // POST: api/articletag
@@ -36,8 +43,11 @@ namespace Scribere.Controllers
         public IActionResult Post(ArticleTag articleTag)
         {
             _articleTagRepository.AddArticleTag(articleTag);
-            return CreatedAtAction("Get", new { id = articleTag.Id, articleTag });
+            return CreatedAtAction("Get", new { id = articleTag.Id }, articleTag);
         }
+
+
+
 
         // DELETE: api/articletag
         [HttpDelete("{articleTagId}")]

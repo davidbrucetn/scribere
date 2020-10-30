@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Scribere.Repositories;
-using Scribere.Models;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Scribere.Models;
+using Scribere.Repositories;
+
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -74,15 +75,18 @@ namespace Scribere.Controllers
         [HttpPost]
         public IActionResult Post(Article article)
         {
+            
+            
             _articleRepository.Add(article);
             return CreatedAtAction("Get", new { id = article.Id }, article);
         }
 
+        [Authorize]
         // PUT api/article/articleId
         [HttpPut("{articleId}")]
         public IActionResult Put(int articleId, Article article)
         {
-            var currentUser = GetCurrentUserData();
+            UserData currentUser = GetCurrentUserData();
             if (currentUser.Id != article.UserId)
             {
                 return Unauthorized();

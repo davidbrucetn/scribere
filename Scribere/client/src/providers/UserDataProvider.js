@@ -6,7 +6,7 @@ import "firebase/auth";
 export const UserDataContext = createContext();
 
 export function UserDataProvider(props) {
-  const apiUrl = "/api/UserData";
+  const apiUrl = "/api/userdata";
 
   const UserData = sessionStorage.getItem("UserData");
   const [isLoggedIn, setIsLoggedIn] = useState(UserData != null);
