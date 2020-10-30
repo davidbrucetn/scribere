@@ -12,7 +12,7 @@ export default function Comment({ comment }) {
     const [editedComment, setComment] = useState();
 
 
-    const { updateComment, deleteComment } = useContext(CommentContext);
+    const { updateComment, deleteComment, GetAllCommentsByArticle } = useContext(CommentContext);
     const thisUser = JSON.parse(sessionStorage.UserData)
     const thisUserId = thisUser.id
     const [modal, setModal] = useState(false);
@@ -33,7 +33,9 @@ export default function Comment({ comment }) {
     }
 
     const DeleteComment = () => {
-        deleteComment(comment.id);
+        deleteComment(comment.id)
+            .then(toggle)
+            .then(GetAllCommentsByArticle(comment.articleId))
     }
 
     const goEdit = () => {
@@ -63,7 +65,7 @@ export default function Comment({ comment }) {
                             <button type="button" key={`DeleteRating${comment.id}`} title="Delete" onClick={toggle}><DeleteCommentButton /></button>
                             <button type="button" key={`EditRating${comment.id}`} title="Edit" onClick={goEdit}><EditCommentButton /></button>
                             <Modal isOpen={modal} toggle={toggle}>
-                                <ModalHeader toggle={toggle}>Are you sure you want to delete?</ModalHeader>
+                                <ModalHeader toggle={toggle}>Are you sure you want to delete this comment?</ModalHeader>
                                 <ModalFooter>
                                     <Button color="danger" onClick={DeleteComment}>Delete</Button>{' '}
                                     <Button color="secondary" onClick={toggle}>Cancel</Button>

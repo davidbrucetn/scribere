@@ -5,8 +5,12 @@ import { FavoriteContext } from "../../providers/FavoriteProvider";
 import { ArticleTagContext } from "../../providers/ArticleTagProvider";
 import { TagContext } from "../../providers/TagProvider";
 import { CommentContext } from "../../providers/CommentProvider";
-
+import "../Comment/Comment.css";
 import Comment from "../Comment/Comment";
+import DangerButton from "../Buttons/DangerButton";
+import PrimaryButton from "../Buttons/PrimaryButton";
+import EditCard from "../Cards/EditCard"
+
 import { useForm } from "react-hook-form"
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -31,7 +35,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 
@@ -55,6 +59,8 @@ const ArticleDetail = () => {
     const history = useHistory();
     const thisUser = JSON.parse(sessionStorage.UserData)
 
+    const [comment, setComment] = useState({ text: '', userId: thisUser.id, articleId: '', createDate: '' });
+
 
     // Material-ui Styling
     const secondary = red.A700;
@@ -70,122 +76,37 @@ const ArticleDetail = () => {
         },
         media: {
             height: 140,
-        },
-        ButtonDanger: {
-            backgroundColor: secondary,
-        },
-        ButtonPrimary: {
-
         }
-
     });
 
-    const DangerButton = withStyles({
-        root: {
-            size: 'small',
-            boxShadow: '3px 3px 3px #aaaaaa',
-            textTransform: 'none',
-            fontSize: 16,
-            padding: '6px 12px',
-            border: '1px solid',
-            lineHeight: 1.5,
-            backgroundColor: '#d50000',
-            borderColor: '#d50000',
-            fontFamily: [
-                '-apple-system',
-                'BlinkMacSystemFont',
-                '"Segoe UI"',
-                'Roboto',
-                '"Helvetica Neue"',
-                'Arial',
-                'sans-serif',
-                '"Apple Color Emoji"',
-                '"Segoe UI Emoji"',
-                '"Segoe UI Symbol"',
-            ].join(','),
-            '&:hover': {
-                backgroundColor: 'inherit',
-                borderColor: '#0062cc',
-            },
-            '&:active': {
-                boxShadow: 'none',
-                backgroundColor: '#0062cc',
-                borderColor: '#005cbf',
-            },
-            '&:focus': {
-                boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-            },
-        },
-    })(Button);
+    const handleFieldChange = evt => {
+        const stateToChange = { ...comment };
+        console.log(evt.target)
+        stateToChange[evt.target.id] = evt.target.value;
+        setComment(stateToChange);
+    };
 
-    const PrimaryButton = withStyles({
-        root: {
-            size: 'small',
-            boxShadow: '5px 5px 5px #aaaaaa',
-            textTransform: 'none',
-            fontSize: 16,
-            padding: '6px 12px',
-            border: '1px solid',
-            lineHeight: 1.5,
-            backgroundColor: '#0063cc',
-            borderColor: '#0063cc',
-            fontFamily: [
-                '-apple-system',
-                'BlinkMacSystemFont',
-                '"Segoe UI"',
-                'Roboto',
-                '"Helvetica Neue"',
-                'Arial',
-                'sans-serif',
-                '"Apple Color Emoji"',
-                '"Segoe UI Emoji"',
-                '"Segoe UI Symbol"',
-            ].join(','),
-            '&:hover': {
-                backgroundColor: 'inherit',
-                borderColor: '#0062cc',
-            },
-            '&:active': {
-                boxShadow: 'none',
-                backgroundColor: '#0062cc',
-                borderColor: '#005cbf',
-            },
-            '&:focus': {
-                boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-            },
-        },
-    })(Button);
-
-    const EditCard = withStyles({
-        root: {
-            size: 'small',
-            boxShadow: '10px 10px 5px #aaaaaa',
-            textTransform: 'none',
-            fontSize: 16,
-            padding: '6px 12px',
-            lineHeight: 1.5,
-            backgroundColor: '#f2f3f3',
-            fontFamily: [
-                '-apple-system',
-                'BlinkMacSystemFont',
-                '"Segoe UI"',
-                'Roboto',
-                '"Helvetica Neue"',
-                'Arial',
-                'sans-serif',
-                '"Apple Color Emoji"',
-                '"Segoe UI Emoji"',
-                '"Segoe UI Symbol"',
-            ].join(','),
-
-        },
-    })(Card);
-
+    const classes = useStyles();
     // End Material-UI styling 
 
 
-    const AddComment = () => {
-        history.push(`/article/${id}/comment/add`)
+    const submitComment = (e) => {
+        setIsLoading(true)
+        comment.createDate = new Date();
+        comment.articleId = article.id;
+        addComment(comment)
+            .then(() => {
+                GetAllCommentsByArticle(article.id);
+                setComment({ text: '', userId: thisUser.id, articleId: '', createDate: '' })
+
+                setIsLoading(false)
+
+            })
+    };
+
+
+    const cancelNewComment = () => {
+
     }
 
     const handleDelete = () => {
@@ -193,13 +114,14 @@ const ArticleDetail = () => {
     };
 
     const goEdit = () => {
+        debugger
         if (thisUser.id === article.userId) {
             history.push(`/articles/edit/${article.id}`);
         }
 
     }
 
-    const classes = useStyles();
+
 
 
 
@@ -274,8 +196,6 @@ const ArticleDetail = () => {
             });
     }
 
-
-
     // Tag Form
     let newTags = [];
     const schema = Yup.object().shape({
@@ -323,8 +243,9 @@ const ArticleDetail = () => {
                             .then((articleTagResp) => {
                                 setArticleTags(articleTagResp);
                                 getAllTags();
+                                setIsLoading(false);
                             });
-                    });
+                    })
                 }
 
             })
@@ -360,13 +281,11 @@ const ArticleDetail = () => {
                             isOpen={showDialog} onDismiss={close}
                             onClose={close}
                         >Are you sure you want to delete this article?
-                                    <DialogActions>
-                                <Button onClick={close} color="primary">
-                                    Disagree
-                                                </Button>
-                                <Button onClick={Delete} color="secondary">
-                                    Agree
-                                                </Button>
+                             <DialogActions>
+
+                                <PrimaryButton size="small" handleClick={close}>Disagree</PrimaryButton>
+                                <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={Delete}>Agree</DangerButton>
+
                             </DialogActions>
                         </Dialog>}
                         <Card className={classes.card} style={{ backgroundColor: '#f5f5f5' }}>
@@ -378,7 +297,8 @@ const ArticleDetail = () => {
                                         image={article.articleImage.imageUrl}
                                         title={article.heading}
                                     />}
-                                <EditCard onClick={goEdit}>
+                                <EditCard handleClick={goEdit} >
+
                                     <Typography gutterBottom variant="h5" component="h2">
                                         {article.heading} </Typography>
                                     <Typography gutterBottom variant="h6" >Category: {article.category.type}</Typography>
@@ -387,7 +307,9 @@ const ArticleDetail = () => {
                                     </Typography>
                                     {new Intl.DateTimeFormat('en-US').format(new Date(article.createDate))}
                                     <br />
+
                                 </EditCard>
+
 
                             </CardActionArea>
                             {(articleTags !== null || articleTags !== undefined) && articleTags.map((tag, index) =>
@@ -396,13 +318,13 @@ const ArticleDetail = () => {
                                 </div>
                             )
                             }
-                            <CardActions>
+                            <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 {(article.userId === thisUser.id) && (
                                     <>
-                                        <PrimaryButton size="small" onClick={goEdit}>
+                                        <PrimaryButton size="small" handleClick={goEdit}>
                                             Edit
                                         </PrimaryButton>
-                                        <DangerButton size="small" className={classes.ButtonDanger} onClick={handleDelete}>Delete</DangerButton>
+                                        <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={handleDelete}>Delete</DangerButton>
                                     </>)}
                                 {(thisUser.id !== article.userId) &&
                                     ((favoriteAuthors.find((favAuthor) => { return favAuthor.favoriteUserId === article.userId })) ?
@@ -417,60 +339,77 @@ const ArticleDetail = () => {
                                         :
                                         <PrimaryButton className="btn__favearticle bg-primary" onClick={AddFaveArticle}>Fav Article</PrimaryButton>)}
                             </CardActions>
-                            <div className="wrap-collabsible">
-                                <input id="collapsible" className="toggle" type="checkbox" />
-                                <label htmlFor="collapsible" className="lbl-toggle">Manage Tags</label>
-                                <div className="div__collapsible__tag--form">
-                                    <div className="div__tag__form">
-                                        <Paper
+                            {(article.userId === thisUser.id) && (
+                                <div className="wrap-collapsible">
+                                    <input id="collapsible" className="toggle" type="checkbox" />
+                                    <label htmlFor="collapsible" className="lbl-toggle">Manage Tags</label>
+                                    <div className="div__collapsible__tag--form">
+                                        <div className="div__tag__form">
+                                            <Paper
+                                                component="form"
+                                                onSubmit={handleSubmit(onSubmit)}
+                                            >
+                                                <div className="div__tags__list">
+                                                    {tags.map((tag, i) => {
+                                                        return (
+                                                            <FormCheckBox
+                                                                key={tag.id}
+                                                                name={tag.title}
+                                                                control={control}
+                                                                setValue={setValue}
+                                                                getValues={getValues}
+                                                                value={tag.id}
+                                                                label={tag.title}
+                                                                register={register}
+                                                                defaultValue={articleTags.some(articleTag => articleTag.id === tag.id)}
+                                                            />
+                                                        );
+                                                    })}
+                                                </div>
 
-                                            component="form"
-                                            onSubmit={handleSubmit(onSubmit)}
-                                        >
-                                            <div className="div__tags__list">
-                                                {tags.map((tag, i) => {
-                                                    return (
-                                                        <FormCheckBox
-                                                            key={tag.id}
-                                                            name={tag.title}
-                                                            control={control}
-                                                            setValue={setValue}
-                                                            getValues={getValues}
-                                                            value={tag.id}
-                                                            label={tag.title}
-                                                            register={register}
-                                                            checked={(articleTags !== undefined) ? articleTags.some(articleTag => articleTag.id === tag.id) : false}
-                                                            defaultValue={(articleTags !== undefined) ? articleTags.some(articleTag => articleTag.id === tag.id) : ""}
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    size="large"
+                                                    type="submit"
+                                                > Save </Button>
+                                                <Button
+                                                    variant="contained"
+                                                    color="secondary"
+                                                    size="large"
+                                                    onClick={goBack}
 
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
+                                                > Cancel</Button>
+                                            </Paper>
 
-                                            <Button
-                                                variant="contained"
-                                                color="primary"
-                                                size="large"
-                                                type="submit"
-                                            > Save </Button>
-                                            <Button
-                                                variant="contained"
-                                                color="secondary"
-                                                size="large"
-                                                onClick={goBack}
-
-                                            > Cancel</Button>
-                                        </Paper>
-
+                                        </div>
                                     </div>
                                 </div>
+                            )}
+
+                            <div className="div__comment__form">
+                                <div className="card" style={{ margin: "1em 1em", padding: "1em 1em" }}>
+                                    <h6>Add a Comment</h6>
+                                    <form id="form__comment__new">
+                                        <div className="form__comment__new">
+
+                                            <input className="form-control" id="text" value={comment.text} onChange={handleFieldChange} />
+                                        </div>
+                                    </form>
+
+                                    <Button color="primary" onClick={submitComment}>Add Comment</Button>{" "}
+                                    <Button onClick={cancelNewComment}>Cancel</Button>
+                                </div>
+
                             </div>
+
                         </Card>
                         <Typography component="div" style={{ color: '#212529', backgroundColor: '#fff', height: 'auto', padding: '1em' }} >
 
                             {article.text}
                         </Typography>
                         <Container>
+
                             {comments.map((comment) => <Comment key={`${article.id} - ${comment.id}`} comment={comment} />)}
                         </Container>
                     </Container>
