@@ -105,11 +105,12 @@
   padding: 0 0.5em;
 }
 
-input[type="checkbox"] {
+input.toggle[type="checkbox"] {
   display: none;
 }
 
 .wrap-collabsible {
+  height: auto;
   margin: 1.2rem 0;
 }
 
@@ -155,7 +156,7 @@ input[type="checkbox"] {
 }
 
 .toggle:checked + .lbl-toggle + .div__collapsible__tag--form {
-  max-height: 350px;
+  max-height: 50vh;
 }
 
 .toggle:checked + .lbl-toggle {

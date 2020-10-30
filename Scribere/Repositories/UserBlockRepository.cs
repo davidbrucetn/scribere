@@ -59,7 +59,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO UserBlock ( BlockedUserId, SourceUserId ) 
-                                                OUPUT INSERTED.ID
+                                                OUTPUT INSERTED.ID
                                                   VALUES ( @BlockedUserId, @SourceUserId ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@BlockedUserId", userBlock.BlockedUserId);

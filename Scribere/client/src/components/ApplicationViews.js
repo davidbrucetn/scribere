@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { UserDataContext } from "../providers/UserDataProvider";
-import Home from "../components/Home/Home";
 import Login from "./LoginReg/Login";
 import Register from "./LoginReg/Register";
 import ArticleList from "./Article/ArticleList";
@@ -17,7 +16,7 @@ export default function ApplicationViews() {
     <main>
       <Switch>
         <Route path="/" exact>
-          {isLoggedIn ? <Home /> : <Redirect to="/login" />}
+          {isLoggedIn ? <ArticleList /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/articles/compose" exact>

@@ -77,7 +77,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Visibility ( Type ) 
-                                                OUPUT INSERTED.ID
+                                                OUTPUT INSERTED.ID
                                                   VALUES ( @Type );";
                     cmd.Parameters.AddWithValue("@Type", visibility.Type);
 

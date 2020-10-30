@@ -77,7 +77,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Category ( CategoryId, Type ) 
-                                                OUPUT INSERTED.ID
+                                                OUTPUT INSERTED.ID
                                                   VALUES ( @CategoryId, @Type ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@CategoryId", category.Id);

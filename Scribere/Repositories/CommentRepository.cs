@@ -113,7 +113,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Comment ( ArticleId, UserId, Text, CreateDate ) 
-                                                OUPUT INSERTED.ID
+                                                OUTPUT INSERTED.ID
                                                   VALUES ( @ArticleId, @UserId, @Text, @CreateDate ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@ArticleId", comment.ArticleId);

@@ -81,7 +81,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Book ( ArticleId, ISBN, LCCN, Title, Author ) 
-                                                OUPUT INSERTED.ID
+                                                OUTPUT INSERTED.ID
                                                   VALUES ( @ArticleId, @ISBN, @LCCN, @Title, @Author ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@ArticleId", book.ArticleId);

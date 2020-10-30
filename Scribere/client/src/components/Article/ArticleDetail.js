@@ -1,10 +1,11 @@
 import React, { useEffect, useContext, useState } from "react";
-import { useHistory, useParams, Link } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { ArticleContext } from "../../providers/ArticleProvider";
 import { FavoriteContext } from "../../providers/FavoriteProvider";
 import { ArticleTagContext } from "../../providers/ArticleTagProvider";
 import { TagContext } from "../../providers/TagProvider";
 import { CommentContext } from "../../providers/CommentProvider";
+
 import Comment from "../Comment/Comment";
 import { useForm } from "react-hook-form"
 import * as Yup from 'yup';
@@ -12,9 +13,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import "./ArticleDetail.css";
 
+
 import { Dialog } from "@reach/dialog";
+
+
+import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import "@reach/dialog/styles.css";
+import Checkbox from "@material-ui/core/Checkbox";
 import DialogActions from '@material-ui/core/DialogActions';
 import red from '@material-ui/core/colors/red';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -24,27 +29,24 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Collapse from '@material-ui/core/Collapse'
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { CardColumns } from "reactstrap";
-import { SettingsApplicationsRounded } from "@material-ui/icons";
+
 
 
 
 const ArticleDetail = () => {
 
     const [showDialog, setShowDialog] = React.useState(false);
+    const [articleTags, setArticleTags] = useState([]);
     const open = () => setShowDialog(true);
     const close = () => setShowDialog(false);
 
     const [isLoading, setIsLoading] = useState(true);
     const [article, setArticle] = useState();
     const { getArticlebyId, deleteArticle } = useContext(ArticleContext);
-    const { articleTags, getTagsByArticleId } = useContext(ArticleTagContext);
-    const { tags, getAllTags } = useContext(TagContext)
+    const { getTagsByArticleId, addArticleTag, deleteTagsByArticleId } = useContext(ArticleTagContext);
+    const { tags, getAllTags, addTag } = useContext(TagContext);
     const { addFavoriteArticle, addFavoriteAuthor, removeFavoriteArticleId, removeFavoriteAuthorId, favoriteArticles, favoriteAuthors, getAllFavoriteArticleIds, getAllFavoriteAuthorIds } = useContext(FavoriteContext);
     const { comments, addComment, getCommentById, GetAllCommentsByArticle, updateComment, deleteComment } = useContext(CommentContext);
 
@@ -178,44 +180,13 @@ const ArticleDetail = () => {
 
         },
     })(Card);
-    const TagCard = withStyles({
-        root: {
-            size: 'small',
-            height: '100%',
-            boxShadow: '10px 10px 5px #aaaaaa',
-            textTransform: 'none',
-            fontSize: 16,
-            padding: '6px 12px',
-            lineHeight: 1.5,
-            backgroundColor: '#f2f3f3',
-            fontFamily: [
-                '-apple-system',
-                'BlinkMacSystemFont',
-                '"Segoe UI"',
-                'Roboto',
-                '"Helvetica Neue"',
-                'Arial',
-                'sans-serif',
-                '"Apple Color Emoji"',
-                '"Segoe UI Emoji"',
-                '"Segoe UI Symbol"',
-            ].join(','),
-
-        },
-    })(Card);
 
     // End Material-UI styling 
 
 
-
-    const ManageTags = () => {
-        history.push(`/articletag/${article.id}`)
-    }
-
     const AddComment = () => {
         history.push(`/article/${id}/comment/add`)
     }
-
 
     const handleDelete = () => {
         setShowDialog(true);
@@ -233,6 +204,7 @@ const ArticleDetail = () => {
 
 
     const Delete = () => {
+        setShowDialog(false)
         deleteArticle(article.id)
             .then(() => {
                 history.push("/articles");
@@ -285,24 +257,100 @@ const ArticleDetail = () => {
     }
 
     const GenerateDetail = (id) => {
+
         getArticlebyId(id)
             .then((articleResp) => {
                 setArticle(articleResp);
-                getTagsByArticleId(articleResp.id);
                 getAllFavoriteAuthorIds();
                 getAllFavoriteArticleIds();
                 GetAllCommentsByArticle(id);
-                setIsLoading(false);
+
             })
+
+        getTagsByArticleId(id)
+            .then((articleTagResp) => {
+                setArticleTags(articleTagResp)
+                setIsLoading(false);
+            });
     }
+
+
+
+    // Tag Form
+    let newTags = [];
+    const schema = Yup.object().shape({
+        tag_Ids: Yup.array()
+            .transform(function (o, obj) {
+                return o.filter(o => o);
+            })
+            .min(2, "")
+    });
+
+    const { register, handleSubmit, control, getValues, setValue } = useForm({
+        resolver: yupResolver(schema),
+        defaultValues: Object.fromEntries(
+            tags.map((tag, i) => [
+                `tag.id[${i}]`,
+                articleTags.some(articleTag => articleTag.id === tags[i].id)
+            ])
+        )
+    });
+
+    const goBack = () => {
+        history.push("/articles");
+    }
+
+    const onSubmit = (data, evt) => {
+        Object.keys(data).forEach(key => {
+            if (data[key] !== false) {
+                newTags.push(
+                    {
+                        "articleId": parseInt(article.id),
+                        "tagId": parseInt(data[key])
+                    })
+            };
+        });
+        deleteTagsByArticleId(article.id)
+            .then((p) => {
+                if (!newTags.length > 0) {
+                    history.push(`/articles/${article.id}`)
+                }
+                else {
+                    // eslint-disable-next-line array-callback-return
+                    newTags.map((articleTag) => {
+                        addArticleTag(articleTag);
+                        getTagsByArticleId(article.id)
+                            .then((articleTagResp) => {
+                                setArticleTags(articleTagResp);
+                                getAllTags();
+                            });
+                    });
+                }
+
+            })
+
+
+    };
+
+
+    // End Tag Form
 
 
     useEffect(() => {
         GenerateDetail(id);
+        getAllTags();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
 
     }, [id]);
 
+    useEffect(() => {
+
+    }, [articleTags])
+
     return (
+
+
+
         (!isLoading && article !== undefined) ?
             (
                 <React.Fragment>
@@ -369,16 +417,51 @@ const ArticleDetail = () => {
                                         :
                                         <PrimaryButton className="btn__favearticle bg-primary" onClick={AddFaveArticle}>Fav Article</PrimaryButton>)}
                             </CardActions>
-                            <div class="wrap-collabsible">
-                                <input id="collapsible" class="toggle" type="checkbox" />
-                                <label for="collapsible" class="lbl-toggle">Manage Tags</label>
-                                <div class="div__collapsible__tag--form">
-                                    <div class="div__tag__form">
-                                        <p>
-                                            QUnit is by calling one of the object that are embedded in JavaScript, and faster JavaScript program could also used with
-                                            its elegant, well documented, and functional programming using JS, HTML pages Modernizr is a popular browsers without
-                                            plug-ins. Test-Driven Development.
-                                            </p>
+                            <div className="wrap-collabsible">
+                                <input id="collapsible" className="toggle" type="checkbox" />
+                                <label htmlFor="collapsible" className="lbl-toggle">Manage Tags</label>
+                                <div className="div__collapsible__tag--form">
+                                    <div className="div__tag__form">
+                                        <Paper
+
+                                            component="form"
+                                            onSubmit={handleSubmit(onSubmit)}
+                                        >
+                                            <div className="div__tags__list">
+                                                {tags.map((tag, i) => {
+                                                    return (
+                                                        <FormCheckBox
+                                                            key={tag.id}
+                                                            name={tag.title}
+                                                            control={control}
+                                                            setValue={setValue}
+                                                            getValues={getValues}
+                                                            value={tag.id}
+                                                            label={tag.title}
+                                                            register={register}
+                                                            checked={(articleTags !== undefined) ? articleTags.some(articleTag => articleTag.id === tag.id) : false}
+                                                            defaultValue={(articleTags !== undefined) ? articleTags.some(articleTag => articleTag.id === tag.id) : ""}
+
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
+
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                size="large"
+                                                type="submit"
+                                            > Save </Button>
+                                            <Button
+                                                variant="contained"
+                                                color="secondary"
+                                                size="large"
+                                                onClick={goBack}
+
+                                            > Cancel</Button>
+                                        </Paper>
+
                                     </div>
                                 </div>
                             </div>
@@ -394,8 +477,30 @@ const ArticleDetail = () => {
                 </React.Fragment >
 
             ) : null
+
     )
 
+
 }
+
+export const FormCheckBox = ({
+    name,
+    value,
+    register,
+    control,
+    setValue,
+    getValues,
+    defaultValue
+}) => {
+    return (
+        <FormControlLabel
+            control={<Checkbox defaultChecked={defaultValue} />}
+            name={name}
+            inputRef={register}
+            value={value}
+            label={name}
+        />
+    );
+};
 
 export default ArticleDetail;

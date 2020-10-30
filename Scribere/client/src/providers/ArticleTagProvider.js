@@ -1,19 +1,18 @@
-import React, { useState, createContext, useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { UserDataContext } from "./UserDataProvider";
 
 
 export const ArticleTagContext = createContext();
 
 export const ArticleTagProvider = (props) => {
-    const [articleTags, setArticleTags] = useState([]);
-
     const { getToken } = useContext(UserDataContext);
 
     const apiUrl = "/api/articletag";
 
     const addArticleTag = (articleTag) => {
+
         return getToken().then((token) =>
-            fetch(apiUrl, {
+            fetch(`${apiUrl}`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -24,7 +23,7 @@ export const ArticleTagProvider = (props) => {
     };
 
     const getTagsByArticleId = (articleId) => {
-        getToken().then((token) =>
+        return getToken().then((token) =>
             fetch(`${apiUrl}/article/${articleId}`,
                 {
                     method: "GET",
@@ -32,8 +31,7 @@ export const ArticleTagProvider = (props) => {
                         Authorization: `Bearer ${token}`,
                     },
                 })
-                .then((res) => res.json()))
-            .then(setArticleTags);
+                .then((res) => res.json()));
     }
 
     const deleteTagsByArticleId = (id) => {
@@ -51,7 +49,7 @@ export const ArticleTagProvider = (props) => {
 
     return (
         <ArticleTagContext.Provider value={{
-            articleTags, getTagsByArticleId,
+            getTagsByArticleId,
             addArticleTag, deleteTagsByArticleId
         }}>
             {props.children}

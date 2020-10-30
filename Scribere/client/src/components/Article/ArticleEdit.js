@@ -22,7 +22,6 @@ const ArticleEdit = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const history = useHistory();
-    const thisUser = JSON.parse(sessionStorage.UserData);
 
 
     useEffect(() => {
@@ -32,7 +31,7 @@ const ArticleEdit = () => {
             .then(setArticle);
 
         setIsLoading(false)
-
+        //eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 

@@ -77,7 +77,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"INSERT INTO Tag ( TagId, Title ) 
-                                                OUPUT INSERTED.ID
+                                                OUTPUT INSERTED.ID
                                                   VALUES ( @TagId, @Title ) 
                                         ;";
                     cmd.Parameters.AddWithValue("@TagId", tag.Id);

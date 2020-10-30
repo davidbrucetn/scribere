@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { CommentContext } from "../../providers/CommentProvider";
 import { Button, Modal, ModalHeader, ModalFooter } from "reactstrap";
-import { useHistory } from 'react-router-dom';
 import "./Comment.css";
 
-import { AiOutlineEdit as EditCommentButton, AiOutlineSave } from "react-icons/ai";
+import { AiOutlineEdit as EditCommentButton } from "react-icons/ai";
 import { TiDeleteOutline as DeleteCommentButton } from "react-icons/ti";
 
 
@@ -13,10 +12,9 @@ export default function Comment({ comment }) {
     const [editedComment, setComment] = useState();
 
 
-    const { comments, addComment, getCommentById, GetAllCommentsByArticle, updateComment, deleteComment } = useContext(CommentContext);
+    const { updateComment, deleteComment } = useContext(CommentContext);
     const thisUser = JSON.parse(sessionStorage.UserData)
     const thisUserId = thisUser.id
-    const history = useHistory();
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
 

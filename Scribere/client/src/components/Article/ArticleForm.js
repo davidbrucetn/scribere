@@ -29,7 +29,7 @@ const ArticleForm = () => {
             .then((resp) => {
                 getAllVisibilities();
             })
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
