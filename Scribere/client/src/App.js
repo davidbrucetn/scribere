@@ -9,6 +9,7 @@ import { ArticleTagProvider } from "./providers/ArticleTagProvider";
 import { CategoryProvider } from "./providers/CategoryProvider";
 import { VisibilityProvider } from "./providers/VisibilityProvider";
 import { CommentProvider } from "./providers/CommentProvider";
+import { CountryProvider } from "./providers/CountryProvider";
 import { TagProvider } from "./providers/TagProvider";
 import './App.css';
 
@@ -16,22 +17,24 @@ function App() {
   return (
     <Router>
       <UserDataProvider>
-        <ArticleProvider>
-          <FavoriteProvider>
-            <ArticleTagProvider>
-              <CategoryProvider>
-                <VisibilityProvider>
-                  <CommentProvider>
-                    <TagProvider>
-                      <Header />
-                      <ApplicationViews />
-                    </TagProvider>
-                  </CommentProvider>
-                </VisibilityProvider>
-              </CategoryProvider>
-            </ArticleTagProvider>
-          </FavoriteProvider>
-        </ArticleProvider>
+        <CountryProvider>
+          <ArticleProvider>
+            <FavoriteProvider>
+              <ArticleTagProvider>
+                <CategoryProvider>
+                  <VisibilityProvider>
+                    <CommentProvider>
+                      <TagProvider>
+                        <Header />
+                        <ApplicationViews />
+                      </TagProvider>
+                    </CommentProvider>
+                  </VisibilityProvider>
+                </CategoryProvider>
+              </ArticleTagProvider>
+            </FavoriteProvider>
+          </ArticleProvider>
+        </CountryProvider>
       </UserDataProvider>
     </Router>
   );

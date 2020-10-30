@@ -25,17 +25,15 @@ import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import DialogActions from '@material-ui/core/DialogActions';
-import red from '@material-ui/core/colors/red';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 
 
@@ -50,9 +48,9 @@ const ArticleDetail = () => {
     const [article, setArticle] = useState();
     const { getArticlebyId, deleteArticle } = useContext(ArticleContext);
     const { getTagsByArticleId, addArticleTag, deleteTagsByArticleId } = useContext(ArticleTagContext);
-    const { tags, getAllTags, addTag } = useContext(TagContext);
+    const { tags, getAllTags } = useContext(TagContext);
     const { addFavoriteArticle, addFavoriteAuthor, removeFavoriteArticleId, removeFavoriteAuthorId, favoriteArticles, favoriteAuthors, getAllFavoriteArticleIds, getAllFavoriteAuthorIds } = useContext(FavoriteContext);
-    const { comments, addComment, getCommentById, GetAllCommentsByArticle, updateComment, deleteComment } = useContext(CommentContext);
+    const { comments, addComment, GetAllCommentsByArticle } = useContext(CommentContext);
 
 
     const { id } = useParams();
@@ -63,7 +61,6 @@ const ArticleDetail = () => {
 
 
     // Material-ui Styling
-    const secondary = red.A700;
 
     const useStyles = makeStyles({
         card: {
@@ -81,7 +78,6 @@ const ArticleDetail = () => {
 
     const handleFieldChange = evt => {
         const stateToChange = { ...comment };
-        console.log(evt.target)
         stateToChange[evt.target.id] = evt.target.value;
         setComment(stateToChange);
     };
@@ -114,7 +110,6 @@ const ArticleDetail = () => {
     };
 
     const goEdit = () => {
-        debugger
         if (thisUser.id === article.userId) {
             history.push(`/articles/edit/${article.id}`);
         }
@@ -230,27 +225,34 @@ const ArticleDetail = () => {
                     })
             };
         });
+        setIsLoading(true)
         deleteTagsByArticleId(article.id)
             .then((p) => {
                 if (!newTags.length > 0) {
-                    history.push(`/articles/${article.id}`)
+                    getTagsByArticleId(article.id)
+                        .then((articleTagResp) => {
+                            setArticleTags(articleTagResp);
+                            getAllTags();
+                            setIsLoading(false);
+                        })
+                    history.push(`/articles/${article.id}`);
+
                 }
                 else {
                     // eslint-disable-next-line array-callback-return
                     newTags.map((articleTag) => {
                         addArticleTag(articleTag);
-                        getTagsByArticleId(article.id)
-                            .then((articleTagResp) => {
-                                setArticleTags(articleTagResp);
-                                getAllTags();
-                                setIsLoading(false);
-                            });
-                    })
+                    });
+                    getTagsByArticleId(article.id)
+                        .then((articleTagResp) => {
+                            setArticleTags(articleTagResp);
+                            getAllTags();
+                            setIsLoading(false);
+                        });
+
                 }
 
             })
-
-
     };
 
 
@@ -261,7 +263,6 @@ const ArticleDetail = () => {
         GenerateDetail(id);
         getAllTags();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-
     }, [id]);
 
     useEffect(() => {

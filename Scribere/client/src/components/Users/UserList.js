@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { ArticleContext } from "../../providers/ArticleProvider";
-import Article from "./Article";
+import { UserDataContext } from "../../providers/UserDataProvider";
+import User from "./User";
 
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
@@ -10,14 +10,14 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
 
-const ArticleList = () => {
+const UserDataList = () => {
 
-    const { articles, getAllArticles } = useContext(ArticleContext);
+    const { users, getAllUsers } = useContext(UserDataContext);
     const [IsLoading, setIsLoading] = useState(true)
 
 
-    const generateArticleList = () => {
-        getAllArticles();
+    const generateUserDataList = () => {
+        getAllUsers();
         setIsLoading(false)
     }
 
@@ -42,7 +42,7 @@ const ArticleList = () => {
 
 
     useEffect(() => {
-        generateArticleList();
+        generateUserDataList();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -52,11 +52,11 @@ const ArticleList = () => {
 
                 <GridList cellHeight={180} className={classes.gridList}>
                     <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-                        <ListSubheader component="div">Articles</ListSubheader>
+                        <ListSubheader component="div">Users</ListSubheader>
 
 
-                        {articles.map((article) => (
-                            <Article key={article.id} article={article} generateArticleList={generateArticleList} />
+                        {users.map((userData) => (
+                            <User key={userData.id} userData={userData} generateUserDataList={generateUserDataList} />
                         ))}
                     </GridListTile>
 
@@ -67,4 +67,4 @@ const ArticleList = () => {
 
 }
 
-export default withRouter(ArticleList);
+export default withRouter(UserDataList);

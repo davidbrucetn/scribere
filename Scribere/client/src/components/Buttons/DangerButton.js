@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
 
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';

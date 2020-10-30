@@ -7,6 +7,9 @@ import ArticleList from "./Article/ArticleList";
 import ArticleDetail from "./Article/ArticleDetail";
 import ArticleEdit from "./Article/ArticleEdit";
 import ArticleForm from "./Article/ArticleForm";
+import UserDetail from "./Users/UserDetail";
+import UserList from "./Users/UserList";
+import UserEdit from "./Users/UserEdit";
 
 
 export default function ApplicationViews() {
@@ -33,6 +36,18 @@ export default function ApplicationViews() {
 
         <Route path="/articles/edit/:id" exact >
           {isLoggedIn ? <ArticleEdit /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/users" exact>
+          {isLoggedIn ? <UserList /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/users/:id" exact>
+          {isLoggedIn ? <UserDetail /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/users/edit/:id" exact>
+          {isLoggedIn ? <UserEdit /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/login">

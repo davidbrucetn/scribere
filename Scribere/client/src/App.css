@@ -13,6 +13,12 @@
   }
 }
 
+.div__article__list__container {
+  display: flex;
+  flex-flow: column wrap;
+  margin: 0 3em;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

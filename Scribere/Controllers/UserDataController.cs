@@ -73,7 +73,7 @@ namespace Scribere.Controllers
 
 
 
-        // POST Soft delete, moves User to a "Deactivated" group
+        // POST Soft delete
         [Authorize]
         [HttpDelete("{id}")]
         public ActionResult Delete(int Id)
@@ -109,24 +109,12 @@ namespace Scribere.Controllers
             }
         }
 
-        [HttpPut("edittype")]
-        public ActionResult Edit(UserData user)
+        // PUT api/userdata/userId
+        [HttpPut("{userId}")]
+        public IActionResult Put(int userId, UserData userData)
         {
-            try
-            {
-                _userDataRepository.UpdateUser(user);
-                return NoContent();
-            }
-            catch
-            {
-                user = _userDataRepository.GetById(user.Id);
-                user.Error = true;
-                if (user != null)
-                {
-                    NotFound();
-                }
-                return Forbid();
-            }
+            _userDataRepository.UpdateUser(userData);
+            return NoContent();
         }
 
     }
