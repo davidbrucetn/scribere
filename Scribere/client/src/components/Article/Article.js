@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import { ArticleContext } from "../../providers/ArticleProvider";
 import { useHistory } from "react-router-dom";
-
+import DangerButton from "../Buttons/DangerButton";
+import PrimaryButton from "../Buttons/PrimaryButton";
 
 import { TiDeleteOutline as DeleteArticleButton } from "react-icons/ti";
 import { Modal, ModalHeader, ModalFooter } from "reactstrap";
@@ -80,16 +81,9 @@ const Article = ({ article, generateArticleList }) => {
 
                 </CardContent>
             </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary">
-                    Share
-        </Button>
-                <Button size="small" color="primary" onClick={goDetails}>
-                    Details
-                </Button>
-                <Button size="small" color="secondary" onClick={toggle}>
-                    Delete
-                </Button>
+            <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <PrimaryButton size="small" handleClick={goDetails}>Details</PrimaryButton>
+                <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={toggle}>Delete</DangerButton>
                 {(article.userId === thisUser.id) &&
 
                     <div className="control__group">

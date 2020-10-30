@@ -1,12 +1,47 @@
 .dialog__fade {
+  margin-left: 10em;
+  width: 30vw;
   border-radius: 2em;
+  padding: 2em;
   font-size: large;
-  border: 1px solid lightgrey;
+  border: 1px solid rgb(41, 57, 78);
   opacity: 1;
   animation-name: fadeInOpacity;
   animation-iteration-count: 1;
   animation-timing-function: ease-in;
   animation-duration: 1s;
+  background-image: linear-gradient(
+    bottom,
+    rgb(33, 127, 204) 0%,
+    rgb(97, 155, 203) 100%
+  );
+  background-image: -o-linear-gradient(
+    bottom,
+    rgb(51, 140, 212) 0%,
+    rgb(97, 155, 203) 100%
+  );
+  background-image: -moz-linear-gradient(
+    bottom,
+    rgb(44, 141, 221) 0%,
+    rgb(97, 155, 203) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    bottom,
+    rgb(73, 132, 180) 0%,
+    rgb(97, 155, 203) 100%
+  );
+  background-image: -ms-linear-gradient(
+    bottom,
+    rgb(73, 132, 180) 0%,
+    rgb(97, 155, 203) 100%
+  );
+  background-image: -webkit-gradient(
+    linear,
+    left bottom,
+    left top,
+    color-stop(0, rgb(73, 132, 180)),
+    color-stop(1, rgb(97, 155, 203))
+  );
 }
 
 @keyframes fadeInOpacity {
@@ -105,11 +140,13 @@
   padding: 0 0.5em;
 }
 
+/* Tag Form */
+
 input.toggle[type="checkbox"] {
   display: none;
 }
 
-.wrap-collabsible {
+.wrap-collapsible {
   height: auto;
   margin: 1.2rem 0;
 }
@@ -121,7 +158,7 @@ input.toggle[type="checkbox"] {
   font-size: 1.2rem;
   text-transform: uppercase;
   text-align: center;
-  padding: 1rem;
+  padding: 0.5rem;
   color: #ddd;
   background: #0069ff;
   cursor: pointer;
@@ -175,3 +212,4 @@ input.toggle[type="checkbox"] {
 .div__collapsible__tag--form p {
   margin-bottom: 0;
 }
+/* End Tag Form */

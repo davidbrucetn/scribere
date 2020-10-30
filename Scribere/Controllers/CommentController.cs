@@ -30,10 +30,10 @@ namespace Scribere.Controllers
         }
 
         // GET api/comment/comment.id
-        [HttpGet("{commentId}")]
-        public IActionResult Get(int commentId)
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            return Ok(_commentRepository.GetCommentByCommentId(commentId));
+            return Ok(_commentRepository.GetCommentByCommentId(id));
         }
 
         // GET api/comment/article/articleId
