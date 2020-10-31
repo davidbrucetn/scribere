@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
+import { FilterforBlockedUsers } from "../Helper/DWBUtils";
 import { UserDataContext } from "../../providers/UserDataProvider";
+import { UserBlockContext } from "../../providers/UserBlockProvider";
 import User from "./User";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,16 +11,25 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
-
+let thisUserData = {};
 const UserDataList = () => {
 
-    const { users, getAllUsers } = useContext(UserDataContext);
+    const { users, getAllUsers, getUserById } = useContext(UserDataContext);
+    const { userBlocks, addUserBlock, getAllUserBlocks, deleteUserBlock } = useContext(UserBlockContext);
     const [IsLoading, setIsLoading] = useState(true)
+    thisUserData = JSON.parse(sessionStorage.UserData);
 
 
     const generateUserDataList = () => {
-        getAllUsers();
-        setIsLoading(false)
+        Promise.all([getAllUsers(), getAllUserBlocks()])
+        setIsLoading(false);
+        // getAllUsers();
+        // getAllUserBlocks();
+        // getUserById(thisUserData.id)
+        //     .then(setThisUser => {
+        //         setIsLoading(false)
+        //     })
+
     }
 
     const useStyles = makeStyles((theme) => ({
@@ -40,14 +51,14 @@ const UserDataList = () => {
 
     const classes = useStyles();
 
-
     useEffect(() => {
         generateUserDataList();
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
-        (!IsLoading) ?
+        (!IsLoading && thisUserData !== undefined) ?
             <div className={classes.root}>
 
                 <GridList cellHeight={180} className={classes.gridList}>
@@ -55,8 +66,8 @@ const UserDataList = () => {
                         <ListSubheader component="div">Users</ListSubheader>
 
 
-                        {users.map((userData) => (
-                            <User key={userData.id} userData={userData} generateUserDataList={generateUserDataList} />
+                        {users.map((userData) => ((!FilterforBlockedUsers(userData.id, thisUserData, userBlocks)) &&
+                            <User key={userData.id} userData={userData} generateUserDataList={generateUserDataList} userBlocks={userBlocks} thisUser={thisUserData} />
                         ))}
                     </GridListTile>
 

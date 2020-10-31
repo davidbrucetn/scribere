@@ -34,18 +34,6 @@ export const UserBlockProvider = (props) => {
                 .then(setUserBlocks)
         );
 
-    const updateUserBlock = (userBlock) => {
-        return getToken().then((token) => {
-            fetch(`${apiUrl}/${userBlock.id}`, {
-                method: "PUT",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(userBlock),
-            })
-        });
-    }
 
     const deleteUserBlock = (userBlockId) => {
         return getToken().then((token) => {
@@ -62,7 +50,7 @@ export const UserBlockProvider = (props) => {
     return (
         <UserBlockContext.Provider value={{
             userBlocks, addUserBlock, getAllUserBlocks,
-            updateUserBlock, deleteUserBlock
+            deleteUserBlock
         }}>
             {props.children}
         </UserBlockContext.Provider>

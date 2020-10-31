@@ -41,6 +41,9 @@ const Article = ({ article, generateArticleList }) => {
 
     }
 
+    const goUserDetail = () => {
+        history.push(`/users/${article.userId}`)
+    }
 
     const classes = useStyles();
 
@@ -76,6 +79,7 @@ const Article = ({ article, generateArticleList }) => {
             </CardActionArea>
             <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <PrimaryButton size="small" handleClick={goDetails}>Details</PrimaryButton>
+                <PrimaryButton size="small" handleClick={goUserDetail}>Author Details</PrimaryButton>
                 {(article.userId === thisUser.id) &&
                     <>
                         <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={toggle}>Delete</DangerButton>

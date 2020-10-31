@@ -3,6 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import Header from "./components/Header";
 import ApplicationViews from "./components/ApplicationViews";
 import { UserDataProvider } from "./providers/UserDataProvider";
+import { UserBlockProvider } from "./providers/UserBlockProvider";
 import { ArticleProvider } from "./providers/ArticleProvider";
 import { FavoriteProvider } from "./providers/FavoriteProvider";
 import { ArticleTagProvider } from "./providers/ArticleTagProvider";
@@ -17,24 +18,26 @@ function App() {
   return (
     <Router>
       <UserDataProvider>
-        <CountryProvider>
-          <ArticleProvider>
-            <FavoriteProvider>
-              <ArticleTagProvider>
-                <CategoryProvider>
-                  <VisibilityProvider>
-                    <CommentProvider>
-                      <TagProvider>
-                        <Header />
-                        <ApplicationViews />
-                      </TagProvider>
-                    </CommentProvider>
-                  </VisibilityProvider>
-                </CategoryProvider>
-              </ArticleTagProvider>
-            </FavoriteProvider>
-          </ArticleProvider>
-        </CountryProvider>
+        <UserBlockProvider>
+          <CountryProvider>
+            <ArticleProvider>
+              <FavoriteProvider>
+                <ArticleTagProvider>
+                  <CategoryProvider>
+                    <VisibilityProvider>
+                      <CommentProvider>
+                        <TagProvider>
+                          <Header />
+                          <ApplicationViews />
+                        </TagProvider>
+                      </CommentProvider>
+                    </VisibilityProvider>
+                  </CategoryProvider>
+                </ArticleTagProvider>
+              </FavoriteProvider>
+            </ArticleProvider>
+          </CountryProvider>
+        </UserBlockProvider>
       </UserDataProvider>
     </Router>
   );

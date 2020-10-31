@@ -25,15 +25,15 @@ namespace Scribere.Repositories
             return userBlock;
         }
 
-        public List<UserBlock> GetAll(int sourceUserId)
+        public List<UserBlock> GetAll()
         {
             using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, Type FROM UserBlock Where SourceUserId = @SourceUserId ORDER BY BlockedUserId;";
-                    DbUtils.AddParameter(cmd, "@SourceUserId", sourceUserId);
+                    cmd.CommandText = "SELECT Id, SourceUserId, BlockedUserId FROM UserBlock ORDER BY BlockedUserId;";
+
                     var reader = cmd.ExecuteReader();
                     var userBlocks = new List<UserBlock>();
                     while (reader.Read())
