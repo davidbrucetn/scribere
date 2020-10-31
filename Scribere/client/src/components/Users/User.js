@@ -1,6 +1,9 @@
 import React, { useContext, useState } from "react";
-import { UserDataContext } from "../../providers/UserDataProvider";
 import { useHistory } from "react-router-dom";
+
+import { UserDataContext } from "../../providers/UserDataProvider";
+import { UserBlockContext } from "../../providers/UserBlockProvider";
+import { UserBlockMgr } from "../Helper/DWBUtils";
 import DangerButton from "../Buttons/DangerButton";
 import PrimaryButton from "../Buttons/PrimaryButton";
 
@@ -25,20 +28,40 @@ const useStyles = makeStyles({
     },
 });
 
-const User = ({ userData, getAllUsers }) => {
+const User = ({ userData, generateUserDataList, thisUser }) => {
     const { deleteUser } = useContext(UserDataContext);
+    const { userBlocks, addUserBlock, deleteUserBlock } = useContext(UserBlockContext);
+
 
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
 
-    const thisUser = JSON.parse(sessionStorage.UserData)
-
     const handleDelete = () => {
         toggle();
         deleteUser(userData.id)
-        getAllUsers();
+        generateUserDataList();
 
+    }
+
+
+    const goBlock = () => {
+        const userBlock = {
+            "sourceUserId": thisUser.id,
+            "blockedUserId": userData.id
+        };
+        addUserBlock(userBlock)
+            .then(() => {
+                generateUserDataList();
+            })
+    }
+
+    const goUnBlock = () => {
+        deleteUserBlock(userData.id)
+            .then(() => {
+                generateUserDataList();
+
+            });
     }
 
 
@@ -71,13 +94,17 @@ const User = ({ userData, getAllUsers }) => {
             </CardActionArea>
             <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <PrimaryButton size="small" handleClick={goDetails}>Details</PrimaryButton>
+                {(userData.id !== thisUser.id) && (
+                    (!UserBlockMgr(userData.id, thisUser.id, userBlocks)) ?
+                        <DangerButton DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={goBlock}>Block User</DangerButton> : <DangerButton DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={goUnBlock}>UnBlock User</DangerButton>
+                )
+                }
                 {(userData.id === thisUser.id) &&
                     <>
                         <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={toggle}>Delete</DangerButton>
 
 
                         <div className="control__group">
-                            <button type="button" key={`DeleteRating${userData.id}`} title="Delete" onClick={toggle}><DeleteArticleButton /></button>
                             <Modal isOpen={modal} toggle={toggle}>
                                 <ModalHeader toggle={toggle}>Are you sure you want to delete your account?</ModalHeader>
                                 <ModalFooter>

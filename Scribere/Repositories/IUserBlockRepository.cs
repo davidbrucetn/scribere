@@ -7,6 +7,6 @@ namespace Scribere.Repositories
     {
         void AddUserBlock(UserBlock userBlock);
         void DeleteUserBlock(int SourceUserId, int userBlockId);
-        List<UserBlock> GetAll(int sourceUserId);
+        List<UserBlock> GetAll();
     }
 }

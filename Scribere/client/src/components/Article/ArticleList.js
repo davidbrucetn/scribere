@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { ArticleContext } from "../../providers/ArticleProvider";
+import { UserDataContext } from "../../providers/UserDataProvider";
+import { UserBlockContext } from "../../providers/UserBlockProvider";
+import { FilterforBlockedUsers } from "../Helper/DWBUtils";
 import Article from "./Article";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,15 +12,18 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
-
+let thisUserData = null;
 const ArticleList = () => {
 
+    const { getUserById } = useContext(UserDataContext);
     const { articles, getAllArticles } = useContext(ArticleContext);
+    const { userBlocks, addUserBlock, getAllUserBlocks, deleteUserBlock } = useContext(UserBlockContext);
     const [IsLoading, setIsLoading] = useState(true)
 
+    thisUserData = JSON.parse(sessionStorage.UserData);
 
     const generateArticleList = () => {
-        getAllArticles();
+        Promise.all([getAllArticles(), getAllUserBlocks()])
         setIsLoading(false)
     }
 
@@ -47,7 +53,7 @@ const ArticleList = () => {
     }, []);
 
     return (
-        (!IsLoading) ?
+        (!IsLoading && thisUserData !== null) ?
             <div className={classes.root}>
 
                 <GridList cellHeight={180} className={classes.gridList}>
@@ -55,8 +61,9 @@ const ArticleList = () => {
                         <ListSubheader component="div">Articles</ListSubheader>
 
 
-                        {articles.map((article) => (
-                            <Article key={article.id} article={article} generateArticleList={generateArticleList} />
+                        {articles.map((article) => ((!FilterforBlockedUsers(article.userId, thisUserData, userBlocks)) &&
+                            <Article key={article.id} article={article} generateArticleList={generateArticleList}
+                            />
                         ))}
                     </GridListTile>
 

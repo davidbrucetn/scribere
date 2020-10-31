@@ -14,7 +14,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 const ArticleForm = () => {
     const { addArticle } = useContext(ArticleContext);
-    const [article, setArticle] = useState({ heading: "", text: "", createDate: "", categoryId: 0, userId: 0 })
+    const [article, setArticle] = useState({ heading: "", text: "", createDate: "", categoryId: 1, userId: 0, visibilityId: 2 })
     const { category, getAllCategories } = useContext(CategoryContext);
     const { visibilities, getAllVisibilities } = useContext(VisibilityContext)
     const [visibilityValue, setVisibilityValue] = React.useState(2);
@@ -40,6 +40,8 @@ const ArticleForm = () => {
         if (evt.target.type === "radio") {
             setVisibilityValue(evt.target.value);
             stateToChange["visibilityId"] = parseInt(evt.target.value);
+        } else if (evt.target.id === "categoryId") {
+            stateToChange[evt.target.id] = parseInt(evt.target.value)
         } else {
             stateToChange[evt.target.id] = evt.target.value
         }
@@ -50,11 +52,11 @@ const ArticleForm = () => {
         setIsLoading(true)
         article.createDate = new Date();
         article.userId = thisUser.id;
-
         article.categoryId = parseInt(article.categoryId);
         article.articleImage = {
             "ImageUrl": ""
         };
+
         addArticle(article).then((a) => {
             // history.push(`/articles/${a.id}`);
             history.push(`/articles`);

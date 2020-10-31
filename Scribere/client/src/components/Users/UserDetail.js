@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { UserDataContext } from "../../providers/UserDataProvider";
 import { useHistory, useParams } from 'react-router-dom';
+
+import { UserDataContext } from "../../providers/UserDataProvider";
+import { UserBlockContext } from "../../providers/UserBlockProvider";
+import { UserBlockMgr } from "../Helper/DWBUtils";
+
 import DangerButton from "../Buttons/DangerButton";
 import PrimaryButton from "../Buttons/PrimaryButton";
 
@@ -25,17 +29,24 @@ const useStyles = makeStyles({
     },
 });
 
+// let thisUserData = {};
+
 const UserDetail = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [userData, setUserData] = useState({});
+    const [thisUserData, setThisUserData] = useState(JSON.parse(sessionStorage.UserData))
     const { deleteUser, getAllUsers, getUserById } = useContext(UserDataContext);
+    const { userBlocks, addUserBlock, deleteUserBlock, getAllUserBlocks } = useContext(UserBlockContext);
+
+    // thisUserData = JSON.parse(sessionStorage.UserData);
 
     const { id } = useParams();
 
 
 
     const generateUserDetail = (id) => {
+        getAllUserBlocks();
         getUserById(id)
             .then(setUserData)
         setIsLoading(false);
@@ -46,10 +57,9 @@ const UserDetail = () => {
 
 
 
+
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
-
-    const thisUser = JSON.parse(sessionStorage.UserData)
 
     const handleDelete = () => {
         toggle();
@@ -59,10 +69,29 @@ const UserDetail = () => {
     }
 
     const goEdit = () => {
-        if (thisUser.id === userData.id) {
+        if (thisUserData.id === userData.id) {
             history.push(`/users/edit/${userData.id}`);
         }
 
+    }
+
+    const goBlock = () => {
+        const userBlock = {
+            "sourceUserId": thisUserData.id,
+            "blockedUserId": userData.id
+        };
+        addUserBlock(userBlock)
+            .then(() => {
+                generateUserDetail(id);
+            })
+    }
+
+    const goUnBlock = () => {
+        deleteUserBlock(userData.id)
+            .then(() => {
+                generateUserDetail(id);
+
+            });
     }
 
 
@@ -93,15 +122,20 @@ const UserDetail = () => {
                         <Typography gutterBottom variant="h6" component="h6">State: {userData.state}</Typography>
                     </CardContent>
                 </CardActionArea>
+
                 <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    {(userData.id === thisUser.id) &&
+                    {(userData.id !== thisUserData.id) && (
+                        (!UserBlockMgr(userData.id, thisUserData.id, userBlocks)) ?
+                            <DangerButton DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={goBlock}>Block User</DangerButton> : <DangerButton DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={goUnBlock}>UnBlock User</DangerButton>
+                    )
+                    }
+                    {(userData.id === thisUserData.id) &&
                         <>
                             <PrimaryButton size="small" handleClick={goEdit}>Edit</PrimaryButton>
                             <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={toggle}>Delete</DangerButton>
 
 
                             <div className="control__group">
-                                <button type="button" key={`DeleteUser${userData.id}`} title="Delete" onClick={toggle}><DeleteArticleButton /></button>
                                 <Modal isOpen={modal} toggle={toggle}>
                                     <ModalHeader toggle={toggle}>Are you sure you want to delete your account?</ModalHeader>
                                     <ModalFooter>
@@ -114,7 +148,7 @@ const UserDetail = () => {
                     }
                 </CardActions>
 
-            </Card> : null
+            </Card > : null
 
     )
 }

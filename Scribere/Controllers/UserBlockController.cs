@@ -36,7 +36,7 @@ namespace Scribere.Controllers
         {
             UserData currentUser = GetCurrentUserData();
             int userId = currentUser.Id;
-            return Ok(_userBlockRepository.GetAll(userId));
+            return Ok(_userBlockRepository.GetAll());
         }
 
         // POST: api/userblock
@@ -57,5 +57,7 @@ namespace Scribere.Controllers
             return NoContent();
 
         }
+
+
     }
 }
