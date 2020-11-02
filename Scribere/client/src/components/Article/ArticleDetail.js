@@ -69,10 +69,23 @@ const ArticleDetail = () => {
             paddingBottom: 5,
             marginBottom: 3,
             marginTop: 3,
-            paddingTop: 3
+            paddingTop: 3,
+            paddingLeft: '2em'
         },
         media: {
-            height: 140,
+            height: '20vh',
+            width: '20vw',
+            maxWidth: '40%',
+            borderRadius: '.3em',
+            boxShadow: '10px 10px 15px #aaaaaa',
+            paddingBottom: '2em',
+        },
+        Typography: {
+            fontFamily: [
+                'Merriweather',
+                'serif'
+            ].join(','),
+            whiteSpace: 'pre-line'
         }
     });
 
@@ -300,10 +313,10 @@ const ArticleDetail = () => {
                                     /> : null}
                                 <EditCard handleClick={goEdit} >
 
-                                    <Typography gutterBottom variant="h5" component="h2">
+                                    <Typography className={classes.Typography} gutterBottom variant="h5" component="h2">
                                         {article.heading} </Typography>
-                                    <Typography gutterBottom variant="h6" >Category: {article.category.type}</Typography>
-                                    <Typography gutterBottom variant="h6" >
+                                    <Typography className={classes.Typography} gutterBottom variant="h6" >Category: {article.category.type}</Typography>
+                                    <Typography className={classes.Typography} gutterBottom variant="h6" >
                                         Author: {article.userData.pseudonym}
                                     </Typography>
                                     {new Intl.DateTimeFormat('en-US').format(new Date(article.createDate))}
@@ -405,7 +418,7 @@ const ArticleDetail = () => {
                             </div>
 
                         </Card>
-                        <Typography component="div" style={{ color: '#212529', backgroundColor: '#fff', height: 'auto', padding: '1em' }} >
+                        <Typography className={classes.Typography} component="div" style={{ color: '#212529', backgroundColor: '#fff', height: 'auto', padding: '1em' }} >
 
                             {article.text}
                         </Typography>
