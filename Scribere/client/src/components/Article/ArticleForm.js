@@ -16,7 +16,7 @@ const ArticleForm = () => {
     const { addArticle } = useContext(ArticleContext);
     const [article, setArticle] = useState({ heading: "", text: "", createDate: "", categoryId: 1, userId: 0, visibilityId: 2 })
     const [articleImage, setArticleImage] = useState({ imageUrl: "" })
-    const { category, getAllCategories } = useContext(CategoryContext);
+    const { category, categories, getAllCategories } = useContext(CategoryContext);
     const { visibilities, getAllVisibilities } = useContext(VisibilityContext)
     const [visibilityValue, setVisibilityValue] = React.useState(2);
     const [isLoading, setIsLoading] = useState(false);
@@ -109,7 +109,7 @@ const ArticleForm = () => {
                                 value={article.categoryId}
                             >
 
-                                {category.map(aCategory =>
+                                {categories.map(aCategory =>
                                     <option value={aCategory.id} key={aCategory.id}>{aCategory.type}</option>
                                 )}
                             </select>

@@ -218,7 +218,6 @@ namespace Scribere.Repositories
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
                               LEFT JOIN Visibility v on v.Id = a.VisibilityId
                         WHERE u.IsActive = 1 
-                          AND a.VisibilityId = 2
                           AND a.UserId = @articleUserId
                      ORDER BY a.CreateDate DESC;";
 

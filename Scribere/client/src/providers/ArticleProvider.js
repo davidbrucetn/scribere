@@ -63,7 +63,9 @@ export const ArticleProvider = (props) => {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then(setArticles));
+                .then(myArticleArray => {
+                    return myArticleArray;
+                }));
     };
 
     const getArticlebyId = (id) => {

@@ -17,7 +17,7 @@ const ArticleEdit = () => {
     const { updateArticle, getArticlebyId } = useContext(ArticleContext);
     const [article, setArticle] = useState({ heading: "", text: "", createDate: "", categoryId: 0, userId: 0 })
     const [articleImage, setArticleImage] = useState({ articleId: "", imageUrl: "" })
-    const { category, getAllCategories } = useContext(CategoryContext);
+    const { category, categories, getAllCategories } = useContext(CategoryContext);
     const { visibilities, getAllVisibilities } = useContext(VisibilityContext)
     const { id } = useParams();
     const [isLoading, setIsLoading] = useState(true);
@@ -123,7 +123,7 @@ const ArticleEdit = () => {
                                     onChange={handleFieldChange}
                                     value={article.categoryId}
                                 >
-                                    {category.map(aCategory =>
+                                    {categories.map(aCategory =>
                                         <option value={aCategory.id} key={aCategory.id}>{aCategory.type}</option>
                                     )}
                                 </select>
