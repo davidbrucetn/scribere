@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { withRouter, useParams } from "react-router-dom";
 import { ArticleContext } from "../../providers/ArticleProvider";
-import { UserDataContext } from "../../providers/UserDataProvider";
 import { UserBlockContext } from "../../providers/UserBlockProvider";
 import { FilterforBlockedUsers } from "../Helper/DWBUtils";
 import Article from "./Article";
@@ -10,23 +9,20 @@ import "./ArticleList.css";
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { Hidden } from "@material-ui/core";
 
 let thisUserData = null;
 let listFilter = "All";
 const ArticleList = (props) => {
-    const [IsLoading, setIsLoading] = useState(true)
-    const { userBlocks, addUserBlock, getAllUserBlocks, deleteUserBlock } = useContext(UserBlockContext);
-    const { articles, getAllArticles } = useContext(ArticleContext);
-    const [articlesList, setArticlesList] = useState([]);
-
+    const [IsLoading, setIsLoading] = useState(true);
+    const [articles, setArticles] = useState([]);
+    const { userBlocks, getAllUserBlocks } = useContext(UserBlockContext);
+    const { getAllArticles } = useContext(ArticleContext);
 
     const params = useParams();
 
     thisUserData = JSON.parse(sessionStorage.UserData);
-
 
 
     const generateArticleList = () => {
@@ -34,8 +30,15 @@ const ArticleList = (props) => {
             listFilter = "Self";
         } else if (params.categoryType !== undefined) {
             listFilter = params.categoryType;
+        } else {
+            listFilter = "All"
         }
-        Promise.all([getAllArticles(listFilter), getAllUserBlocks()]);
+
+        getAllUserBlocks();
+        getAllArticles(listFilter)
+            .then((articleResp) => {
+                setArticles([...articleResp])
+            })
         setIsLoading(false)
     }
 
@@ -44,7 +47,7 @@ const ArticleList = (props) => {
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'space-around',
-            overflow: 'hidden',
+            overflow: 'Hidden',
             backgroundColor: theme.palette.background.paper,
         },
         gridList: {
@@ -61,13 +64,12 @@ const ArticleList = (props) => {
 
 
     useEffect(() => {
-        if (articles !== [...articles]) {
-            generateArticleList();
-        }
+        generateArticleList();
+
 
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [props.location.pathname, listFilter]);
+    }, [props.location.pathname]);
 
     return (
         (!IsLoading && thisUserData !== null) ?

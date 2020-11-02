@@ -58,7 +58,6 @@ const ArticleEdit = () => {
     const handleFieldChange = evt => {
         const stateToChange = { ...article }
         if (evt.target.type === "radio") {
-            // setVisibilityValue(evt.target.value);
             stateToChange["visibilityId"] = parseInt(evt.target.value);
         } else if (evt.target.id === "articleImage.imageUrl") {
             stateToChange[evt.target.id] = evt.target.value;

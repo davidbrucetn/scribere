@@ -47,7 +47,7 @@ export default function Comment({ comment, article }) {
     }
 
     useState(() => {
-        console.log(((comment.userId === thisUserId) || (article.userId === thisUserId)) ? "true" : "false")
+
     }, [editStatus])
 
 
