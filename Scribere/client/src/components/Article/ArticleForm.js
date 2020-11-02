@@ -15,6 +15,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 const ArticleForm = () => {
     const { addArticle } = useContext(ArticleContext);
     const [article, setArticle] = useState({ heading: "", text: "", createDate: "", categoryId: 1, userId: 0, visibilityId: 2 })
+    const [articleImage, setArticleImage] = useState({ imageUrl: "" })
     const { category, getAllCategories } = useContext(CategoryContext);
     const { visibilities, getAllVisibilities } = useContext(VisibilityContext)
     const [visibilityValue, setVisibilityValue] = React.useState(2);
@@ -42,10 +43,15 @@ const ArticleForm = () => {
             stateToChange["visibilityId"] = parseInt(evt.target.value);
         } else if (evt.target.id === "categoryId") {
             stateToChange[evt.target.id] = parseInt(evt.target.value)
+        } else if (evt.target.id === "articleImage.imageUrl") {
+            stateToChange[evt.target.id] = evt.target.value;
+            setArticleImage(article.articleImage = { "imageUrl": evt.target.value })
+            setArticle(article)
         } else {
             stateToChange[evt.target.id] = evt.target.value
         }
-        setArticle(stateToChange)
+        (evt.target.id !== "articleImage.imageUrl") &&
+            setArticle(stateToChange)
     }
 
     const submit = (e) => {
@@ -53,9 +59,13 @@ const ArticleForm = () => {
         article.createDate = new Date();
         article.userId = thisUser.id;
         article.categoryId = parseInt(article.categoryId);
-        article.articleImage = {
-            "ImageUrl": ""
-        };
+        if (article.articleImage !== undefined) {
+            article.articleImage.articleId = article.id;
+        } else {
+            article.articleImage = {
+                "ImageUrl": ""
+            };
+        }
 
         addArticle(article).then((a) => {
             // history.push(`/articles/${a.id}`);
@@ -79,6 +89,15 @@ const ArticleForm = () => {
                                 className="form-control"
                                 onChange={handleFieldChange}
                                 value={article.heading}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <FormLabel component="legend">Article Image URL</FormLabel>
+                            <input
+                                id="articleImage.imageUrl"
+                                className="form-control"
+                                onChange={handleFieldChange}
+                                value={articleImage.imageUrl}
                             />
                         </div>
                         <div className="form-group">

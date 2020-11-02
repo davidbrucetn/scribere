@@ -5,6 +5,8 @@ export const CategoryContext = React.createContext();
 
 export const CategoryProvider = (props) => {
     const [category, setCategory] = useState([]);
+    const [categories, setCategories] = useState([]);
+
 
     const { getToken } = useContext(UserDataContext);
 
@@ -45,7 +47,7 @@ export const CategoryProvider = (props) => {
                 }
             })
                 .then((res) => res.json())
-                .then(setCategory));
+                .then(setCategories))
     };
 
     const deleteCategory = (id) => {
@@ -76,7 +78,7 @@ export const CategoryProvider = (props) => {
 
     return (
         <CategoryContext.Provider value={{
-            category, addCategory, getAllCategories,
+            category, categories, addCategory, getAllCategories,
             getCategoryById, deleteCategory, updateCategory
         }}>
             {props.children}

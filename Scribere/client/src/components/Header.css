@@ -11,7 +11,7 @@ navbar-default {
   font-weight: 800;
   background-color: transparent;
 }
-.navbar-default .dropdown-menu {
+.navbar-default {
   background-color: #ffffff;
 }
 .navbar-default .dropdown-menu li > a {
@@ -137,10 +137,14 @@ h5 {
   border-width: 0;
 }
 .dropdown-menu {
-  background-color: #f4f4f4;
+  background-color: #443d3d;
   border-color: #f0f0f0;
   border-radius: 0;
   margin-top: -1px;
+}
+
+.dropdown-item {
+  background-color: #443d3d;
 }
 /* end theme */
 

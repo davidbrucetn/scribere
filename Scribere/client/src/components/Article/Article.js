@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ArticleContext } from "../../providers/ArticleProvider";
 import { useHistory } from "react-router-dom";
+import { Spinner } from "reactstrap";
 import DangerButton from "../Buttons/DangerButton";
 import PrimaryButton from "../Buttons/PrimaryButton";
 
@@ -21,7 +22,12 @@ const useStyles = makeStyles({
         maxWidth: 345,
     },
     media: {
-        height: 140,
+
+        height: '100%',
+        width: '40%',
+        maxWidth: '40%',
+        borderRadius: '.3em',
+        boxShadow: '10px 10px 15px #aaaaaa'
     },
 });
 
@@ -56,20 +62,22 @@ const Article = ({ article, generateArticleList }) => {
 
     return (
         <Card>
+
             <CardActionArea onClick={goDetails}>
-                {(article.articleImage !== null) &&
+                {(article.articleImage.imageUrl !== "") ?
                     <CardMedia
+                        component="img"
                         className={classes.media}
                         image={article.articleImage.imageUrl}
                         title={article.heading}
-                    />}
+                    /> : null}
                 <CardContent>
 
                     <Typography gutterBottom variant="h5" component="h2">
                         {article.heading} </Typography>
                     <Typography gutterBottom variant="h5" component="h2">Category: {article.category.type}</Typography>
                     <Typography gutterBottom variant="h5" component="h3">
-                        Nom de Plume: {article.userData.pseudonym}
+                        Author: {article.userData.pseudonym}
                     </Typography>
                     {new Intl.DateTimeFormat('en-US').format(new Date(article.createDate))}
 

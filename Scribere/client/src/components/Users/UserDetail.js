@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from 'react-router-dom';
 
+import "./UserDetail.css";
 import { UserDataContext } from "../../providers/UserDataProvider";
 import { UserBlockContext } from "../../providers/UserBlockProvider";
 import { UserBlockMgr } from "../Helper/DWBUtils";
@@ -14,6 +15,7 @@ import { Modal, ModalHeader, ModalFooter } from "reactstrap";
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
+import CardMedia from '@material-ui/core/CardMedia';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
@@ -25,8 +27,17 @@ const useStyles = makeStyles({
         maxWidth: 345,
     },
     media: {
-        height: 140,
+        height: 250,
+        width: 250,
+        borderRadius: '50%',
+        boxShadow: '10px 10px 15px #aaaaaa'
     },
+    Typography: {
+        fontFamily: [
+            'Merriweather',
+            'serif'
+        ].join(','),
+    }
 });
 
 // let thisUserData = {};
@@ -34,7 +45,7 @@ const useStyles = makeStyles({
 const UserDetail = () => {
 
     const [isLoading, setIsLoading] = useState(true);
-    const [userData, setUserData] = useState({});
+    const [userData, setUserData] = useState();
     const [thisUserData, setThisUserData] = useState(JSON.parse(sessionStorage.UserData))
     const { deleteUser, getAllUsers, getUserById } = useContext(UserDataContext);
     const { userBlocks, addUserBlock, deleteUserBlock, getAllUserBlocks } = useContext(UserBlockContext);
@@ -48,8 +59,11 @@ const UserDetail = () => {
     const generateUserDetail = (id) => {
         getAllUserBlocks();
         getUserById(id)
-            .then(setUserData)
-        setIsLoading(false);
+            .then((u) => {
+                setUserData(u);
+                setIsLoading(false)
+            })
+
 
     }
 
@@ -114,12 +128,18 @@ const UserDetail = () => {
 
             <Card>
                 <CardActionArea onClick={goDetails}>
+                    {(userData.userImage.imageUrl !== "" && userData.userImage !== null) ?
+                        <CardMedia
+                            className={classes.media}
+                            image={userData.userImage.imageUrl}
 
+                        /> : null}
                     <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">{userData.nameFirst} {userData.nameLast} </Typography>
-                        <Typography gutterBottom variant="h5" component="h3">Nom de Plume: {userData.pseudonym}</Typography>
-                        <Typography gutterBottom variant="h6" component="h6">City: {userData.city}</Typography>
-                        <Typography gutterBottom variant="h6" component="h6">State: {userData.state}</Typography>
+                        <Typography className={classes.Typography} gutterBottom variant="h5" component="h2">{userData.nameFirst} {userData.nameLast} </Typography>
+                        <Typography className={classes.Typography} gutterBottom variant="h5" component="h3"> {userData.pseudonym}</Typography>
+                        <Typography className={classes.Typography} gutterBottom variant="h6" component="h6"> {userData.city} {userData.state}</Typography>
+                        <Typography className={classes.Typography} gutterBottom variant="h6" component="h6"> {userData.country.name}</Typography>
+                        <Typography className={classes.Typography} gutterBottom variant="body1" component="body1">Bio: {userData.bio}</Typography>
                     </CardContent>
                 </CardActionArea>
 

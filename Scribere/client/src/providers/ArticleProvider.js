@@ -2,15 +2,18 @@ import React, { useState, createContext, useContext } from "react";
 import { UserDataContext } from "./UserDataProvider";
 
 export const ArticleContext = createContext();
-
+let orgArray = [];
 export const ArticleProvider = (props) => {
+
     const [articles, setArticles] = useState([]);
 
     const { getToken } = useContext(UserDataContext);
 
     const apiUrl = "/api/article";
 
-    const getAllArticles = () => {
+    const getAllArticles = (ALFilter) => {
+
+        const thisUser = JSON.parse(sessionStorage.UserData);
         return getToken().then((token) =>
             fetch(apiUrl, {
                 method: "GET",
@@ -18,8 +21,29 @@ export const ArticleProvider = (props) => {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then(setArticles));
+                .then(articleArray => {
+                    orgArray = [...articles]
+                    if (ALFilter !== undefined || ALFilter !== null) {
+                        if (ALFilter === "Self") {
+                            orgArray = articleArray.filter(article => article.userId === thisUser.id);
+                        } else if (ALFilter === "All") {
+                            orgArray = articleArray;
+                        } else {
+
+                            orgArray = articleArray.filter(article => article.category.type === ALFilter);
+                        }
+                    } else {
+                        orgArray = articleArray;
+                    }
+                    setArticles(orgArray);
+
+
+                }))
+
     };
+
+
+
 
     const getFavoriteArticles = () => {
         return getToken().then((token) =>

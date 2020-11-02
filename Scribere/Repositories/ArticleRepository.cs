@@ -46,6 +46,11 @@ namespace Scribere.Repositories
 
                 },
                 VisibilityId = DbUtils.GetInt(reader, "VisibilityId"),
+                Visibility = new Visibility()
+                {
+                    Id = DbUtils.GetInt(reader, "VisibilityId"),
+                    Type = DbUtils.GetString(reader, "VisibilityType"),
+                },
             };
             if (DbUtils.IsNotDbNull(reader, "ArticleImageId"))
             {
@@ -56,7 +61,15 @@ namespace Scribere.Repositories
                     ImageUrl = DbUtils.GetString(reader, "ArticleImageUrl")
                 };
                 Article.ArticleImage = ArticleImage;
-            };
+            } else
+            {
+                ArticleImage = new ArticleImage()
+                {
+                    ArticleId = DbUtils.GetInt(reader, "Id"),
+                    ImageUrl = ""
+                };
+                Article.ArticleImage = ArticleImage;
+            }
             
             return Article;
 
@@ -79,13 +92,15 @@ namespace Scribere.Repositories
                               u.NameFirst, u.NameLast, u.Pseudonym, 
                               u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
                               u.UserLevelId, 
-                              ul.[Level]
+                              ul.[Level],
+                              v.Type as VisibilityType
                          FROM Article a
                               LEFT JOIN Category c ON a.CategoryId = c.id
                               LEFT JOIN UserData u ON a.UserId = u.id
                               LEFT JOIN UserLevel ul ON u.UserLevelId = ul.id
 							  LEFT JOIN UserImage ui ON u.Id = ui.UserId
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
+                              LEFT JOIN Visibility v on v.Id = a.VisibilityId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
                      ORDER BY a.CreateDate DESC;";
@@ -121,7 +136,8 @@ namespace Scribere.Repositories
                               u.NameFirst, u.NameLast, u.Pseudonym, 
                               u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
                               u.UserLevelId, 
-                              ul.[Level]
+                              ul.[Level],
+                              v.Type as VisibilityType
                          FROM Article a
                               LEFT JOIN Category c ON a.CategoryId = c.id
                               LEFT JOIN UserData u ON a.UserId = u.id
@@ -130,6 +146,7 @@ namespace Scribere.Repositories
                               LEFT JOIN FavoriteAuthor fa on u.id = fa.FavoriteUserId
                               LEFT JOIN FavoriteArticle far on u.id = far.ArticleId
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
+                              LEFT JOIN Visibility v on v.Id = a.VisibilityId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
                           AND a.CreateDate < SYSDATETIME()
@@ -169,13 +186,15 @@ namespace Scribere.Repositories
                               u.NameFirst, u.NameLast, u.Pseudonym, 
                               u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
                               u.UserLevelId, 
-                              ul.[Level]
+                              ul.[Level],
+                              v.Type as VisibilityType
                          FROM Article a
                               LEFT JOIN Category c ON a.CategoryId = c.id
                               LEFT JOIN UserData u ON a.UserId = u.id
                               LEFT JOIN UserImage ui on a.UserId = ui.UserId
                               LEFT JOIN UserLevel ul ON u.UserLevelId = ul.id
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
+                              LEFT JOIN Visibility v on v.Id = a.VisibilityId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
                           AND a.UserId = @articleUserId
@@ -213,13 +232,15 @@ namespace Scribere.Repositories
                               u.NameFirst, u.NameLast, u.Pseudonym, 
                               u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
                               u.UserLevelId, 
-                              ul.[Level]
+                              ul.[Level],
+                              v.Type as VisibilityType
                          FROM Article a
                               LEFT JOIN Category c ON a.CategoryId = c.id
                               LEFT JOIN UserData u ON a.UserId = u.id
                               LEFT JOIN UserImage ui on a.UserId = ui.UserId
                               LEFT JOIN UserLevel ul ON u.UserLevelId = ul.id
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
+                              LEFT JOIN Visibility v on v.Id = a.VisibilityId
                         WHERE u.IsActive = 1
                           AND a.id = @articleId;";
 
@@ -255,10 +276,10 @@ namespace Scribere.Repositories
                             OUTPUT INSERTED.ID, @ArticleImageUrl INTO @ArticleImage
                                VALUES (@UserId, @Heading, @Text, @CreateDate, @CategoryId, @VisibilityId)
                         
-                        If @ArticleImageUrl IS NOT NULL
-                            BEGIN
-                             INSERT INTO ArticleImage (ArticleId,ImageUrl) SELECT [ArticleId],[ImageUrl] FROM @ArticleImage WHERE [ImageUrl] <> NULL AND [ImageUrl] <> '';
-                            END 
+                       
+                             INSERT INTO ArticleImage (ArticleId,ImageUrl) SELECT [ArticleId],[ImageUrl] FROM @ArticleImage WHERE [ImageUrl] <> NULL OR [ImageUrl] <> ''
+                       
+
                         SELECT [ArticleId] from @ArticleImage
                            
                      END;"; 
@@ -322,10 +343,14 @@ namespace Scribere.Repositories
 
                             If @ArticleImageUrl IS NOT NULL
                             BEGIN
-                                        UPDATE ArticleImage
-                                            SET
-                                                ImageUrl = @ArticleImageUrl
-                                        WHERE ArticleId = @Id
+                                IF EXISTS(SELECT @Id FROM ArticleImage WHERE ArticleImage.ArticleId = @Id)
+	                                BEGIN 
+				                        UPDATE ArticleImage SET ImageUrl=@ArticleImageURL WHERE ArticleId = @Id
+	                                END
+                                ELSE
+                                    BEGIN
+                                        INSERT INTO ArticleImage (ArticleId,ImageUrl) VALUES (@Id, @ArticleImageUrl)
+                                    END 
                             END
                      END;
                     ";

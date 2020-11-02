@@ -292,19 +292,19 @@ const ArticleDetail = () => {
                         <Card className={classes.card} style={{ backgroundColor: '#f5f5f5' }}>
                             <CardActionArea>
 
-                                {(article.articleImage !== null) &&
+                                {(article.articleImage !== "") ?
                                     <CardMedia
                                         className={classes.media}
                                         image={article.articleImage.imageUrl}
                                         title={article.heading}
-                                    />}
+                                    /> : null}
                                 <EditCard handleClick={goEdit} >
 
                                     <Typography gutterBottom variant="h5" component="h2">
                                         {article.heading} </Typography>
                                     <Typography gutterBottom variant="h6" >Category: {article.category.type}</Typography>
                                     <Typography gutterBottom variant="h6" >
-                                        Nom de Plume: {article.userData.pseudonym}
+                                        Author: {article.userData.pseudonym}
                                     </Typography>
                                     {new Intl.DateTimeFormat('en-US').format(new Date(article.createDate))}
                                     <br />

@@ -6,6 +6,7 @@ import { UserBlockContext } from "../../providers/UserBlockProvider";
 import User from "./User";
 
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -23,13 +24,6 @@ const UserDataList = () => {
     const generateUserDataList = () => {
         Promise.all([getAllUsers(), getAllUserBlocks()])
         setIsLoading(false);
-        // getAllUsers();
-        // getAllUserBlocks();
-        // getUserById(thisUserData.id)
-        //     .then(setThisUser => {
-        //         setIsLoading(false)
-        //     })
-
     }
 
     const useStyles = makeStyles((theme) => ({
@@ -41,8 +35,8 @@ const UserDataList = () => {
             backgroundColor: theme.palette.background.paper,
         },
         gridList: {
-            width: '80vw',
-            height: '90vh',
+            // width: '80vw',
+            // height: '90vh',
         },
         icon: {
             color: 'rgba(255, 255, 255, 0.54)',
@@ -61,17 +55,22 @@ const UserDataList = () => {
         (!IsLoading && thisUserData !== undefined) ?
             <div className={classes.root}>
 
-                <GridList cellHeight={180} className={classes.gridList}>
+                {/* <GridList cellHeight={180} className={classes.gridList}>
                     <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-                        <ListSubheader component="div">Users</ListSubheader>
+                        <ListSubheader component="div">Users</ListSubheader> */}
 
-
-                        {users.map((userData) => ((!FilterforBlockedUsers(userData.id, thisUserData, userBlocks)) &&
+                <Grid container spacing={10}
+                    style={{ padding: '24px' }}
+                >
+                    {users.map((userData) => ((!FilterforBlockedUsers(userData.id, thisUserData, userBlocks)) &&
+                        <Grid key={userData.id} item
+                            xs={12} sm={6} md={4} lg={4} xl={3}
+                        >
                             <User key={userData.id} userData={userData} generateUserDataList={generateUserDataList} userBlocks={userBlocks} thisUser={thisUserData} />
-                        ))}
-                    </GridListTile>
+                        </Grid>
+                    ))}
 
-                </GridList>
+                </Grid>
             </div>
             : null
     )

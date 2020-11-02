@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { NavLink as RRNavLink } from "react-router-dom";
 import {
   Collapse,
@@ -7,19 +7,43 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
 } from 'reactstrap';
 import { UserDataContext } from "../providers/UserDataProvider";
+import { CategoryContext } from "../providers/CategoryProvider";
+
 import "./Header.css";
+
 
 export default function Header() {
   const { isLoggedIn, logout } = useContext(UserDataContext);
+  const { categories, getAllCategories } = useContext(CategoryContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true)
   const toggle = () => setIsOpen(!isOpen);
 
-  return (
+  const generateNav = () => {
+    if (isLoggedIn) {
+      Promise.all([getAllCategories()]);
+    }
 
-    <div>
+
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    generateNav()
+
+
+
+  }, [isLoggedIn])
+
+  return (
+    (!isLoading) ? <div>
       <Navbar color="dark" dark expand="md">
         <NavbarBrand tag={RRNavLink} to="/">Scribere</NavbarBrand>
         <NavbarToggler onClick={toggle} />
@@ -33,6 +57,23 @@ export default function Header() {
                 <NavItem>
                   <NavLink tag={RRNavLink} to="/articles">Articles</NavLink>
                 </NavItem>
+                <NavItem>
+                  <NavLink tag={RRNavLink} to="/articles/self/mywork">My Work</NavLink>
+                </NavItem>
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret>
+                    Categories
+              </DropdownToggle>
+
+                  <DropdownMenu style={{ backgroundColor: '#443d3d' }} right>
+                    {categories.map((category) =>
+                      <DropdownItem key={`DropdownItem=${category.type}`} tag={RRNavLink} className="nav-link" activeClassName="selected" exact to={`/articles/category/${category.type}`}>
+                        {category.type}
+                      </DropdownItem>
+                    )}
+
+                  </DropdownMenu>
+                </UncontrolledDropdown>
                 <NavItem>
                   <a aria-current="page" className="nav-link" href="/"
                     style={{ cursor: "pointer" }} onClick={logout}>Logout</a>
@@ -58,7 +99,7 @@ export default function Header() {
         </Collapse>
       </Navbar>
 
-    </div>
+    </div> : null
 
 
   );
