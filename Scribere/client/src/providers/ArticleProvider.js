@@ -35,7 +35,7 @@ export const ArticleProvider = (props) => {
                     }
                     return orgArray;
 
-                }))
+                }));
 
     };
 
@@ -50,8 +50,10 @@ export const ArticleProvider = (props) => {
                     Authorization: `Bearer ${token}`
                 }
             }).then(resp => resp.json())
-                .then(setArticles))
-    }
+                .then(faveArticleArray => {
+                    return faveArticleArray;
+                }));
+    };
 
     const getMyArticles = () => {
         return getToken().then((token) =>

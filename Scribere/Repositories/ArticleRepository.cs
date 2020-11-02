@@ -128,7 +128,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT a.Id, a.Heading, a.Text, 
+                    SELECT a.Id, a.Heading, a.Text, 
                               ai.Id AS ArticleImageId, ai.ImageUrl AS ArticleImageUrl,
                               a.CreateDate, 
                               a.CategoryId, a.UserId,a.VisibilityId,
@@ -144,14 +144,36 @@ namespace Scribere.Repositories
                               LEFT JOIN UserImage ui on a.UserId = ui.UserId
                               LEFT JOIN UserLevel ul ON u.UserLevelId = ul.id
                               LEFT JOIN FavoriteAuthor fa on u.id = fa.FavoriteUserId
-                              LEFT JOIN FavoriteArticle far on u.id = far.ArticleId
                               LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
                               LEFT JOIN Visibility v on v.Id = a.VisibilityId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
                           AND a.CreateDate < SYSDATETIME()
-                          AND (fa.SourceUserId = @SourceUserId )
-                     ORDER BY a.CreateDate DESC";
+                          AND ( fa.SourceUserId = @SourceUserId  )
+                    UNION 
+                    SELECT a.Id, a.Heading, a.Text, 
+                              ai.Id AS ArticleImageId, ai.ImageUrl AS ArticleImageUrl,
+                              a.CreateDate, 
+                              a.CategoryId, a.UserId,a.VisibilityId,
+                              c.[Type] AS CategoryType,
+                              u.NameFirst, u.NameLast, u.Pseudonym, 
+                              u.Email, u.CreateDate as UserCreateDate, ui.ImageUrl AS UserImageUrl,
+                              u.UserLevelId, 
+                              ul.[Level],
+                              v.Type as VisibilityType
+                         FROM Article a
+                              LEFT JOIN Category c ON a.CategoryId = c.id
+                              LEFT JOIN UserData u ON a.UserId = u.id
+                              LEFT JOIN UserImage ui on a.UserId = ui.UserId
+                              LEFT JOIN UserLevel ul ON u.UserLevelId = ul.id
+                              LEFT JOIN FavoriteArticle far on a.Id = far.ArticleId
+                              LEFT JOIN ArticleImage ai ON a.Id = ai.ArticleId
+                              LEFT JOIN Visibility v on v.Id = a.VisibilityId
+                        WHERE u.IsActive = 1 
+                          AND a.VisibilityId = 2
+                          AND a.CreateDate < SYSDATETIME()
+                          AND ( far.UserId = @SourceUserId  )
+                     ORDER BY a.CreateDate ;";
 
                     cmd.Parameters.AddWithValue("@SourceUserId", SourceUserId);
                     var reader = cmd.ExecuteReader();

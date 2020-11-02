@@ -58,6 +58,9 @@ export default function Header() {
                   <NavLink tag={RRNavLink} to="/articles">Articles</NavLink>
                 </NavItem>
                 <NavItem>
+                  <NavLink tag={RRNavLink} to="/articles/favorites/favarticles">Faves</NavLink>
+                </NavItem>
+                <NavItem>
                   <NavLink tag={RRNavLink} to="/articles/self/mywork">My Work</NavLink>
                 </NavItem>
                 <UncontrolledDropdown nav inNavbar>
@@ -92,9 +95,13 @@ export default function Header() {
             }
           </Nav>
           <Nav navbar>
-            <NavItem>
-              <NavLink tag={RRNavLink} to="/users">Users</NavLink>
-            </NavItem>
+            {isLoggedIn &&
+              <>
+                <NavItem>
+                  <NavLink tag={RRNavLink} to="/users">Users</NavLink>
+                </NavItem>
+              </>
+            }
           </Nav>
         </Collapse>
       </Navbar>
