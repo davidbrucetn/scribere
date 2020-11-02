@@ -18,27 +18,35 @@ const ArticleList = (props) => {
     const [IsLoading, setIsLoading] = useState(true);
     const [articles, setArticles] = useState([]);
     const { userBlocks, getAllUserBlocks } = useContext(UserBlockContext);
-    const { getAllArticles } = useContext(ArticleContext);
+    const { getAllArticles, getFavoriteArticles } = useContext(ArticleContext);
 
     const params = useParams();
 
     thisUserData = JSON.parse(sessionStorage.UserData);
 
+    console.log(params)
 
     const generateArticleList = () => {
-        if (params.mywork === "mywork") {
-            listFilter = "Self";
-        } else if (params.categoryType !== undefined) {
-            listFilter = params.categoryType;
-        } else {
-            listFilter = "All"
-        }
+        getAllUserBlocks()
+        if (params.favorites === "favarticles") {
+            getFavoriteArticles()
+                .then((articleResp) => {
+                    setArticles([...articleResp])
+                })
 
-        getAllUserBlocks();
-        getAllArticles(listFilter)
-            .then((articleResp) => {
-                setArticles([...articleResp])
-            })
+        } else {
+            if (params.mywork === "mywork") {
+                listFilter = "Self";
+            } else if (params.categoryType !== undefined) {
+                listFilter = params.categoryType;
+            } else {
+                listFilter = "All"
+            }
+            getAllArticles(listFilter)
+                .then((articleResp) => {
+                    setArticles([...articleResp])
+                })
+        }
         setIsLoading(false)
     }
 

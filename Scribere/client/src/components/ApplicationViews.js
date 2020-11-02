@@ -46,6 +46,10 @@ const ApplicationViews = (props) => {
           {isLoggedIn ? <ArticleEdit /> : <Redirect to="/login" />}
         </Route>
 
+        <Route path="/articles/favorites/:favorites" exact>
+          {isLoggedIn ? <ArticleList {...props} /> : <Redirect to="/login" />}
+        </Route>
+
         <Route path="/users" exact>
           {isLoggedIn ? <UserList /> : <Redirect to="/login" />}
         </Route>

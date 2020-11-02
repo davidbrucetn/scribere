@@ -132,7 +132,7 @@ const ArticleDetail = () => {
         const favoriteArticle = {
             "articleId": article.id
         }
-        setIsLoading(true)
+        setIsLoading(true);
         addFavoriteArticle(favoriteArticle)
             .then(() => {
                 GenerateDetail(id);
@@ -143,7 +143,7 @@ const ArticleDetail = () => {
         const favoriteArticle = {
             "articleId": article.id
         }
-        setIsLoading(true)
+        setIsLoading(true);
         removeFavoriteArticleId(favoriteArticle.articleId)
             .then(() => {
                 GenerateDetail(id);
@@ -154,7 +154,7 @@ const ArticleDetail = () => {
         const favoriteAuthor = {
             "favoriteUserId": article.userId
         }
-        setIsLoading(true)
+        setIsLoading(true);
         addFavoriteAuthor(favoriteAuthor)
             .then(() => {
                 GenerateDetail(id);
@@ -166,7 +166,7 @@ const ArticleDetail = () => {
         const favoriteAuthor = {
             "favoriteUserId": article.userId
         }
-        setIsLoading(true)
+        setIsLoading(true);
         removeFavoriteAuthorId(favoriteAuthor.favoriteUserId)
             .then(() => {
                 GenerateDetail(id);
@@ -330,15 +330,15 @@ const ArticleDetail = () => {
                                 {(thisUser.id !== article.userId) &&
                                     ((favoriteAuthors.find((favAuthor) => { return favAuthor.favoriteUserId === article.userId })) ?
 
-                                        <PrimaryButton className="btn__unfaveauthor bg-info" onClick={RemoveFavAuthor}>UnFav Author</PrimaryButton>
+                                        <PrimaryButton className="btn__unfaveauthor bg-info" handleClick={RemoveFavAuthor}>UnFav Author</PrimaryButton>
                                         :
-                                        <PrimaryButton className="btn__faveauthor bg-primary" onClick={AddFaveAuthor}>Fav Author</PrimaryButton>)}
+                                        <PrimaryButton className="btn__faveauthor bg-primary" handleClick={AddFaveAuthor}>Fav Author</PrimaryButton>)}
                                 {(thisUser.id !== article.userId) &&
                                     ((favoriteArticles.find((favArticle) => { return favArticle.articleId === article.id })) ?
 
-                                        <PrimaryButton className="btn__unfavearticle bg-info" onClick={RemoveFaveArticle}>UnFavorite Article</PrimaryButton>
+                                        <PrimaryButton className="btn__unfavearticle bg-info" handleClick={RemoveFaveArticle}>UnFavorite Article</PrimaryButton>
                                         :
-                                        <PrimaryButton className="btn__favearticle bg-primary" onClick={AddFaveArticle}>Fav Article</PrimaryButton>)}
+                                        <PrimaryButton className="btn__favearticle bg-primary" handleClick={AddFaveArticle}>Fav Article</PrimaryButton>)}
                             </CardActions>
                             {(article.userId === thisUser.id) && (
                                 <div className="wrap-collapsible">
