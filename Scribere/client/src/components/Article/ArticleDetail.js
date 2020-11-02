@@ -411,7 +411,7 @@ const ArticleDetail = () => {
                         </Typography>
                         <Container>
 
-                            {comments.map((comment) => <Comment key={`${article.id} - ${comment.id}`} comment={comment} />)}
+                            {comments.map((comment) => <Comment key={`${article.id} - ${comment.id}`} comment={comment} article={article} />)}
                         </Container>
                     </Container>
                 </React.Fragment >
