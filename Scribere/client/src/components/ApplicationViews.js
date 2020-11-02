@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { UserDataContext } from "../providers/UserDataProvider";
 import Login from "./LoginReg/Login";
 import Register from "./LoginReg/Register";
@@ -12,14 +12,14 @@ import UserList from "./Users/UserList";
 import UserEdit from "./Users/UserEdit";
 
 
-export default function ApplicationViews() {
+const ApplicationViews = (props) => {
   const { isLoggedIn } = useContext(UserDataContext);
 
   return (
     <main>
       <Switch>
         <Route path="/" exact>
-          {isLoggedIn ? <ArticleList /> : <Redirect to="/login" />}
+          {isLoggedIn ? <ArticleList {...props} /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/articles/compose" exact>
@@ -27,7 +27,15 @@ export default function ApplicationViews() {
         </Route>
 
         <Route path="/articles" exact>
-          {isLoggedIn ? <ArticleList /> : <Redirect to="/login" />}
+          {isLoggedIn ? <ArticleList {...props} /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/articles/self/:mywork" exact>
+          {isLoggedIn ? <ArticleList {...props} /> : <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/articles/category/:categoryType" exact>
+          {isLoggedIn ? <ArticleList  {...props} /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/articles/:id" exact>
@@ -61,3 +69,4 @@ export default function ApplicationViews() {
     </main>
   );
 };
+export default withRouter(ApplicationViews);

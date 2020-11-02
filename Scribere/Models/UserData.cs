@@ -47,6 +47,8 @@ namespace Scribere.Models
         public UserLevel UserLevel { get; set; }
         public int IsActive { get; set; }
 
+        public string Bio { get; set; }
+
         public int AllowMessaging { get; set; }
 
         public string FullName

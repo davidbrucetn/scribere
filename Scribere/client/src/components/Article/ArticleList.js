@@ -1,29 +1,41 @@
 import React, { useContext, useEffect, useState } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, useParams } from "react-router-dom";
 import { ArticleContext } from "../../providers/ArticleProvider";
 import { UserDataContext } from "../../providers/UserDataProvider";
 import { UserBlockContext } from "../../providers/UserBlockProvider";
 import { FilterforBlockedUsers } from "../Helper/DWBUtils";
 import Article from "./Article";
+import "./ArticleList.css";
 
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
+import { Hidden } from "@material-ui/core";
 
 let thisUserData = null;
-const ArticleList = () => {
-
-    const { getUserById } = useContext(UserDataContext);
-    const { articles, getAllArticles } = useContext(ArticleContext);
-    const { userBlocks, addUserBlock, getAllUserBlocks, deleteUserBlock } = useContext(UserBlockContext);
+let listFilter = "All";
+const ArticleList = (props) => {
     const [IsLoading, setIsLoading] = useState(true)
+    const { userBlocks, addUserBlock, getAllUserBlocks, deleteUserBlock } = useContext(UserBlockContext);
+    const { articles, getAllArticles } = useContext(ArticleContext);
+    const [articlesList, setArticlesList] = useState([]);
+
+
+    const params = useParams();
 
     thisUserData = JSON.parse(sessionStorage.UserData);
 
+
+
     const generateArticleList = () => {
-        Promise.all([getAllArticles(), getAllUserBlocks()])
+        if (params.mywork === "mywork") {
+            listFilter = "Self";
+        } else if (params.categoryType !== undefined) {
+            listFilter = params.categoryType;
+        }
+        Promise.all([getAllArticles(listFilter), getAllUserBlocks()]);
         setIsLoading(false)
     }
 
@@ -38,6 +50,7 @@ const ArticleList = () => {
         gridList: {
             width: '80vw',
             height: '90vh',
+
         },
         icon: {
             color: 'rgba(255, 255, 255, 0.54)',
@@ -48,9 +61,13 @@ const ArticleList = () => {
 
 
     useEffect(() => {
-        generateArticleList();
+        if (articles !== [...articles]) {
+            generateArticleList();
+        }
+
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [props.location.pathname, listFilter]);
 
     return (
         (!IsLoading && thisUserData !== null) ?

@@ -12,6 +12,7 @@ import { Modal, ModalHeader, ModalFooter } from "reactstrap";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -25,6 +26,9 @@ const useStyles = makeStyles({
     },
     media: {
         height: 140,
+        width: 140,
+        borderRadius: '50%',
+        margin: '28px'
     },
 });
 
@@ -83,13 +87,18 @@ const User = ({ userData, generateUserDataList, thisUser }) => {
 
         <Card>
             <CardActionArea onClick={goDetails}>
-
+                {(userData.userImage.imageUrl !== "") ?
+                    <CardMedia
+                        component="img"
+                        className={classes.media}
+                        image={userData.userImage.imageUrl}
+                        title={userData.pseudonym}
+                    /> : null}
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">{userData.nameFirst} {userData.nameLast}</Typography>
-                    <Typography gutterBottom variant="h5" component="h3">Nom de Plume: {userData.pseudonym}</Typography>
-                    <Typography gutterBottom variant="h6" component="h6">City: {userData.city}</Typography>
-                    <Typography gutterBottom variant="h6" component="h6">State: {userData.state}</Typography>
-                    <Typography gutterBottom variant="h6" component="h6">Country: {userData.country.name}</Typography>
+                    <Typography gutterBottom variant="h5" component="h6"> {userData.pseudonym}</Typography>
+                    <Typography gutterBottom variant="h6" component="h6"> {userData.city} {userData.state}</Typography>
+                    <Typography gutterBottom variant="h6" component="h6"> {userData.country.name}</Typography>
+                    <Typography gutterBottom variant="h6" component="h6"><br /> {userData.bio}</Typography>
                 </CardContent>
             </CardActionArea>
             <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>

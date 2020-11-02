@@ -5,7 +5,8 @@ import { UserDataContext } from "../../providers/UserDataProvider";
 
 
 export default function UserEdit() {
-    const [userData, setUserData] = useState({ id: '', nameFirst: '', nameLast: '', pseudonym: '', email: '', city: '', state: '', countryId: '', isActive: true });
+    const [userData, setUserData] = useState({ id: '', nameFirst: '', nameLast: '', pseudonym: '', bio: '', email: '', city: '', state: '', countryId: '', isActive: true });
+    const [userImage, setUserImage] = useState({ articleId: "", imageUrl: "" })
     const [isLoading, setIsLoading] = useState(true);
 
 
@@ -18,13 +19,28 @@ export default function UserEdit() {
 
     const handleFieldChange = evt => {
         const stateToChange = { ...userData }
-        stateToChange[evt.target.id] = evt.target.value
-        setUserData(stateToChange)
+        if (evt.target.id === "userImage.imageUrl") {
+            stateToChange[evt.target.id] = evt.target.value;
+            setUserImage(userData.userImage = { "imageUrl": evt.target.value })
+            setUserData(userData)
+        } else {
+            stateToChange[evt.target.id] = evt.target.value
+        }
+        (evt.target.id !== "userImage.imageUrl") &&
+            setUserData(stateToChange)
     }
 
     const submit = (e) => {
         setIsLoading(true)
         userData.countryId = parseInt(userData.countryId);
+        if (userData.userImage["imageUrl"] !== "") {
+            userData.userImage.userId = userData.id;
+        } else {
+            userData.userImage = {
+                "ImageUrl": ""
+            };
+        }
+
         updateUser(userData).then((u) => {
             history.push(`/users/${thisUser.id}`);
         });
@@ -37,7 +53,28 @@ export default function UserEdit() {
     useEffect(() => {
         getAllCountries();
         getUserById(thisUser.id)
-            .then(setUserData)
+            .then(userResp => {
+                if (userResp.userImage === null) {
+
+                    setUserImage({
+                        userId: userData.id,
+                        imageUrl: ""
+                    });
+                    setUserData(userResp.userImage = userImage);
+                    setUserData(userResp);
+                    setIsLoading(false);
+                } else {
+                    setUserImage({
+                        id: userResp.userImage.id,
+                        userId: userResp.userId,
+                        imageUrl: userResp.userImage.imageUrl
+                    })
+                    setUserData(userResp);
+                    setIsLoading(false);
+                }
+
+            })
+
         setIsLoading(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -74,6 +111,15 @@ export default function UserEdit() {
                                 />
                             </div>
                             <div className="form-group">
+                                <label htmlFor="userImage.imageUrl" className="control-label">User Image URL</label>
+                                <input
+                                    id="userImage.imageUrl"
+                                    className="form-control"
+                                    onChange={handleFieldChange}
+                                    value={userImage.imageUrl}
+                                />
+                            </div>
+                            <div className="form-group">
                                 <label htmlFor="city" className="control-label">City</label>
                                 <input
                                     id="city"
@@ -103,6 +149,15 @@ export default function UserEdit() {
                                         <option value={aCountry.id} key={aCountry.id}>{aCountry.name}</option>
                                     )}
                                 </select>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="bio" className="control-label">Bio</label>
+                                <input
+                                    id="bio"
+                                    className="form-control"
+                                    onChange={handleFieldChange}
+                                    value={userData.bio}
+                                />
                             </div>
 
                             <div className="form-group">

@@ -11,6 +11,7 @@ export default function Register() {
   const [pseudonym, setPseudonym] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [imageUrl, setImageUrl] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
 
 
@@ -21,6 +22,11 @@ export default function Register() {
       alert("Passwords don't match. Do better.");
     } else {
       const userData = { nameLast, nameFirst, pseudonym, email };
+      if (imageUrl !== "") {
+        userData.userImage = {
+          "imageUrl": imageUrl
+        }
+      }
       register(userData, password)
         .then(() => history.push("/"));
     }
@@ -40,6 +46,10 @@ export default function Register() {
         <FormGroup>
           <Label htmlFor="pseudonym">Pseudonym</Label>
           <Input id="pseudonym" type="text" onChange={e => setPseudonym(e.target.value)} />
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="imageUrll">User Image URL</Label>
+          <Input id="imageUrl" type="text" onChange={e => setImageUrl(e.target.value)} />
         </FormGroup>
         <FormGroup>
           <Label for="email">Email</Label>

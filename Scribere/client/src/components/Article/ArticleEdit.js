@@ -16,6 +16,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 const ArticleEdit = () => {
     const { updateArticle, getArticlebyId } = useContext(ArticleContext);
     const [article, setArticle] = useState({ heading: "", text: "", createDate: "", categoryId: 0, userId: 0 })
+    const [articleImage, setArticleImage] = useState({ articleId: "", imageUrl: "" })
     const { category, getAllCategories } = useContext(CategoryContext);
     const { visibilities, getAllVisibilities } = useContext(VisibilityContext)
     const { id } = useParams();
@@ -28,9 +29,28 @@ const ArticleEdit = () => {
         getAllCategories();
         getAllVisibilities();
         getArticlebyId(id)
-            .then(setArticle);
+            .then((articleResp) => {
+                if (articleResp.articleImage === null) {
 
-        setIsLoading(false)
+                    setArticleImage({
+                        articleId: article.id,
+                        imageUrl: ""
+                    });
+                    setArticle(article.articleImage = articleImage);
+                    setArticle(articleResp);
+                    setIsLoading(false);
+                } else {
+                    setArticleImage({
+                        id: articleResp.articleImage.id,
+                        articleId: id,
+                        imageUrl: articleResp.articleImage.imageUrl
+                    })
+                    setArticle(articleResp);
+                    setIsLoading(false);
+                }
+
+            });
+
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -40,18 +60,28 @@ const ArticleEdit = () => {
         if (evt.target.type === "radio") {
             // setVisibilityValue(evt.target.value);
             stateToChange["visibilityId"] = parseInt(evt.target.value);
+        } else if (evt.target.id === "articleImage.imageUrl") {
+            stateToChange[evt.target.id] = evt.target.value;
+            setArticleImage(article.articleImage = { "imageUrl": evt.target.value })
+            setArticle(article)
         } else {
             stateToChange[evt.target.id] = evt.target.value
         }
-        setArticle(stateToChange)
+        (evt.target.id !== "articleImage.imageUrl") &&
+            setArticle(stateToChange)
     }
 
     const submit = (e) => {
         setIsLoading(true)
         article.categoryId = parseInt(article.categoryId);
-        article.articleImage = {
-            "ImageUrl": ""
-        };
+        if (article.articleImage["imageUrl"] !== "") {
+            article.articleImage.articleId = article.id;
+        } else {
+            article.articleImage = {
+                "ImageUrl": ""
+            };
+        }
+
 
 
         updateArticle(article).then((a) => {
@@ -77,25 +107,13 @@ const ArticleEdit = () => {
                                     value={article.heading}
                                 />
                             </div>
-                            {/* <div className="form-group">
-                            <label htmlFor="imageUrl" className="control-label">Header Image</label>
-                            <input
-                                id="imageUrl"
-                                className="form-control"
-                                onChange={handleImgChange}
-                                type="file"
-                                accept="image/*"
-                                placeholder={article.imageUrl}
-                            />
-                        </div> */}
                             <div className="form-group">
-                                <label htmlFor="createDate" className="control-label">Date</label>
+                                <label htmlFor="articleImage.imageUrl" className="control-label">Article Image URL</label>
                                 <input
-                                    id="createDate"
+                                    id="articleImage.imageUrl"
                                     className="form-control"
                                     onChange={handleFieldChange}
-                                    value={article.createDate.split('T')[0]}
-                                    type="date"
+                                    value={articleImage.imageUrl}
                                 />
                             </div>
                             <div className="form-group">

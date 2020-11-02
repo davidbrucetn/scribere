@@ -31,6 +31,7 @@ namespace Scribere.Repositories
                 CreateDate = reader.GetDateTime(reader.GetOrdinal("CreateDate")),
                 UserLevelId = DbUtils.GetInt(reader, "UserLevelId"),
                 IsActive = DbUtils.GetInt(reader, "IsActive"),
+                Bio = DbUtils.GetString(reader, "Bio"),
                 AllowMessaging = DbUtils.GetInt(reader, "AllowMessaging"),
                 UserLevel = new UserLevel()
                 {
@@ -52,6 +53,15 @@ namespace Scribere.Repositories
                     ImageUrl = DbUtils.GetString(reader, "ImageUrl")
                 };
                 UserData.UserImage = UserImage;
+
+            } else
+            {
+                UserImage = new UserImage()
+                {
+                    UserId = DbUtils.GetInt(reader, "Id"),
+                    ImageUrl = ""
+                };
+                UserData.UserImage = UserImage;
             };
 
             return UserData;
@@ -66,7 +76,7 @@ namespace Scribere.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Email,u.City, u.State, 
+                    cmd.CommandText = @"SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Bio, u.Email,u.City, u.State, 
                                                u.CountryId, c.Name,
                                                u.CreateDate, u.UserLevelId, u.IsActive,
                                                ut.Level AS UserLevelName,
@@ -99,7 +109,7 @@ namespace Scribere.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Email,u.City, u.State, 
+                    cmd.CommandText = @"SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Bio, u.Email,u.City, u.State, 
                                                u.CountryId, c.Name,
                                                u.CreateDate, u.UserLevelId, u.IsActive,
                                                ut.Level AS UserLevelName,
@@ -131,7 +141,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                       SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Email,u.City, u.State, 
+                       SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Bio, u.Email,u.City, u.State, 
                                                u.CountryId, c.Name,
                                                u.CreateDate, u.UserLevelId, u.IsActive,
                                                ut.Level AS UserLevelName,
@@ -165,7 +175,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Email,u.City, u.State, 
+                        SELECT u.id, u.FirebaseUserId,  u.NameFirst, u.NameLast, u.Pseudonym, u.Bio, u.Email,u.City, u.State, 
                                                u.CountryId, c.Name,
                                                u.CreateDate, u.UserLevelId, u.IsActive,
                                                ut.Level AS UserLevelName,
@@ -247,15 +257,23 @@ namespace Scribere.Repositories
                 {
                     cmd.CommandText = @"
                       BEGIN
-
-                        
+                        DECLARE @UserImage TABLE (
+                            [UserId] INT,
+                            [ImageUrl]  VARCHAR(300)
+                        )
                                         
-                            INSERT INTO UserData (FirebaseUserId, NameFirst, NameLast, Pseudonym, Email, City, State, CountryId,
+                            INSERT INTO UserData (FirebaseUserId, NameFirst, NameLast, Pseudonym, Bio, Email, City, State, CountryId,
                                 CreateDate, UserLevelId, IsActive, AllowMessaging )
-                            OUTPUT INSERTED.ID
-                            VALUES (@FirebaseUserId, @NameFirst, @NameLast, @Pseudonym, @Email, @City, @State, @CountryId,
+                            OUTPUT INSERTED.ID, @UserImageUrl INTO @UserImage
+                            VALUES (@FirebaseUserId, @NameFirst, @NameLast, @Pseudonym, @Bio, @Email, @City, @State, @CountryId,
                                 @CreateDate, @UserLevelId, @IsActive, @AllowMessaging)
 
+                      
+                            INSERT INTO UserImage (UserId,ImageUrl) SELECT [UserId],[ImageUrl] FROM @UserImage WHERE [ImageUrl] <> NULL OR [ImageUrl] <> ''
+                            
+                      
+                       
+                            SELECT [UserId] from @UserImage                           
                         
                       END;
                         ";
@@ -263,6 +281,7 @@ namespace Scribere.Repositories
                     DbUtils.AddParameter(cmd, "@NameFirst", UserData.NameFirst);
                     DbUtils.AddParameter(cmd, "@NameLast", UserData.NameLast);
                     DbUtils.AddParameter(cmd, "@Pseudonym", UserData.Pseudonym);
+                    DbUtils.AddParameter(cmd, "@Bio", UserData.Bio);
                     DbUtils.AddParameter(cmd, "@Email", UserData.Email);
                     DbUtils.AddParameter(cmd, "@City", UserData.City);
                     DbUtils.AddParameter(cmd, "@State", UserData.State);
@@ -271,7 +290,8 @@ namespace Scribere.Repositories
                     DbUtils.AddParameter(cmd, "@UserLevelId", UserData.UserLevelId);
                     DbUtils.AddParameter(cmd, "@IsActive", UserData.IsActive);
                     DbUtils.AddParameter(cmd, "@AllowMessaging", UserData.AllowMessaging);
-                    
+                    DbUtils.AddParameter(cmd, "@UserImageUrl", UserData.UserImage.ImageUrl);
+
 
                     UserData.Id = (int)cmd.ExecuteScalar();
                 }
@@ -297,12 +317,20 @@ namespace Scribere.Repositories
                                       CountryId = @CountryId,
                                     UserLevelId = @UserLevelId,
                                        IsActive = @IsActive,
-                                 AllowMessaging = @AllowMessaging
+                                 AllowMessaging = @AllowMessaging,
+                                            Bio = @Bio
                                     WHERE Id = @id                              
  
-                            IF @UserImageURL IS NOT NULL
+                            If @UserImageURL IS NOT NULL
                             BEGIN
-                                Update UserImage Set ImageUrl = @UserImageUrl WHERE UserId = @Id
+                                IF EXISTS(SELECT @Id FROM UserImage WHERE UserImage.UserId = @Id)
+	                                BEGIN 
+				                        UPDATE UserImage SET ImageUrl=@UserImageURL WHERE UserId = @Id
+	                                END
+                                ELSE
+                                    BEGIN
+                                        INSERT INTO UserImage (UserId,ImageUrl) VALUES (@Id, @UserImageURL)
+                                    END 
                             END
                     ;";
 
@@ -312,6 +340,7 @@ namespace Scribere.Repositories
                     DbUtils.AddParameter(cmd, "@NameFirst", userData.NameFirst);
                     DbUtils.AddParameter(cmd, "@NameLast", userData.NameLast);
                     DbUtils.AddParameter(cmd, "@Pseudonym", userData.Pseudonym);
+                    DbUtils.AddParameter(cmd, "@Bio", userData.Bio);
                     DbUtils.AddParameter(cmd, "@Email", userData.Email);
                     DbUtils.AddParameter(cmd, "@City", userData.City);
                     DbUtils.AddParameter(cmd, "@State", userData.State);
@@ -320,7 +349,8 @@ namespace Scribere.Repositories
                     DbUtils.AddParameter(cmd, "@UserLevelId", userData.UserLevelId);
                     DbUtils.AddParameter(cmd, "@IsActive", userData.IsActive);
                     DbUtils.AddParameter(cmd, "@AllowMessaging", userData.AllowMessaging);
-                    DbUtils.AddParameter(cmd, "@UserImageUrl", userData.AllowMessaging);
+                    DbUtils.AddParameter(cmd, "@UserImageURL", userData.UserImage.ImageUrl);
+                    
                     
 
 
