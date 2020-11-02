@@ -43,7 +43,7 @@ export default function Header() {
   }, [isLoggedIn])
 
   return (
-    (!isLoading) ? <div>
+    (!isLoading) ? <div className="div__navbar__container">
       <Navbar color="dark" dark expand="md">
         <NavbarBrand tag={RRNavLink} to="/">Scribere</NavbarBrand>
         <NavbarToggler onClick={toggle} />

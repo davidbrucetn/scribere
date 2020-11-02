@@ -63,6 +63,7 @@ const ArticleDetail = () => {
     // Material-ui Styling
 
     const useStyles = makeStyles({
+
         card: {
             borderRadius: 2,
             backgroundColor: 'default',
@@ -70,7 +71,12 @@ const ArticleDetail = () => {
             marginBottom: 3,
             marginTop: 3,
             paddingTop: 3,
-            paddingLeft: '2em'
+            paddingLeft: '2em',
+            opacity: 1,
+            animationName: 'fadeInOpacity',
+            animationIterationCount: 1,
+            animationTimingFunction: 'ease-in',
+            animationDuration: '1s',
         },
         media: {
             height: '20vh',
@@ -242,6 +248,9 @@ const ArticleDetail = () => {
         deleteTagsByArticleId(article.id)
             .then((p) => {
                 if (!newTags.length > 0) {
+                    setIsLoading(false)
+                    setIsLoading(true)
+
                     getTagsByArticleId(article.id)
                         .then((articleTagResp) => {
                             setArticleTags(articleTagResp);

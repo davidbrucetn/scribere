@@ -25,6 +25,10 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     card: {
         maxWidth: 345,
+        opacity: 1,
+        animationName: 'fadeInOpacity',
+        animationTimingFunction: 'ease',
+        animationDuration: '2s',
     },
     media: {
         height: 250,
@@ -126,7 +130,7 @@ const UserDetail = () => {
 
         (!isLoading) ?
 
-            <Card>
+            <Card className={classes.card}>
                 <CardActionArea onClick={goDetails}>
                     {(userData.userImage.imageUrl !== "" && userData.userImage !== null) ?
                         <CardMedia

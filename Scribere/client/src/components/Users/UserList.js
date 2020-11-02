@@ -4,6 +4,7 @@ import { FilterforBlockedUsers } from "../Helper/DWBUtils";
 import { UserDataContext } from "../../providers/UserDataProvider";
 import { UserBlockContext } from "../../providers/UserBlockProvider";
 import User from "./User";
+import "./UserList.css";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -41,6 +42,18 @@ const UserDataList = () => {
         icon: {
             color: 'rgba(255, 255, 255, 0.54)',
         },
+        grid: {
+            opacity: 1,
+            animationName: 'fadeInOpacity',
+            animationTimingFunction: 'ease',
+            animationDuration: '2s',
+        },
+        Typography: {
+            fontFamily: [
+                'Merriweather',
+                'serif'
+            ].join(','),
+        }
     }));
 
     const classes = useStyles();
@@ -59,7 +72,7 @@ const UserDataList = () => {
                     <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
                         <ListSubheader component="div">Users</ListSubheader> */}
 
-                <Grid container spacing={10}
+                <Grid className={classes.grid} container spacing={10}
                     style={{ padding: '24px' }}
                 >
                     {users.map((userData) => ((!FilterforBlockedUsers(userData.id, thisUserData, userBlocks)) &&

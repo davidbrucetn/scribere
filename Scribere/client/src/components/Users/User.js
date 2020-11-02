@@ -30,6 +30,12 @@ const useStyles = makeStyles({
         borderRadius: '50%',
         margin: '28px'
     },
+    Typography: {
+        fontFamily: [
+            'Merriweather',
+            'serif'
+        ].join(','),
+    }
 });
 
 const User = ({ userData, generateUserDataList, thisUser }) => {
@@ -95,10 +101,12 @@ const User = ({ userData, generateUserDataList, thisUser }) => {
                         title={userData.pseudonym}
                     /> : null}
                 <CardContent>
-                    <Typography gutterBottom variant="h5" component="h6"> {userData.pseudonym}</Typography>
-                    <Typography gutterBottom variant="h6" component="h6"> {userData.city} {userData.state}</Typography>
-                    <Typography gutterBottom variant="h6" component="h6"> {userData.country.name}</Typography>
-                    <Typography gutterBottom variant="h6" component="h6"><br /> {userData.bio}</Typography>
+                    <Typography className={classes.Typography} gutterBottom variant="h5" component="h6"> {userData.pseudonym}</Typography>
+                    <Typography className={classes.Typography} gutterBottom variant="h6" component="h6"> {userData.city} {userData.state}</Typography>
+                    <Typography className={classes.Typography} gutterBottom variant="h6" component="h6"> {userData.country.name}</Typography>
+                    {(userData.bio !== null) &&
+                        <Typography className={classes.Typography} gutterBottom variant="body" component="body"><br /> {userData.bio.split(".")[0]}...</Typography>}
+
                 </CardContent>
             </CardActionArea>
             <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>

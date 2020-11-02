@@ -2,6 +2,10 @@
   margin: 0;
   width: 100%;
   text-align: center;
+  opacity: 1;
+  animation-name: fadeInOpacity;
+  animation-timing-function: ease-in;
+  animation-duration: 1s;
 }
 
 .div__articleNew__form {
@@ -23,4 +27,13 @@
 input {
   color: black;
   border: 1px gray solid;
+}
+
+@keyframes fadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

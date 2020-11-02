@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Spinner } from "reactstrap";
 import DangerButton from "../Buttons/DangerButton";
 import PrimaryButton from "../Buttons/PrimaryButton";
+import "./Article.css";
 
 import { Modal, ModalHeader, ModalFooter } from "reactstrap";
 
@@ -20,6 +21,10 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     card: {
         maxWidth: 345,
+        opacity: 1,
+        animationName: 'fadeInOpacity',
+        animationTimingFunction: 'ease',
+        animationDuration: '1s',
     },
     media: {
 
