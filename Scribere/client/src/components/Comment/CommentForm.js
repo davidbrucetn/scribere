@@ -31,8 +31,6 @@ export default function CommentForm(article) {
     }
 
 
-
-
     return (
 
         <>

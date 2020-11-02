@@ -12,7 +12,6 @@ export const ArticleProvider = (props) => {
     const apiUrl = "/api/article";
 
     const getAllArticles = (ALFilter) => {
-
         const thisUser = JSON.parse(sessionStorage.UserData);
         return getToken().then((token) =>
             fetch(apiUrl, {
@@ -22,7 +21,6 @@ export const ArticleProvider = (props) => {
                 }
             }).then(resp => resp.json())
                 .then(articleArray => {
-                    orgArray = [...articles]
                     if (ALFilter !== undefined || ALFilter !== null) {
                         if (ALFilter === "Self") {
                             orgArray = articleArray.filter(article => article.userId === thisUser.id);
@@ -35,8 +33,7 @@ export const ArticleProvider = (props) => {
                     } else {
                         orgArray = articleArray;
                     }
-                    setArticles(orgArray);
-
+                    return orgArray;
 
                 }))
 
