@@ -18,7 +18,7 @@ const ArticleList = (props) => {
     const [IsLoading, setIsLoading] = useState(true);
     const [articles, setArticles] = useState([]);
     const { userBlocks, getAllUserBlocks } = useContext(UserBlockContext);
-    const { getAllArticles, getFavoriteArticles } = useContext(ArticleContext);
+    const { getAllArticles, getFavoriteArticles, getMyArticles } = useContext(ArticleContext);
 
     const params = useParams();
 
@@ -37,6 +37,10 @@ const ArticleList = (props) => {
         } else {
             if (params.mywork === "mywork") {
                 listFilter = "Self";
+                getMyArticles()
+                    .then((articleResp) => {
+                        setArticles([...articleResp])
+                    })
             } else if (params.categoryType !== undefined) {
                 listFilter = params.categoryType;
             } else {

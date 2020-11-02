@@ -23,9 +23,10 @@ const useStyles = makeStyles({
     },
     media: {
 
-        height: '100%',
+        height: '40%',
         width: '40%',
-        maxWidth: '40%',
+        maxWidth: 400,
+        maxHeight: 400,
         borderRadius: '.3em',
         boxShadow: '10px 10px 15px #aaaaaa'
     },
