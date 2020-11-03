@@ -20,7 +20,7 @@ DBDiagram Schema https://dbdiagram.io/d/5f91ad8e3a78976d7b78c797
   MVP Features
 * User Registration and JWT Authentication.
 * Edit user profile.
-* Article CRUD with category, tags, and visibility (self, circle, all).
+* Article CRUD with category, tags, and visibility (self, all).
 * Comment on articles
 * Delete unwanted comments on your own articles. 
 * Block other users (prevents them seeing your work or commenting).
