@@ -1,0 +1,19 @@
+.div__registration {
+  display: flex;
+}
+
+.container__login {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100vh;
+  padding-bottom: 5em;
+  width: auto;
+  background-color: rgb(46, 79, 105);
+  background-image: url("../assets/Scribere.png");
+  background-size: contain;
+  background-repeat: repeat;
+  background-attachment: fixed;
+  background-position: center bottom;
+}

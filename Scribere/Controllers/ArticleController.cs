@@ -12,6 +12,7 @@ using Scribere.Repositories;
 
 namespace Scribere.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ArticleController : ControllerBase
