@@ -229,7 +229,11 @@ td {
 
 .div__article__body {
   border: 1px solid lightgrey;
+  border-radius: 2em;
   background-color: #ddd;
+  margin: 2em 1em;
+  overflow: hidden;
+  box-shadow: 10px 10px 5px #aaaaaa;
 }
 
 .MuiContainer-maxWidthLg {

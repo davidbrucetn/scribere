@@ -100,6 +100,9 @@ const ArticleDetail = () => {
             ].join(','),
             whiteSpace: 'pre-line'
         },
+        card: {
+            margin: '0 1em',
+        }
     }));
 
     const handleFieldChange = evt => {
