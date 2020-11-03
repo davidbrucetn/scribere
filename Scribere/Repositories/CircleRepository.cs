@@ -62,8 +62,8 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"INSERT INTO Circle (FriendId, UserId) 
                                                 OUTPUT INSERTED.ID
                                          VALUES ( @CircleId, @UserId );";
-                    cmd.Parameters.AddWithValue("@CircleId", circle.FriendId);
-                    cmd.Parameters.AddWithValue("@UserId", circle.UserId);
+                    DbUtils.AddParameter(cmd,"@CircleId", circle.FriendId);
+                    DbUtils.AddParameter(cmd,"@UserId", circle.UserId);
 
                     circle.Id = (int)cmd.ExecuteScalar();
                 }
@@ -84,8 +84,8 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM Circle WHERE FriendId = @friendId and UserId = @UserId;";
 
-                    cmd.Parameters.AddWithValue("@friendId", friendId);
-                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    DbUtils.AddParameter(cmd,"@friendId", friendId);
+                    DbUtils.AddParameter(cmd,"@UserId", userId);
 
                     cmd.ExecuteNonQuery();
                 }

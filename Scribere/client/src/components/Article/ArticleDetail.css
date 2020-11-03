@@ -212,3 +212,36 @@ input.toggle[type="checkbox"] {
   margin-bottom: 0;
 }
 /* End Tag Form */
+
+.card__media__container {
+  display: flex;
+}
+
+.div__card__media--right {
+  flex: 8;
+  background-color: rgb(46, 79, 105);
+  margin-bottom: 3em;
+}
+
+td {
+  padding: 0 1em;
+}
+
+.div__article__body {
+  border: 1px solid lightgrey;
+  background-color: #ddd;
+}
+
+.MuiContainer-maxWidthLg {
+  max-width: 90vw;
+}
+
+.div__comment__card {
+  border: 1px solid #aaaaaa;
+  box-shadow: 10px 10px 5px #aaaaaa;
+  border-radius: 1em;
+  text-transform: none;
+  font-size: 16;
+  padding: 6px 1em;
+  margin: 0 1em;
+}

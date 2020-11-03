@@ -55,7 +55,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "SELECT Id, Type FROM Category WHERE Id = @categoryId;";
-                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                    DbUtils.AddParameter(cmd,"@categoryId", categoryId);
                     var reader = cmd.ExecuteReader();
 
                     Category category = null;
@@ -80,8 +80,8 @@ namespace Scribere.Repositories
                                                 OUTPUT INSERTED.ID
                                                   VALUES ( @CategoryId, @Type ) 
                                         ;";
-                    cmd.Parameters.AddWithValue("@CategoryId", category.Id);
-                    cmd.Parameters.AddWithValue("@Type", category.Type);
+                    DbUtils.AddParameter(cmd,"@CategoryId", category.Id);
+                    DbUtils.AddParameter(cmd,"@Type", category.Type);
 
                     category.Id = (int)cmd.ExecuteScalar();
                 }
@@ -100,8 +100,8 @@ namespace Scribere.Repositories
                                            SET Type = @Type
                                             WHERE Id = @CategoryId";
 
-                    cmd.Parameters.AddWithValue("@CategoryId", category.Id);
-                    cmd.Parameters.AddWithValue("@Type", category.Type);
+                    DbUtils.AddParameter(cmd,"@CategoryId", category.Id);
+                    DbUtils.AddParameter(cmd,"@Type", category.Type);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -120,7 +120,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM Category WHERE Id = @categoryId;";
 
-                    cmd.Parameters.AddWithValue("@categoryId", categoryId);
+                    DbUtils.AddParameter(cmd,"@categoryId", categoryId);
 
                     cmd.ExecuteNonQuery();
                 }

@@ -24,8 +24,6 @@ const ArticleList = (props) => {
 
     thisUserData = JSON.parse(sessionStorage.UserData);
 
-    console.log(params)
-
     const generateArticleList = () => {
         getAllUserBlocks()
         if (params.favorites === "favarticles") {
@@ -65,6 +63,11 @@ const ArticleList = (props) => {
         gridList: {
             width: '80vw',
             height: '90vh',
+            opacity: 1,
+            animationName: 'fadeInOpacity',
+            animationTimingFunction: 'ease',
+            animationDuration: '2s',
+            paddingTop: 10,
 
         },
         icon: {
@@ -89,7 +92,7 @@ const ArticleList = (props) => {
 
                 <GridList cellHeight={180} className={classes.gridList}>
                     <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
-                        <ListSubheader component="div">Articles</ListSubheader>
+                        <ListSubheader component="div"></ListSubheader>
 
 
                         {articles.map((article) => ((!FilterforBlockedUsers(article.userId, thisUserData, userBlocks)) &&

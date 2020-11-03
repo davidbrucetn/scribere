@@ -60,7 +60,7 @@ namespace Scribere.Repositories
                                         LEFT JOIN UserImage ui on u.Id = ui.UserId
                                     WHERE a.Id = @articleId
                                         Order By c.CreateDate;";
-                    cmd.Parameters.AddWithValue("@articleId", articleId);
+                    DbUtils.AddParameter(cmd,"@articleId", articleId);
                     var reader = cmd.ExecuteReader();
                     var books = new List<Comment>();
                     while (reader.Read())
@@ -91,7 +91,7 @@ namespace Scribere.Repositories
                                         LEFT JOIN UserData u on u.Id = c.UserId
                                         LEFT JOIN UserImage ui on u.Id = ui.UserId
                                    WHERE c.Id = @commentId;";
-                    cmd.Parameters.AddWithValue("@commentId", commentId);
+                    DbUtils.AddParameter(cmd,"@commentId", commentId);
                     var reader = cmd.ExecuteReader();
 
                     Comment comment = null;
@@ -116,10 +116,10 @@ namespace Scribere.Repositories
                                                 OUTPUT INSERTED.ID
                                                   VALUES ( @ArticleId, @UserId, @Text, @CreateDate ) 
                                         ;";
-                    cmd.Parameters.AddWithValue("@ArticleId", comment.ArticleId);
-                    cmd.Parameters.AddWithValue("@UserId", comment.UserId);
-                    cmd.Parameters.AddWithValue("@Text", comment.Text);
-                    cmd.Parameters.AddWithValue("@CreateDate", comment.CreateDate);
+                    DbUtils.AddParameter(cmd,"@ArticleId", comment.ArticleId);
+                    DbUtils.AddParameter(cmd,"@UserId", comment.UserId);
+                    DbUtils.AddParameter(cmd,"@Text", comment.Text);
+                    DbUtils.AddParameter(cmd,"@CreateDate", comment.CreateDate);
 
                     comment.Id = (int)cmd.ExecuteScalar();
                 }
@@ -142,11 +142,11 @@ namespace Scribere.Repositories
                                                    CreateDate = @CreateDate
                                             WHERE Id = @Id";
 
-                    cmd.Parameters.AddWithValue("@Id", comment.Id);
-                    cmd.Parameters.AddWithValue("@ArticleId", comment.ArticleId);
-                    cmd.Parameters.AddWithValue("@UserId", comment.UserId);
-                    cmd.Parameters.AddWithValue("@Text", comment.Text);
-                    cmd.Parameters.AddWithValue("@CreateDate", comment.CreateDate);
+                    DbUtils.AddParameter(cmd,"@Id", comment.Id);
+                    DbUtils.AddParameter(cmd,"@ArticleId", comment.ArticleId);
+                    DbUtils.AddParameter(cmd,"@UserId", comment.UserId);
+                    DbUtils.AddParameter(cmd,"@Text", comment.Text);
+                    DbUtils.AddParameter(cmd,"@CreateDate", comment.CreateDate);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -165,7 +165,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM Comment WHERE Id = @CommentId;";
 
-                    cmd.Parameters.AddWithValue("@CommentId", commentId);
+                    DbUtils.AddParameter(cmd,"@CommentId", commentId);
 
                     cmd.ExecuteNonQuery();
                 }

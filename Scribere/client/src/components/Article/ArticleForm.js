@@ -1,11 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
+import Moment from 'react-moment';
+import 'moment-timezone';
+import Datetime from 'react-datetime';
 import { ArticleContext } from "../../providers/ArticleProvider";
 import { CategoryContext } from "../../providers/CategoryProvider";
 import { VisibilityContext } from "../../providers/VisibilityProvider";
 import { useHistory } from "react-router-dom";
 
+
 import "./ArticleForm.css";
 
+import { makeStyles } from '@material-ui/core/styles';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -20,6 +25,31 @@ const ArticleForm = () => {
     const { visibilities, getAllVisibilities } = useContext(VisibilityContext)
     const [visibilityValue, setVisibilityValue] = React.useState(2);
     const [isLoading, setIsLoading] = useState(false);
+
+    const useStyles = makeStyles({
+
+        formlabel: {
+            borderRadius: 2,
+            backgroundColor: 'default',
+            paddingBottom: 5,
+            marginBottom: 3,
+            marginTop: 3,
+            paddingTop: 3,
+            paddingLeft: '2em',
+        },
+        Typography: {
+            fontFamily: [
+                'Merriweather',
+                'serif'
+            ].join(','),
+            textShadow: '10px 10px 15px #aaaaaa',
+            whiteSpace: 'pre-line',
+        }
+    });
+
+    const classes = useStyles();
+
+
 
 
     const history = useHistory();
@@ -68,22 +98,23 @@ const ArticleForm = () => {
         }
 
         addArticle(article).then((a) => {
-            // history.push(`/articles/${a.id}`);
             history.push(`/articles`);
         });
-
-
     };
+
+    const cancel = () => {
+        history.push(`/articles`);
+    }
 
 
     return (
         <div className="container__article__new">
             <div className="row justify-content-center div__articleNew__form">
-                <div className="card col-md-11 col-lg-8">
+                <div className="card col-md-11 col-lg-10">
                     <h3 className="mt-3 text-primary text-center card-title">Let the Words Flow</h3>
                     <div className="mt-2 card-body">
                         <div className="form-group">
-                            <FormLabel component="legend">Heading</FormLabel>
+                            <FormLabel className={classes.Typography} component="legend">Heading</FormLabel>
                             <input
                                 id="heading"
                                 className="form-control"
@@ -92,7 +123,7 @@ const ArticleForm = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <FormLabel component="legend">Article Image URL</FormLabel>
+                            <FormLabel className={classes.Typography} component="legend">Article Image URL</FormLabel>
                             <input
                                 id="articleImage.imageUrl"
                                 className="form-control"
@@ -101,7 +132,7 @@ const ArticleForm = () => {
                             />
                         </div>
                         <div className="form-group">
-                            <FormLabel component="legend">Category</FormLabel>
+                            <FormLabel className={classes.Typography} component="legend">Category</FormLabel>
                             <select
                                 id="categoryId"
                                 className="form-control"
@@ -115,20 +146,20 @@ const ArticleForm = () => {
                             </select>
                         </div>
                         <div className="form-group radio__group">
-                            <FormControl component="fieldset">
-                                <FormLabel component="legend">Visibility</FormLabel>
+                            <FormControl className={classes.Typography} component="fieldset">
+                                <FormLabel className={classes.Typography} component="legend">Visibility</FormLabel>
                                 <RadioGroup row aria-label="visibilityId" name="article.visibiltyId" value={visibilityValue} onChange={handleFieldChange} >
                                     {visibilities.map(aVisibility =>
-                                        <FormControlLabel key={aVisibility.id.toString() + "Visibility"} value={aVisibility.id.toString()} control={<Radio />} label={aVisibility.type} />
+                                        <FormControlLabel className={classes.Typography} key={aVisibility.id.toString() + "Visibility"} value={aVisibility.id.toString()} control={<Radio />} label={aVisibility.type} />
                                     )}
                                 </RadioGroup>
                             </FormControl>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="text" className="control-label">Body</label>
+                            <FormLabel className={classes.Typography} component="legend">Body</FormLabel>
                             <textarea
                                 id="text"
-                                rows="15"
+                                rows="13"
                                 className="form-control article__content-input"
                                 onChange={handleFieldChange}
                                 value={article.text}
@@ -137,6 +168,7 @@ const ArticleForm = () => {
                         </div>
                         <div className="form-group">
                             <button disabled={isLoading} onClick={submit} className="btn btn-primary btn-block">Save</button>
+                            <button disabled={isLoading} onClick={cancel} className="btn btn-primary btn-block">Cancel</button>
                         </div>
                     </div>
                 </div>

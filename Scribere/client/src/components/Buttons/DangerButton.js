@@ -3,6 +3,7 @@ import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 import Button from '@material-ui/core/Button';
+import { grey } from '@material-ui/core/colors';
 
 
 export function DangerButton(props) {
@@ -23,6 +24,7 @@ export function DangerButton(props) {
         },
         ButtonDanger: {
             backgroundColor: secondary,
+            color: grey[200]
         },
         ButtonPrimary: {
 

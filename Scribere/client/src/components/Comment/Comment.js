@@ -54,7 +54,7 @@ export default function Comment({ comment, article }) {
     return (
         (!editStatus) ?
             <>
-                <div className="card" style={{ margin: "1em 1em" }}>
+                <div className="card card__comment" style={{ margin: "1em 1em" }}>
                     <p>{comment.text}</p>
                     <span>{comment.userData.pseudonym}</span>
                     <p className="text-secondary">{new Intl.DateTimeFormat('en-US').format(new Date(comment.createDate))}</p>
@@ -79,18 +79,16 @@ export default function Comment({ comment, article }) {
                 </div>
             </> :
             <>
-                <div className="card" style={{ margin: "1em 1em" }}>
+                <div className="card card__comment" style={{ margin: "1em 1em" }}>
                     <h6>Edit Form</h6>
                     <label htmlFor="content" className="control-label">Content</label>
-                    <input className="form-control" id="text" value={editedComment.text} onChange={handleFieldChange} />
+                    <textarea rows="2" className="form-control" id="text" value={editedComment.text} onChange={handleFieldChange} />
                     <span>{comment.userData.pseudonym}</span>
                     <p className="text-secondary">{new Intl.DateTimeFormat('en-US').format(new Date(comment.createDate))}</p>
                     <div className="control__group">
                         {(comment.userId === thisUserId) &&
 
                             <>
-                                <Button color="primary" onClick={Update}>Update Comment</Button>{" "}
-                                <button type="button" key={`EditRating${comment.id}`} title="Edit" onClick={goEdit}><EditCommentButton /></button>
                                 <button type="button" key={`DeleteRating${comment.id}`} title="Delete" onClick={toggle}><DeleteCommentButton /></button>
 
                                 <Modal isOpen={modal} toggle={toggle}>

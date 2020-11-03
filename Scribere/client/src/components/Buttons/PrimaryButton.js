@@ -2,6 +2,7 @@ import React from 'react';
 
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import { grey } from '@material-ui/core/colors';
 
 
 export function PrimaryButton(props) {
@@ -39,6 +40,7 @@ export function PrimaryButton(props) {
             border: '1px solid',
             lineHeight: 1.5,
             backgroundColor: '#0063cc',
+            color: grey[200],
             borderColor: '#0063cc',
             fontFamily: [
                 '-apple-system',

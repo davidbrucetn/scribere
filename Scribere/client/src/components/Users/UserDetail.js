@@ -24,7 +24,11 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     card: {
-        maxWidth: 345,
+        maxWidth: '80%',
+        opacity: 1,
+        animationName: 'fadeInOpacity',
+        animationTimingFunction: 'ease',
+        animationDuration: '2s',
     },
     media: {
         height: 250,
@@ -37,6 +41,8 @@ const useStyles = makeStyles({
             'Merriweather',
             'serif'
         ].join(','),
+        whiteSpace: 'pre-line',
+
     }
 });
 
@@ -126,7 +132,7 @@ const UserDetail = () => {
 
         (!isLoading) ?
 
-            <Card>
+            <Card className={classes.card}>
                 <CardActionArea onClick={goDetails}>
                     {(userData.userImage.imageUrl !== "" && userData.userImage !== null) ?
                         <CardMedia
@@ -139,7 +145,7 @@ const UserDetail = () => {
                         <Typography className={classes.Typography} gutterBottom variant="h5" component="h3"> {userData.pseudonym}</Typography>
                         <Typography className={classes.Typography} gutterBottom variant="h6" component="h6"> {userData.city} {userData.state}</Typography>
                         <Typography className={classes.Typography} gutterBottom variant="h6" component="h6"> {userData.country.name}</Typography>
-                        <Typography className={classes.Typography} gutterBottom variant="body1" component="body1">Bio: {userData.bio}</Typography>
+                        <Typography className={classes.Typography} gutterBottom variant="body" component="body">Bio: {userData.bio}</Typography>
                     </CardContent>
                 </CardActionArea>
 

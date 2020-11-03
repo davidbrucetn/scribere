@@ -59,7 +59,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "Select Id, ArticleId, ISBN, LCCN, Title, Author FROM BOOK WHERE ArticleId = @articleId;";
-                    cmd.Parameters.AddWithValue("@articleId", articleId);
+                    DbUtils.AddParameter(cmd,"@articleId", articleId);
                     var reader = cmd.ExecuteReader();
 
                     Book book = null;
@@ -84,11 +84,11 @@ namespace Scribere.Repositories
                                                 OUTPUT INSERTED.ID
                                                   VALUES ( @ArticleId, @ISBN, @LCCN, @Title, @Author ) 
                                         ;";
-                    cmd.Parameters.AddWithValue("@ArticleId", book.ArticleId);
-                    cmd.Parameters.AddWithValue("@ISBN", book.ISBN);
-                    cmd.Parameters.AddWithValue("@LCCN", book.LCCN);
-                    cmd.Parameters.AddWithValue("@Title", book.Title);
-                    cmd.Parameters.AddWithValue("@Author", book.Author);
+                    DbUtils.AddParameter(cmd,"@ArticleId", book.ArticleId);
+                    DbUtils.AddParameter(cmd,"@ISBN", book.ISBN);
+                    DbUtils.AddParameter(cmd,"@LCCN", book.LCCN);
+                    DbUtils.AddParameter(cmd,"@Title", book.Title);
+                    DbUtils.AddParameter(cmd,"@Author", book.Author);
 
                     book.Id = (int)cmd.ExecuteScalar();
                 }
@@ -112,12 +112,12 @@ namespace Scribere.Repositories
                                                   Author = @Author
                                             WHERE Id = @Id";
 
-                    cmd.Parameters.AddWithValue("@Id", book.Id);
-                    cmd.Parameters.AddWithValue("@ArticleId", book.ArticleId);
-                    cmd.Parameters.AddWithValue("@ISBN", book.ISBN);
-                    cmd.Parameters.AddWithValue("@LCCN", book.LCCN);
-                    cmd.Parameters.AddWithValue("@Title", book.Title);
-                    cmd.Parameters.AddWithValue("@Author", book.Author);
+                    DbUtils.AddParameter(cmd,"@Id", book.Id);
+                    DbUtils.AddParameter(cmd,"@ArticleId", book.ArticleId);
+                    DbUtils.AddParameter(cmd,"@ISBN", book.ISBN);
+                    DbUtils.AddParameter(cmd,"@LCCN", book.LCCN);
+                    DbUtils.AddParameter(cmd,"@Title", book.Title);
+                    DbUtils.AddParameter(cmd,"@Author", book.Author);
 
 
                     cmd.ExecuteNonQuery();
@@ -137,7 +137,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM Book WHERE Id = @BookId;";
 
-                    cmd.Parameters.AddWithValue("@BookId", bookId);
+                    DbUtils.AddParameter(cmd,"@BookId", bookId);
 
                     cmd.ExecuteNonQuery();
                 }

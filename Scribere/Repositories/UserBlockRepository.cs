@@ -60,10 +60,9 @@ namespace Scribere.Repositories
                 {
                     cmd.CommandText = @"INSERT INTO UserBlock ( BlockedUserId, SourceUserId ) 
                                                 OUTPUT INSERTED.ID
-                                                  VALUES ( @BlockedUserId, @SourceUserId ) 
-                                        ;";
-                    cmd.Parameters.AddWithValue("@BlockedUserId", userBlock.BlockedUserId);
-                    cmd.Parameters.AddWithValue("@SourceUserId", userBlock.SourceUserId);
+                                                  VALUES ( @BlockedUserId, @SourceUserId );";
+                    DbUtils.AddParameter(cmd,"@BlockedUserId", userBlock.BlockedUserId);
+                    DbUtils.AddParameter(cmd,"@SourceUserId", userBlock.SourceUserId);
 
                     userBlock.Id = (int)cmd.ExecuteScalar();
                 }
@@ -84,8 +83,8 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM UserBlock WHERE BlockedUserId = @BlockedUserId and SourceUserId = @SourceUserId;";
 
-                    cmd.Parameters.AddWithValue("@BlockedUserId", userBlockId);
-                    cmd.Parameters.AddWithValue("@SourceUserId", SourceUserId);
+                    DbUtils.AddParameter(cmd,"@BlockedUserId", userBlockId);
+                    DbUtils.AddParameter(cmd,"@SourceUserId", SourceUserId);
 
                     cmd.ExecuteNonQuery();
                 }

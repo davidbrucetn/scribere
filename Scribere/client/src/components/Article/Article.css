@@ -1,11 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap");
 
-font-family: "Merriweather", serif;
-
-html {
-  --mdc-typography-font-family: "Merriweather, serif";
-}
-
 @keyframes fadeInOpacity {
   0% {
     opacity: 0;
@@ -13,4 +7,17 @@ html {
   100% {
     opacity: 1;
   }
+}
+
+.card__media__container {
+  display: flex;
+}
+
+.div__card__media--right {
+  flex: 50%;
+  background-color: rgb(46, 79, 105);
+}
+
+td {
+  padding: 0 1em;
 }

@@ -80,20 +80,21 @@ const ArticleEdit = () => {
                 "ImageUrl": ""
             };
         }
-
-
-
         updateArticle(article).then((a) => {
             history.push(`/articles/${article.id}`);
         });
     };
+
+    const cancel = () => {
+        history.push(`/articles`);
+    }
 
     return (
         (!isLoading && article !== undefined) ?
 
             <div className="container">
                 <div className="row justify-content-center">
-                    <div className="card col-md-12 col-lg-8">
+                    <div className="card col-md-12 col-lg-15">
                         <h3 className="mt-3 text-primary text-center card-title">Let the Words Flow</h3>
                         <div className="mt-5 card-body">
                             <div className="text-danger"></div>
@@ -143,7 +144,7 @@ const ArticleEdit = () => {
                                 <label htmlFor="text" className="control-label">Body</label>
                                 <textarea
                                     id="text"
-                                    rows="15"
+                                    rows="13"
                                     className="form-control post__content-input"
                                     onChange={handleFieldChange}
                                     value={article.text}
@@ -152,6 +153,7 @@ const ArticleEdit = () => {
                             </div>
                             <div className="form-group">
                                 <button disabled={isLoading} onClick={submit} className="btn btn-primary btn-block">SAVE</button>
+                                <button disabled={isLoading} onClick={cancel} className="btn btn-primary btn-block">Cancel</button>
                             </div>
                         </div>
                     </div>
