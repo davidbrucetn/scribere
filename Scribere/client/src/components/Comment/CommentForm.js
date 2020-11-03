@@ -7,6 +7,7 @@ import "./Comment.css";
 
 export default function CommentForm(article) {
 
+    console.log("COmment form")
     const thisUser = JSON.parse(sessionStorage.UserData)
 
     const [comment, setComment] = useState({ text: '', userId: thisUser.id, articleId: '', createDate: '' });
@@ -16,6 +17,7 @@ export default function CommentForm(article) {
     const handleFieldChange = evt => {
         const stateToChange = { ...comment };
         stateToChange[evt.target.id] = evt.target.value;
+        console.log(evt.target)
         setComment(stateToChange);
     };
 
@@ -27,7 +29,8 @@ export default function CommentForm(article) {
     }
 
     const cancelNewComment = () => {
-
+        comment.text = "";
+        setComment(comment.text)
     }
 
 

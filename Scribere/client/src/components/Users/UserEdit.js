@@ -152,8 +152,9 @@ export default function UserEdit() {
                             </div>
                             <div className="form-group">
                                 <label htmlFor="bio" className="control-label">Bio</label>
-                                <input
+                                <textarea type="text"
                                     id="bio"
+                                    rows="10"
                                     className="form-control"
                                     onChange={handleFieldChange}
                                     value={userData.bio}

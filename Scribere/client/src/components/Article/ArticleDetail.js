@@ -20,21 +20,23 @@ import "./ArticleDetail.css";
 
 import { Dialog } from "@reach/dialog";
 
-
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import { Hidden } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import DialogActions from '@material-ui/core/DialogActions';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-
 
 
 const ArticleDetail = () => {
@@ -62,29 +64,34 @@ const ArticleDetail = () => {
 
     // Material-ui Styling
 
-    const useStyles = makeStyles({
-
-        card: {
-            borderRadius: 2,
-            backgroundColor: 'default',
-            paddingBottom: 5,
-            marginBottom: 3,
-            marginTop: 3,
-            paddingTop: 3,
-            paddingLeft: '2em',
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-around',
+            overflow: 'Hidden',
+            backgroundColor: theme.palette.background.paper,
+        },
+        gridList: {
+            width: '80vw',
+            height: '90vh',
             opacity: 1,
             animationName: 'fadeInOpacity',
-            animationIterationCount: 1,
-            animationTimingFunction: 'ease-in',
-            animationDuration: '1s',
+            animationTimingFunction: 'ease',
+            animationDuration: '2s',
+            paddingTop: 10,
+
+        },
+        icon: {
+            color: 'rgba(255, 255, 255, 0.54)',
         },
         media: {
-            height: '20vh',
-            width: '20vw',
-            maxWidth: '40%',
-            borderRadius: '.3em',
-            boxShadow: '10px 10px 15px #aaaaaa',
-            paddingBottom: '2em',
+            height: '40%',
+            width: '40%',
+            maxWidth: 350,
+            maxHeight: 350,
+            backgroundColor: "rgb(46, 79, 105)",
+            boxShadow: '10px 10px 15px #aaaaaa'
         },
         Typography: {
             fontFamily: [
@@ -92,8 +99,8 @@ const ArticleDetail = () => {
                 'serif'
             ].join(','),
             whiteSpace: 'pre-line'
-        }
-    });
+        },
+    }));
 
     const handleFieldChange = evt => {
         const stateToChange = { ...comment };
@@ -121,7 +128,7 @@ const ArticleDetail = () => {
 
 
     const cancelNewComment = () => {
-
+        setComment({ text: '', userId: thisUser.id, articleId: '', createDate: '' })
     }
 
     const handleDelete = () => {
@@ -200,7 +207,6 @@ const ArticleDetail = () => {
                 getAllFavoriteAuthorIds();
                 getAllFavoriteArticleIds();
                 GetAllCommentsByArticle(id);
-
             })
 
         getTagsByArticleId(id)
@@ -297,146 +303,177 @@ const ArticleDetail = () => {
 
         (!isLoading && article !== undefined) ?
             (
-                <React.Fragment>
-                    <CssBaseline />
-                    <Container maxWidth="lg">
-                        {<Dialog aria-label="deleteConfirm" className="dialog__fade"
-                            isOpen={showDialog} onDismiss={close}
-                            onClose={close}
-                        >Are you sure you want to delete this article?
+                <div className={classes.root}>
+
+                    <GridList cellHeight={180} className={classes.gridList}>
+                        <GridListTile key="Subheader" cols={2} style={{ height: 'auto' }}>
+                            <ListSubheader component="div"></ListSubheader>
+
+                            {<Dialog aria-label="deleteConfirm" className="dialog__fade"
+                                isOpen={showDialog} onDismiss={close}
+                                onClose={close}
+                            >Are you sure you want to delete this article?
                              <DialogActions>
 
-                                <PrimaryButton size="small" handleClick={close}>Disagree</PrimaryButton>
-                                <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={Delete}>Agree</DangerButton>
+                                    <PrimaryButton size="small" handleClick={close}>Disagree</PrimaryButton>
+                                    <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={Delete}>Agree</DangerButton>
 
-                            </DialogActions>
-                        </Dialog>}
-                        <Card className={classes.card} style={{ backgroundColor: '#f5f5f5' }}>
-                            <CardActionArea>
+                                </DialogActions>
+                            </Dialog>}
+                            <Card className={classes.card} style={{ backgroundColor: '#f5f5f5' }}>
+                                <CardActionArea>
 
-                                {(article.articleImage !== "") ?
-                                    <CardMedia
-                                        className={classes.media}
-                                        image={article.articleImage.imageUrl}
-                                        title={article.heading}
-                                    /> : null}
-                                <EditCard handleClick={goEdit} >
-
-                                    <Typography className={classes.Typography} gutterBottom variant="h5" component="h2">
-                                        {article.heading} </Typography>
-                                    <Typography className={classes.Typography} gutterBottom variant="h6" >Category: {article.category.type}</Typography>
-                                    <Typography className={classes.Typography} gutterBottom variant="h6" >
-                                        Author: {article.userData.pseudonym}
-                                    </Typography>
-                                    {new Intl.DateTimeFormat('en-US').format(new Date(article.createDate))}
-                                    <br />
-
-                                </EditCard>
-
-
-                            </CardActionArea>
-                            {(articleTags !== null || articleTags !== undefined) && articleTags.map((tag, index) =>
-                                <div className="div__tag" key={`${article.id}-${tag.id}`} id={`${article.id}-${tag.id}`} style={{ display: 'inline-block', margin: '1vh .8vw', padding: '0 .4vw' }}>
-                                    <h6 className="tag__title"> {tag.title}</h6>
-                                </div>
-                            )
-                            }
-                            <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                {(article.userId === thisUser.id) && (
-                                    <>
-                                        <PrimaryButton size="small" handleClick={goEdit}>
-                                            Edit
-                                        </PrimaryButton>
-                                        <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={handleDelete}>Delete</DangerButton>
-                                    </>)}
-                                {(thisUser.id !== article.userId) &&
-                                    ((favoriteAuthors.find((favAuthor) => { return favAuthor.favoriteUserId === article.userId })) ?
-
-                                        <PrimaryButton className="btn__unfaveauthor bg-info" handleClick={RemoveFavAuthor}>UnFav Author</PrimaryButton>
-                                        :
-                                        <PrimaryButton className="btn__faveauthor bg-primary" handleClick={AddFaveAuthor}>Fav Author</PrimaryButton>)}
-                                {(thisUser.id !== article.userId) &&
-                                    ((favoriteArticles.find((favArticle) => { return favArticle.articleId === article.id })) ?
-
-                                        <PrimaryButton className="btn__unfavearticle bg-info" handleClick={RemoveFaveArticle}>UnFavorite Article</PrimaryButton>
-                                        :
-                                        <PrimaryButton className="btn__favearticle bg-primary" handleClick={AddFaveArticle}>Fav Article</PrimaryButton>)}
-                            </CardActions>
-                            {(article.userId === thisUser.id) && (
-                                <div className="wrap-collapsible">
-                                    <input id="collapsible" className="toggle" type="checkbox" />
-                                    <label htmlFor="collapsible" className="lbl-toggle">Manage Tags</label>
-                                    <div className="div__collapsible__tag--form">
-                                        <div className="div__tag__form">
-                                            <Paper
-                                                component="form"
-                                                onSubmit={handleSubmit(onSubmit)}
-                                            >
-                                                <div className="div__tags__list">
-                                                    {tags.map((tag, i) => {
-                                                        return (
-                                                            <FormCheckBox
-                                                                key={tag.id}
-                                                                name={tag.title}
-                                                                control={control}
-                                                                setValue={setValue}
-                                                                getValues={getValues}
-                                                                value={tag.id}
-                                                                label={tag.title}
-                                                                register={register}
-                                                                defaultValue={articleTags.some(articleTag => articleTag.id === tag.id)}
-                                                            />
-                                                        );
-                                                    })}
-                                                </div>
-
-                                                <Button
-                                                    variant="contained"
-                                                    color="primary"
-                                                    size="large"
-                                                    type="submit"
-                                                > Save </Button>
-                                                <Button
-                                                    variant="contained"
-                                                    color="secondary"
-                                                    size="large"
-                                                    onClick={goBack}
-
-                                                > Cancel</Button>
-                                            </Paper>
+                                    <div className="card__media__container">
+                                        {(article.articleImage !== undefined) ?
+                                            <CardMedia
+                                                component="img"
+                                                className={classes.media}
+                                                image={article.articleImage.imageUrl}
+                                                title={article.heading} >
+                                            </CardMedia> :
+                                            <img src={require("./images/quillImage.jpg").default} alt={article.heading} />}
+                                        <div className="div__card__media--right">
 
                                         </div>
                                     </div>
-                                </div>
-                            )}
 
-                            <div className="div__comment__form">
-                                <div className="card" style={{ margin: "1em 1em", padding: "1em 1em" }}>
-                                    <h6>Add a Comment</h6>
-                                    <form id="form__comment__new">
-                                        <div className="form__comment__new">
+                                    <CardContent>
 
-                                            <input className="form-control" id="text" value={comment.text} onChange={handleFieldChange} />
+                                        <Typography className={classes.TypographyShadow} gutterBottom variant="h4" component="h4">
+                                            {article.heading} </Typography>
+                                        <Typography className={classes.TypographyShadow} gutterBottom variant="h6" component="h6">
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                        <th>
+                                                            <strong>Category</strong>
+                                                        </th>
+                                                        <td>
+                                                            {article.category.type}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>
+                                                            <strong>Author</strong>
+                                                        </th>
+                                                        <td>
+                                                            {article.userData.pseudonym}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </Typography>
+                                        <span >{new Intl.DateTimeFormat('en-US').format(new Date(article.createDate))}</span>
+
+                                    </CardContent>
+                                </CardActionArea>
+                                {(articleTags !== null || articleTags !== undefined) && articleTags.map((tag, index) =>
+                                    <div className="div__tag" key={`${article.id}-${tag.id}`} id={`${article.id}-${tag.id}`} style={{ display: 'inline-block', margin: '1vh .8vw', padding: '0 .4vw' }}>
+                                        <h6 className="tag__title"> {tag.title}</h6>
+                                    </div>
+                                )
+                                }
+                                <CardActions style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    {(article.userId === thisUser.id) && (
+                                        <>
+                                            <PrimaryButton size="small" handleClick={goEdit}>
+                                                Edit
+                                        </PrimaryButton>
+                                            <DangerButton ml="3em" size="small" className={classes.ButtonDanger} handleClick={handleDelete}>Delete</DangerButton>
+                                        </>)}
+                                    {(thisUser.id !== article.userId) &&
+                                        ((favoriteAuthors.find((favAuthor) => { return favAuthor.favoriteUserId === article.userId })) ?
+
+                                            <PrimaryButton className="btn__unfaveauthor bg-info" handleClick={RemoveFavAuthor}>UnFav Author</PrimaryButton>
+                                            :
+                                            <PrimaryButton className="btn__faveauthor bg-primary" handleClick={AddFaveAuthor}>Fav Author</PrimaryButton>)}
+                                    {(thisUser.id !== article.userId) &&
+                                        ((favoriteArticles.find((favArticle) => { return favArticle.articleId === article.id })) ?
+
+                                            <PrimaryButton className="btn__unfavearticle bg-info" handleClick={RemoveFaveArticle}>UnFavorite Article</PrimaryButton>
+                                            :
+                                            <PrimaryButton className="btn__favearticle bg-primary" handleClick={AddFaveArticle}>Fav Article</PrimaryButton>)}
+                                </CardActions>
+                                {(article.userId === thisUser.id) && (
+                                    <div className="wrap-collapsible">
+                                        <input id="collapsible" className="toggle" type="checkbox" />
+                                        <label htmlFor="collapsible" className="lbl-toggle">Manage Tags</label>
+                                        <div className="div__collapsible__tag--form">
+                                            <div className="div__tag__form">
+                                                <Paper
+                                                    component="form"
+                                                    onSubmit={handleSubmit(onSubmit)}
+                                                >
+                                                    <div className="div__tags__list">
+                                                        {tags.map((tag, i) => {
+                                                            return (
+                                                                <FormCheckBox
+                                                                    key={tag.id}
+                                                                    name={tag.title}
+                                                                    control={control}
+                                                                    setValue={setValue}
+                                                                    getValues={getValues}
+                                                                    value={tag.id}
+                                                                    label={tag.title}
+                                                                    register={register}
+                                                                    defaultValue={articleTags.some(articleTag => articleTag.id === tag.id)}
+                                                                />
+                                                            );
+                                                        })}
+                                                    </div>
+
+                                                    <Button
+                                                        variant="contained"
+                                                        color="primary"
+                                                        size="large"
+                                                        type="submit"
+                                                    > Save </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        color="secondary"
+                                                        size="large"
+                                                        onClick={goBack}
+
+                                                    > Cancel</Button>
+                                                </Paper>
+
+                                            </div>
                                         </div>
-                                    </form>
+                                    </div>
+                                )}
 
-                                    <Button color="primary" onClick={submitComment}>Add Comment</Button>{" "}
-                                    <Button onClick={cancelNewComment}>Cancel</Button>
+                                <div className="div__comment__form">
+                                    <div className="div__comment__card" style={{ margin: "1em 1em", padding: "1em 1em" }}>
+                                        <h6>Add a Comment</h6>
+                                        <form id="form__comment__new">
+                                            <div className="form__comment__new">
+
+                                                <textarea rows="2" className="form-control" id="text" value={comment.text} onChange={handleFieldChange} />
+                                            </div>
+                                        </form>
+
+                                        <Button color="primary" onClick={submitComment}>Add Comment</Button>{" "}
+                                        <Button onClick={cancelNewComment}>Clear</Button>
+                                    </div>
+
                                 </div>
 
+                            </Card>
+                            <div className="div__article__body">
+                                <Typography className={classes.Typography} component="div" style={{ color: '#212529', backgroundColor: '#fff', height: 'auto', padding: '1em' }} >
+
+                                    {article.text}
+
+                                </Typography>
                             </div>
+                            <Container>
 
-                        </Card>
-                        <Typography className={classes.Typography} component="div" style={{ color: '#212529', backgroundColor: '#fff', height: 'auto', padding: '1em' }} >
+                                {comments.map((comment) => <Comment key={`${article.id} - ${comment.id}`} comment={comment} article={article} />)}
+                            </Container>
 
-                            {article.text}
-                        </Typography>
-                        <Container>
-
-                            {comments.map((comment) => <Comment key={`${article.id} - ${comment.id}`} comment={comment} article={article} />)}
-                        </Container>
-                    </Container>
-                </React.Fragment >
+                        </GridListTile>
+                    </GridList>
+                </div>
 
             ) : null
 

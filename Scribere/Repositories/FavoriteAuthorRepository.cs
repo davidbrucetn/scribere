@@ -63,8 +63,8 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"INSERT INTO FavoriteAuthor (FavoriteUserId, SourceUserId) 
                                                 OUTPUT INSERTED.ID
                                          VALUES ( @FavoriteAuthorId, @SourceUserId );";
-                    cmd.Parameters.AddWithValue("@FavoriteAuthorId", favoriteAuthor.FavoriteUserId);
-                    cmd.Parameters.AddWithValue("@SourceUserId", favoriteAuthor.SourceUserId);
+                    DbUtils.AddParameter(cmd,"@FavoriteAuthorId", favoriteAuthor.FavoriteUserId);
+                    DbUtils.AddParameter(cmd,"@SourceUserId", favoriteAuthor.SourceUserId);
 
                     favoriteAuthor.Id = (int)cmd.ExecuteScalar();
                 }
@@ -85,8 +85,8 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM FavoriteAuthor WHERE FavoriteUserId = @favoriteUserId and SourceUserId = @SourceUserId;";
 
-                    cmd.Parameters.AddWithValue("@favoriteUserId", favoriteUserId);
-                    cmd.Parameters.AddWithValue("@SourceUserId", SourceUserId);
+                    DbUtils.AddParameter(cmd,"@favoriteUserId", favoriteUserId);
+                    DbUtils.AddParameter(cmd,"@SourceUserId", SourceUserId);
 
                     cmd.ExecuteNonQuery();
                 }

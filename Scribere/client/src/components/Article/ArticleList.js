@@ -67,6 +67,7 @@ const ArticleList = (props) => {
             animationName: 'fadeInOpacity',
             animationTimingFunction: 'ease',
             animationDuration: '2s',
+            paddingTop: 10,
 
         },
         icon: {

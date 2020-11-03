@@ -151,7 +151,7 @@ namespace Scribere.Repositories
                                      LEFT JOIN UserLevel ut ON u.UserLevelId = ut.id
                                      LEFT JOIN UserImage ui ON u.Id = ui.UserId
                                          WHERE u.id = @id";
-                    cmd.Parameters.AddWithValue("@id", id);
+                    DbUtils.AddParameter(cmd,"@id", id);
 
                     UserData userData = null;
                     var reader = cmd.ExecuteReader();
@@ -222,8 +222,8 @@ namespace Scribere.Repositories
                                 SET IsActive = @IsActive
                                 WHERE id = @id";
 
-                    cmd.Parameters.AddWithValue("@IsActive", 1);
-                    cmd.Parameters.AddWithValue("@id", id);
+                    DbUtils.AddParameter(cmd,"@IsActive", 1);
+                    DbUtils.AddParameter(cmd,"@id", id);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -241,8 +241,8 @@ namespace Scribere.Repositories
                                            SET IsActive = @IsActive
                                         WHERE id = @id";
 
-                    cmd.Parameters.AddWithValue("@IsActive", 0);
-                    cmd.Parameters.AddWithValue("@id", id);
+                    DbUtils.AddParameter(cmd,"@IsActive", 0);
+                    DbUtils.AddParameter(cmd,"@id", id);
 
                     cmd.ExecuteNonQuery();
                 }

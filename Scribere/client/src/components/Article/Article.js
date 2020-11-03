@@ -16,15 +16,23 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { grey } from "@material-ui/core/colors";
 
 
 const useStyles = makeStyles({
     card: {
-        maxWidth: 345,
+        maxWidth: '75vw',
+        border: '1px solid grey[200]',
         opacity: 1,
         animationName: 'fadeInOpacity',
-        animationTimingFunction: 'ease',
+        animationTimingFunction: 'ease-in',
         animationDuration: '1s',
+        boxShadow: '10px 10px 15px #aaaaaa',
+        margin: 15,
+
+    },
+    CardActionArea: {
+        backgroundColor: grey[200],
     },
     media: {
 
@@ -32,11 +40,20 @@ const useStyles = makeStyles({
         width: '40%',
         maxWidth: 400,
         maxHeight: 400,
-        borderRadius: '.3em',
+        backgroundColor: "rgb(46, 79, 105)",
         boxShadow: '10px 10px 15px #aaaaaa'
     },
+    TypographyShadow: {
+        fontFamily: [
+            'Merriweather',
+            'serif'
+        ].join(','),
+        fontWeight: 100,
+        textShadow: '10px 10px 15px #aaaaaa',
+        whiteSpace: 'pre-line',
+    }
 });
-
+let articleImageHolder = "";
 const Article = ({ article, generateArticleList }) => {
     const { deleteArticle } = useContext(ArticleContext);
 
@@ -65,29 +82,56 @@ const Article = ({ article, generateArticleList }) => {
         history.push(`/articles/${article.id}`);
     }
 
+    if (article.articleImage.imageUrl === "") {
+        articleImageHolder = './images/quillImage.jpg';
+    } else {
+        articleImageHolder = article.articleImage.imageUrl
+    }
 
     return (
-        <Card>
+        <Card className={classes.card}>
 
-            <CardActionArea onClick={goDetails}>
-                {(article.articleImage.imageUrl !== "") ?
-                    <CardMedia
-                        component="img"
-                        className={classes.media}
-                        image={article.articleImage.imageUrl}
-                        title={article.heading}
-                    /> : null}
+            <CardActionArea className={classes.CardActionArea} onClick={goDetails}>
+                <div className="card__media__container">
+                    {(articleImageHolder === article.articleImage.imageUrl) ?
+                        <CardMedia
+                            component="img"
+                            className={classes.media}
+                            image={articleImageHolder}
+                            title={article.heading} >
+                        </CardMedia> :
+                        <img src={require("./images/quillImage.jpg").default} alt={article.heading} />}
+                    <div className="div__card__media--right">
+
+                    </div>
+                </div>
                 <CardContent>
 
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography className={classes.TypographyShadow} gutterBottom variant="h4" component="h4">
                         {article.heading} </Typography>
-                    <Typography gutterBottom variant="h5" component="h2">Category: {article.category.type}</Typography>
-                    <Typography gutterBottom variant="h5" component="h3">
-                        Author: {article.userData.pseudonym}
+                    <Typography className={classes.TypographyShadow} gutterBottom variant="h6" component="h6">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th>
+                                        <strong>Category</strong>
+                                    </th>
+                                    <td>
+                                        {article.category.type}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <strong>Author</strong>
+                                    </th>
+                                    <td>
+                                        {article.userData.pseudonym}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </Typography>
-                    {new Intl.DateTimeFormat('en-US').format(new Date(article.createDate))}
-
-
+                    <span >{new Intl.DateTimeFormat('en-US').format(new Date(article.createDate))}</span>
 
                 </CardContent>
             </CardActionArea>

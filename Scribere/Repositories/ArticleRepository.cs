@@ -148,7 +148,6 @@ namespace Scribere.Repositories
                               LEFT JOIN Visibility v on v.Id = a.VisibilityId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
-                          AND a.CreateDate < SYSDATETIME()
                           AND ( fa.SourceUserId = @SourceUserId  )
                     UNION 
                     SELECT a.Id, a.Heading, a.Text, 
@@ -171,11 +170,10 @@ namespace Scribere.Repositories
                               LEFT JOIN Visibility v on v.Id = a.VisibilityId
                         WHERE u.IsActive = 1 
                           AND a.VisibilityId = 2
-                          AND a.CreateDate < SYSDATETIME()
                           AND ( far.UserId = @SourceUserId  )
                      ORDER BY a.CreateDate ;";
 
-                    cmd.Parameters.AddWithValue("@SourceUserId", SourceUserId);
+                    DbUtils.AddParameter(cmd,"@SourceUserId", SourceUserId);
                     var reader = cmd.ExecuteReader();
 
                     var articles = new List<Article>();
@@ -221,7 +219,7 @@ namespace Scribere.Repositories
                           AND a.UserId = @articleUserId
                      ORDER BY a.CreateDate DESC;";
 
-                    cmd.Parameters.AddWithValue("@articleUserId", articleUserId);
+                    DbUtils.AddParameter(cmd,"@articleUserId", articleUserId);
                     var reader = cmd.ExecuteReader();
 
                     var articles = new List<Article>();
@@ -265,7 +263,7 @@ namespace Scribere.Repositories
                         WHERE u.IsActive = 1
                           AND a.id = @articleId;";
 
-                    cmd.Parameters.AddWithValue("@articleId", articleId);
+                    DbUtils.AddParameter(cmd,"@articleId", articleId);
                     var reader = cmd.ExecuteReader();
 
                     Article article = null;
@@ -305,13 +303,13 @@ namespace Scribere.Repositories
                            
                      END;"; 
 
-                    cmd.Parameters.AddWithValue("@Heading", article.Heading);
-                    cmd.Parameters.AddWithValue("@Text", article.Text);
-                    cmd.Parameters.AddWithValue("@ArticleImageUrl", article.ArticleImage.ImageUrl ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@CreateDate", article.CreateDate);
-                    cmd.Parameters.AddWithValue("@CategoryId", article.CategoryId);
-                    cmd.Parameters.AddWithValue("@VisibilityId", article.VisibilityId);
-                    cmd.Parameters.AddWithValue("@UserId", article.UserId);
+                    DbUtils.AddParameter(cmd,"@Heading", article.Heading);
+                    DbUtils.AddParameter(cmd,"@Text", article.Text);
+                    DbUtils.AddParameter(cmd,"@ArticleImageUrl", article.ArticleImage.ImageUrl ?? (object)DBNull.Value);
+                    DbUtils.AddParameter(cmd,"@CreateDate", article.CreateDate);
+                    DbUtils.AddParameter(cmd,"@CategoryId", article.CategoryId);
+                    DbUtils.AddParameter(cmd,"@VisibilityId", article.VisibilityId);
+                    DbUtils.AddParameter(cmd,"@UserId", article.UserId);
 
                      var result = (int)cmd.ExecuteScalar();
                 }
@@ -334,7 +332,7 @@ namespace Scribere.Repositories
                         DELETE FROM ArticleImage WHERE ArticleID = @Id;
                         DELETE FROM Article WHERE Id = @Id";
 
-                    cmd.Parameters.AddWithValue("@Id", articleId);
+                    DbUtils.AddParameter(cmd,"@Id", articleId);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -376,14 +374,15 @@ namespace Scribere.Repositories
                      END;
                     ";
 
-                    cmd.Parameters.AddWithValue("@Heading", article.Heading);
-                    cmd.Parameters.AddWithValue("@Text", article.Text);
-                    cmd.Parameters.AddWithValue("@ArticleImageUrl", article.ArticleImage.ImageUrl ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@CreateDate", article.CreateDate);
-                    cmd.Parameters.AddWithValue("@CategoryId", article.CategoryId);
-                    cmd.Parameters.AddWithValue("@VisibilityId", article.VisibilityId);
-                    cmd.Parameters.AddWithValue("@UserId", article.UserId);
-                    cmd.Parameters.AddWithValue("@Id", article.Id);
+                    
+                    DbUtils.AddParameter(cmd,"@Heading", article.Heading);
+                    DbUtils.AddParameter(cmd,"@Text", article.Text);
+                    DbUtils.AddParameter(cmd,"@ArticleImageUrl", article.ArticleImage.ImageUrl ?? (object)DBNull.Value);
+                    DbUtils.AddParameter(cmd,"@CreateDate", article.CreateDate);
+                    DbUtils.AddParameter(cmd,"@CategoryId", article.CategoryId);
+                    DbUtils.AddParameter(cmd,"@VisibilityId", article.VisibilityId);
+                    DbUtils.AddParameter(cmd,"@UserId", article.UserId);
+                    DbUtils.AddParameter(cmd,"@Id", article.Id);
 
                     cmd.ExecuteNonQuery();
                 }

@@ -57,7 +57,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "SELECT Id, Name FROM Country WHERE Id = @countryId;";
-                    cmd.Parameters.AddWithValue("@countryId", countryId);
+                    DbUtils.AddParameter(cmd,"@countryId", countryId);
                     var reader = cmd.ExecuteReader();
 
                     Country country = null;
@@ -82,7 +82,7 @@ namespace Scribere.Repositories
                                                 OUTPUT INSERTED.ID
                                                   VALUES ( @Name ) 
                                         ;";
-                    cmd.Parameters.AddWithValue("@Name", country.Name);
+                    DbUtils.AddParameter(cmd,"@Name", country.Name);
 
                     country.Id = (int)cmd.ExecuteScalar();
                 }
@@ -101,8 +101,8 @@ namespace Scribere.Repositories
                                            SET Name = @Name
                                             WHERE Id = @CountryId";
 
-                    cmd.Parameters.AddWithValue("@CountryId", country.Id);
-                    cmd.Parameters.AddWithValue("@Name", country.Name);
+                    DbUtils.AddParameter(cmd,"@CountryId", country.Id);
+                    DbUtils.AddParameter(cmd,"@Name", country.Name);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -121,7 +121,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM Country WHERE Id = @countryId;";
 
-                    cmd.Parameters.AddWithValue("@countryId", countryId);
+                    DbUtils.AddParameter(cmd,"@countryId", countryId);
 
                     cmd.ExecuteNonQuery();
                 }

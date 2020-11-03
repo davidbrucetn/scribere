@@ -6,6 +6,7 @@ import { UserBlockContext } from "../../providers/UserBlockProvider";
 import { UserBlockMgr } from "../Helper/DWBUtils";
 import DangerButton from "../Buttons/DangerButton";
 import PrimaryButton from "../Buttons/PrimaryButton";
+import "./UserDetail.css";
 
 import { TiDeleteOutline as DeleteArticleButton } from "react-icons/ti";
 import { Modal, ModalHeader, ModalFooter } from "reactstrap";
@@ -23,6 +24,13 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     card: {
         maxWidth: 345,
+        border: '1px solid grey[200]',
+        opacity: 1,
+        animationName: 'fadeInOpacity',
+        animationTimingFunction: 'ease-in',
+        animationDuration: '1s',
+        boxShadow: '10px 10px 15px #aaaaaa',
+        margin: 15,
     },
     media: {
         height: 140,
@@ -35,10 +43,12 @@ const useStyles = makeStyles({
             'Merriweather',
             'serif'
         ].join(','),
+        textShadow: '10px 10px 15px #aaaaaa',
+        whiteSpace: 'pre-line',
     }
 });
 
-const User = ({ userData, generateUserDataList, thisUser }) => {
+const User = ({ userData, generateUserDataList, thisUser, IsLoading, setIsLoading }) => {
     const { deleteUser } = useContext(UserDataContext);
     const { userBlocks, addUserBlock, deleteUserBlock } = useContext(UserBlockContext);
 

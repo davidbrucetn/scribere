@@ -47,6 +47,8 @@ const UserDataList = () => {
             animationName: 'fadeInOpacity',
             animationTimingFunction: 'ease',
             animationDuration: '2s',
+            paddingTop: 10,
+
         },
         Typography: {
             fontFamily: [
@@ -79,7 +81,7 @@ const UserDataList = () => {
                         <Grid key={userData.id} item
                             xs={12} sm={6} md={4} lg={4} xl={3}
                         >
-                            <User key={userData.id} userData={userData} generateUserDataList={generateUserDataList} userBlocks={userBlocks} thisUser={thisUserData} />
+                            <User key={userData.id} userData={userData} generateUserDataList={generateUserDataList} userBlocks={userBlocks} thisUser={thisUserData} IsLoading={IsLoading} setIsLoading={setIsLoading} />
                         </Grid>
                     ))}
 

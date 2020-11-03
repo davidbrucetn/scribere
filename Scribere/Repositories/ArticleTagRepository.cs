@@ -103,10 +103,9 @@ namespace Scribere.Repositories
                 {
                     cmd.CommandText = @"INSERT INTO ArticleTag ( TagId, ArticleId ) 
                                                 OUTPUT INSERTED.ID
-                                                  VALUES ( @TagId, @ArticleId ) 
-                                        ;";
-                    cmd.Parameters.AddWithValue("@TagId", articleTag.TagId);
-                    cmd.Parameters.AddWithValue("@ArticleId", articleTag.ArticleId);
+                                                  VALUES ( @TagId, @ArticleId );";
+                    DbUtils.AddParameter(cmd,"@TagId", articleTag.TagId);
+                    DbUtils.AddParameter(cmd,"@ArticleId", articleTag.ArticleId);
 
                     articleTag.Id = (int)cmd.ExecuteScalar();
                 }
@@ -126,7 +125,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM ArticleTag WHERE ArticleId = @articleTagId;";
 
-                    cmd.Parameters.AddWithValue("@articleTagId", articleTagId);
+                    DbUtils.AddParameter(cmd,"@articleTagId", articleTagId);
 
 
                     cmd.ExecuteNonQuery();

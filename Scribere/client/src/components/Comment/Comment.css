@@ -9,3 +9,7 @@
 .form__comment__new {
   margin: 2em 2em;
 }
+
+.card__comment {
+  max-width: 100%;
+}

@@ -55,7 +55,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "SELECT Id, Title FROM Tag WHERE Id = @tagId;";
-                    cmd.Parameters.AddWithValue("@tagId", tagId);
+                    DbUtils.AddParameter(cmd,"@tagId", tagId);
                     var reader = cmd.ExecuteReader();
 
                     Tag tag = null;
@@ -80,8 +80,8 @@ namespace Scribere.Repositories
                                                 OUTPUT INSERTED.ID
                                                   VALUES ( @TagId, @Title ) 
                                         ;";
-                    cmd.Parameters.AddWithValue("@TagId", tag.Id);
-                    cmd.Parameters.AddWithValue("@Title", tag.Title);
+                    DbUtils.AddParameter(cmd,"@TagId", tag.Id);
+                    DbUtils.AddParameter(cmd,"@Title", tag.Title);
 
                     tag.Id = (int)cmd.ExecuteScalar();
                 }
@@ -100,8 +100,8 @@ namespace Scribere.Repositories
                                            SET Title = @Title
                                             WHERE Id = @TagId";
 
-                    cmd.Parameters.AddWithValue("@TagId", tag.Id);
-                    cmd.Parameters.AddWithValue("@Title", tag.Title);
+                    DbUtils.AddParameter(cmd,"@TagId", tag.Id);
+                    DbUtils.AddParameter(cmd,"@Title", tag.Title);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -120,7 +120,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM Tag WHERE Id = @tagId;";
 
-                    cmd.Parameters.AddWithValue("@tagId", tagId);
+                    DbUtils.AddParameter(cmd,"@tagId", tagId);
 
                     cmd.ExecuteNonQuery();
                 }

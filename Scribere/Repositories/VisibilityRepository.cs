@@ -55,7 +55,7 @@ namespace Scribere.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = "SELECT Id, Type FROM Visibility WHERE Id = @visibilityId;";
-                    cmd.Parameters.AddWithValue("@visibilityId", visibilityId);
+                    DbUtils.AddParameter(cmd,"@visibilityId", visibilityId);
                     var reader = cmd.ExecuteReader();
 
                     Visibility visibility = null;
@@ -79,7 +79,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"INSERT INTO Visibility ( Type ) 
                                                 OUTPUT INSERTED.ID
                                                   VALUES ( @Type );";
-                    cmd.Parameters.AddWithValue("@Type", visibility.Type);
+                    DbUtils.AddParameter(cmd,"@Type", visibility.Type);
 
                     visibility.Id = (int)cmd.ExecuteScalar();
                 }
@@ -98,8 +98,8 @@ namespace Scribere.Repositories
                                            SET Type = @Type
                                             WHERE Id = @VisibilityId";
 
-                    cmd.Parameters.AddWithValue("@VisibilityId", visibility.Id);
-                    cmd.Parameters.AddWithValue("@Type", visibility.Type);
+                    DbUtils.AddParameter(cmd,"@VisibilityId", visibility.Id);
+                    DbUtils.AddParameter(cmd,"@Type", visibility.Type);
 
                     cmd.ExecuteNonQuery();
                 }
@@ -118,7 +118,7 @@ namespace Scribere.Repositories
                     cmd.CommandText = @"
                         DELETE FROM VisibilityId WHERE Id = @visibilityId;";
 
-                    cmd.Parameters.AddWithValue("@visibilityId", visibilityId);
+                    DbUtils.AddParameter(cmd,"@visibilityId", visibilityId);
 
                     cmd.ExecuteNonQuery();
                 }
