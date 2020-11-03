@@ -17,7 +17,7 @@ namespace Scribere.Models
         public ArticleImage ArticleImage { get; set; }
         [MaxLength(100)]
         public string Heading { get; set; }
-        [MaxLength(2000)]
+        [MaxLength(40000)]
         public string Text { get; set; }
         public DateTime CreateDate { get; set; }
         public int VisibilityId { get; set; }
