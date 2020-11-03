@@ -4,6 +4,7 @@ davidbrucetn@gmail.com
 
 Mentor: Spencer Truett
 
+![alt text](https://github.com/davidbrucetn/scribere/blob/main/Scribere/client/src/components/assets/Scribere.png?raw=true)
 
 ### Initial Proposal
 Scribere, the infinite Latin verb, “to write,” will allow budding poets and short story authors to share their work in this online literary communal application. This fills a niche that really isn’t met on current social apps, where other users are more interested in seeing fleeting moments in pictures or single paragraphs.  
