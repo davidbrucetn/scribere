@@ -1,0 +1,9 @@
+.container__home {
+  height: 90vh;
+  width: auto;
+  background-image: url("../assets/Scribere.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+}

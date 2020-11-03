@@ -46,8 +46,7 @@ export const FavoriteProvider = (props) => {
                 if (!response.ok) {
                     return false;
                 }
-
-                return response.json;
+                return response.json();
 
             })
         )

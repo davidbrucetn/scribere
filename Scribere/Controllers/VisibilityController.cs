@@ -9,6 +9,7 @@ using Scribere.Repositories;
 
 namespace Scribere.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class VisibilityController : ControllerBase

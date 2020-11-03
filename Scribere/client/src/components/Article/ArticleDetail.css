@@ -219,7 +219,7 @@ input.toggle[type="checkbox"] {
 
 .div__card__media--right {
   flex: 8;
-  background-color: rgb(46, 79, 105);
+  background-color: #2e4f69;
   margin-bottom: 3em;
 }
 

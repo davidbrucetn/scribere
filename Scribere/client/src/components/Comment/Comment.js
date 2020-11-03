@@ -5,6 +5,8 @@ import "./Comment.css";
 
 import { AiOutlineEdit as EditCommentButton } from "react-icons/ai";
 import { TiDeleteOutline as DeleteCommentButton } from "react-icons/ti";
+import { makeStyles } from '@material-ui/core/styles';
+import { blue } from '@material-ui/core/colors';
 
 
 export default function Comment({ comment, article }) {
@@ -18,6 +20,48 @@ export default function Comment({ comment, article }) {
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
 
+
+    const useStyles = makeStyles((theme) => ({
+        root: {
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-around',
+            overflow: 'Hidden',
+            backgroundColor: theme.palette.background.paper,
+        },
+        gridList: {
+            width: '80vw',
+            height: '90vh',
+            opacity: 1,
+            animationName: 'fadeInOpacity',
+            animationTimingFunction: 'ease',
+            animationDuration: '2s',
+            paddingTop: 10,
+
+        },
+        icon: {
+            color: 'rgba(255, 255, 255, 0.54)',
+        },
+        buttonSave: {
+            backgroundColor: '#0063cc',
+        },
+        buttonDelete: {
+            backgroundColor: '#d50000',
+            size: 'small',
+        },
+        Typography: {
+            fontFamily: [
+                'Merriweather',
+                'serif'
+            ].join(','),
+            whiteSpace: 'pre-line'
+        },
+        card: {
+            margin: '0 1em',
+        }
+    }));
+
+    const classes = useStyles();
 
     const handleFieldChange = evt => {
         const stateToChange = { ...editedComment };
@@ -60,11 +104,11 @@ export default function Comment({ comment, article }) {
                     <p className="text-secondary">{new Intl.DateTimeFormat('en-US').format(new Date(comment.createDate))}</p>
                     <div className="control__group">
                         {(comment.userId === thisUserId) &&
-                            <button type="button" key={`EditRating${comment.id}`} title="Edit" onClick={goEdit}><EditCommentButton /></button>
+                            <Button className={classes.buttonSave} key={`EditRating${comment.id}`} title="Edit" onClick={goEdit}>Edit</Button>
                         }
                         {((comment.userId === thisUserId) || (article.userId === thisUserId)) &&
                             <>
-                                <button type="button" key={`DeleteRating${comment.id}`} title="Delete" onClick={toggle}><DeleteCommentButton /></button>
+                                <Button className={classes.buttonDelete} key={`DeleteRating${comment.id}`} title="Delete" onClick={toggle}>Delete</Button>
 
                                 <Modal isOpen={modal} toggle={toggle}>
                                     <ModalHeader toggle={toggle}>Are you sure you want to delete this comment?</ModalHeader>
@@ -89,7 +133,8 @@ export default function Comment({ comment, article }) {
                         {(comment.userId === thisUserId) &&
 
                             <>
-                                <button type="button" key={`DeleteRating${comment.id}`} title="Delete" onClick={toggle}><DeleteCommentButton /></button>
+                                <Button color="danger" onClick={DeleteComment}>Delete</Button>{' '}
+
 
                                 <Modal isOpen={modal} toggle={toggle}>
                                     <ModalHeader toggle={toggle}>Are you sure you want to delete?</ModalHeader>
@@ -100,9 +145,10 @@ export default function Comment({ comment, article }) {
                                 </Modal>
                             </>
                         }
-
+                        <Button className={classes.buttonSave} onClick={Update}>Save</Button>
+                        <Button onClick={cancelEdit}>Cancel</Button>
                     </div>
-                    <Button onClick={cancelEdit}>Cancel</Button>
+
                 </div>
             </>
     )

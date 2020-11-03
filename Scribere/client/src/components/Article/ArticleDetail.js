@@ -9,7 +9,6 @@ import "../Comment/Comment.css";
 import Comment from "../Comment/Comment";
 import DangerButton from "../Buttons/DangerButton";
 import PrimaryButton from "../Buttons/PrimaryButton";
-import EditCard from "../Cards/EditCard"
 
 import { useForm } from "react-hook-form"
 import * as Yup from 'yup';
@@ -145,10 +144,6 @@ const ArticleDetail = () => {
 
     }
 
-
-
-
-
     const Delete = () => {
         setShowDialog(false)
         deleteArticle(article.id)
@@ -237,7 +232,8 @@ const ArticleDetail = () => {
                 articleTags.some(articleTag => articleTag.id === tags[i].id)
             ])
         )
-    });
+    }
+    );
 
     const goBack = () => {
         history.push("/articles");
@@ -257,16 +253,14 @@ const ArticleDetail = () => {
         deleteTagsByArticleId(article.id)
             .then((p) => {
                 if (!newTags.length > 0) {
-                    setIsLoading(false)
-                    setIsLoading(true)
-
+                    setArticleTags([]);
                     getTagsByArticleId(article.id)
                         .then((articleTagResp) => {
                             setArticleTags(articleTagResp);
                             getAllTags();
                             setIsLoading(false);
+
                         })
-                    history.push(`/articles/${article.id}`);
 
                 }
                 else {
@@ -279,11 +273,17 @@ const ArticleDetail = () => {
                             setArticleTags(articleTagResp);
                             getAllTags();
                             setIsLoading(false);
+
                         });
 
                 }
 
+
+
+
+
             })
+
     };
 
 

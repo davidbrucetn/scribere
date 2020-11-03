@@ -296,7 +296,7 @@ namespace Scribere.Repositories
                                VALUES (@UserId, @Heading, @Text, @CreateDate, @CategoryId, @VisibilityId)
                         
                        
-                             INSERT INTO ArticleImage (ArticleId,ImageUrl) SELECT [ArticleId],[ImageUrl] FROM @ArticleImage WHERE [ImageUrl] <> NULL OR [ImageUrl] <> ''
+                             INSERT INTO ArticleImage (ArticleId,ImageUrl) SELECT [ArticleId],[ImageUrl] FROM @ArticleImage WHERE [ImageUrl] IS NOT NULL OR [ImageUrl] <> ''
                        
 
                         SELECT [ArticleId] from @ArticleImage

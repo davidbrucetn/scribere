@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Scribere.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
