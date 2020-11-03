@@ -324,7 +324,7 @@ const ArticleDetail = () => {
                                 <CardActionArea>
 
                                     <div className="card__media__container">
-                                        {(article.articleImage !== undefined) ?
+                                        {(article.articleImage.imageUrl !== "") ?
                                             <CardMedia
                                                 component="img"
                                                 className={classes.media}
