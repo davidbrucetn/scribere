@@ -73,7 +73,7 @@ values
 insert into [UserData]
 	(Id, Pseudonym, NameFirst, NameLast, Email, Created_at, UserLevelId, FirebaseUserId, IsActive)
 values
-	(2, 'Severian', 'Will', 'Shakespeare', 'jollyroger@gmail.com', '2020-10-23', 2, '', 1);
+	(2, 'Severian', 'Will', 'Shakespeare', 'testjollyroger@gmail.com', '2020-10-23', 2, '', 1);
 	set identity_insert [UserData] off
 
 set identity_insert [Country] on
@@ -336,6 +336,5 @@ insert into Visibility
 	([Id], [Type])
 values
 (1, 'Self'),
-(2, 'All'),
-(3, 'Circle');
+(2, 'All')
 set identity_insert [Visibility] off
