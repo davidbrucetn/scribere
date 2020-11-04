@@ -164,8 +164,8 @@ const ArticleForm = () => {
                             </textarea>
                         </div>
                         <div className="form-group">
-                            <button disabled={isLoading} onClick={submit} className="btn btn-primary btn-block">Save</button>
-                            <button disabled={isLoading} onClick={cancel} className="btn btn-primary btn-block">Cancel</button>
+                            <button disabled={isLoading} onClick={submit} className="btn btn-primary btn-block btn-styling">Save</button>
+                            <button disabled={isLoading} onClick={cancel} className="btn btn-primary btn-block btn-styling" style={{ backgroundColor: "gray" }}>Cancel</button>
                         </div>
                     </div>
                 </div>
