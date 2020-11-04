@@ -111,6 +111,15 @@ export default function UserEdit() {
                                 />
                             </div>
                             <div className="form-group">
+                                <label htmlFor="pseudonym" className="control-label">Nom de Plume</label>
+                                <input
+                                    id="pseudonym"
+                                    className="form-control"
+                                    onChange={handleFieldChange}
+                                    value={userData.pseudonym}
+                                />
+                            </div>
+                            <div className="form-group">
                                 <label htmlFor="userImage.imageUrl" className="control-label">User Image URL</label>
                                 <input
                                     id="userImage.imageUrl"

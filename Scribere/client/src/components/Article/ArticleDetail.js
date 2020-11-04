@@ -258,9 +258,8 @@ const ArticleDetail = () => {
                         .then((articleTagResp) => {
                             setArticleTags(articleTagResp);
                             getAllTags();
-                        })
-                        .then((articleTags) => {
                             setIsLoading(false);
+
                         })
 
                 }
@@ -273,10 +272,9 @@ const ArticleDetail = () => {
                         .then((articleTagResp) => {
                             setArticleTags(articleTagResp)
                             getAllTags();
-                        })
-                        .then((articleTags) => {
                             setIsLoading(false);
-                        })
+
+                        });
 
                 }
 
