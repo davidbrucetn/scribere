@@ -73,3 +73,7 @@
     opacity: 1;
   }
 }
+
+.main__title {
+  color: rgb(46, 79, 105);
+}
