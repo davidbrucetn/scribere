@@ -108,7 +108,7 @@ const ArticleForm = () => {
         <div className="container__article__new">
             <div className="row justify-content-center div__articleNew__form">
                 <div className="card col-md-11 col-lg-10">
-                    <h3 className="mt-3 text-primary text-center card-title">Let the Words Flow</h3>
+                    <h3 className="mt-3 text-center card-title main__title">Let the Words Flow</h3>
                     <div className="mt-2 card-body">
                         <div className="form-group">
                             <FormLabel className={classes.Typography} component="legend">Heading</FormLabel>

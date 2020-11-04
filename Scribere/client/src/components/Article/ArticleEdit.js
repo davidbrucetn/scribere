@@ -95,7 +95,7 @@ const ArticleEdit = () => {
             <div className="container">
                 <div className="row justify-content-center">
                     <div className="card col-md-12 col-lg-15">
-                        <h3 className="mt-3 text-primary text-center card-title">Let the Words Flow</h3>
+                        <h3 className="mt-3 text-center card-title">Let the Words Flow</h3>
                         <div className="mt-5 card-body">
                             <div className="text-danger"></div>
                             <div className="form-group">
@@ -152,8 +152,8 @@ const ArticleEdit = () => {
                                 </textarea>
                             </div>
                             <div className="form-group">
-                                <button disabled={isLoading} onClick={submit} className="btn btn-primary btn-block">SAVE</button>
-                                <button disabled={isLoading} onClick={cancel} className="btn btn-primary btn-block">Cancel</button>
+                                <button disabled={isLoading} onClick={submit} className="btn btn-primary btn-block btn-styling">Save</button>
+                                <button disabled={isLoading} onClick={cancel} className="btn btn-primary btn-block btn-styling" style={{ backgroundColor: "gray" }}>Cancel</button>
                             </div>
                         </div>
                     </div>
