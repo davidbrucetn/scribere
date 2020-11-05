@@ -80,6 +80,7 @@ const ArticleList = (props) => {
 
     useEffect(() => {
         generateArticleList();
+        document.title = `Scribere - ${thisUserData.pseudonym}`
 
 
 
