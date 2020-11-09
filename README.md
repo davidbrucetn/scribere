@@ -19,6 +19,17 @@ Initial Sketchboard Layout https://sketchboard.me/LColsCx2jIP#/
 ### ERD
 DBDiagram Schema https://dbdiagram.io/d/5f91ad8e3a78976d7b78c797
 
+Technology Stack:   
+1.  Base  
+   * ReactJS
+   * Bootstrap
+   * ASP.NET Core
+   * SQL Server 2019 (Express)
+2.  UI
+   *  CSS
+   *  Material-UI
+   *  Bootstrap
+
 ### Github for Scribere
   MVP Features
 * User Registration and JWT Authentication.
