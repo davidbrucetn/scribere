@@ -4,7 +4,7 @@
 	Email Address:	david.bruce.tn@gmail.com  
 	Mentors:	Spencer Truett 
 	Capstone Repo on Github:   
-	https://github.com/davidbrucetn/scriber
+	https://github.com/davidbrucetn/scribere
 
 ### Video Demo
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/21H6T33VSIE/sddefault.jpg)](https://youtu.be/21H6T33VSIE)]
