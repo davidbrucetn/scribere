@@ -1,8 +1,10 @@
 # Scribere
-David Bruce
-davidbrucetn@gmail.com
 
-Mentor: Spencer Truett
+	Name:	David Bruce  
+	Email Address:	david.bruce.tn@gmail.com  
+	Mentors:	Spencer Truett 
+	Capstone Repo on Github:   
+	https://github.com/davidbrucetn/scriber
 
 ![alt text](https://github.com/davidbrucetn/scribere/blob/main/Scribere/client/src/components/assets/Scribere.png?raw=true)
 
@@ -27,17 +29,12 @@ DBDiagram Schema https://dbdiagram.io/d/5f91ad8e3a78976d7b78c797
 * Block other users (prevents them seeing your work or commenting).
 * Favorite other authors or articles.
 
-### Stretch Goals
-* Book search API for looking up book titles and authors for reviews.
-* Add users to Circle for messaging
-* Inter-user messaging with multi-recipients option.
-* Free text search on content.
 
 ### User Stories
  * As a user I’d like to be able to register with an email and password to login to Scribere.
  * As a writer, I’d like to be able to save new poetry or short stories to Scribere.
  * As a writer, I’d like to be able to select from categories for my work, so readers can more easily find it.
- * As a writer, I’d like to be able to tag my work, so readers have more options to find it.
+ * As a writer, I’d like to be able to tag my work.
  * As a reader I’d like to be able to favorite an article or author that I enjoy reading.
  * As a reader, I’d like to be able to comment on an author’s work.
  * As a writer, I’d like to be able to delete comments on my work, and if necessary, block a user from further interaction.
